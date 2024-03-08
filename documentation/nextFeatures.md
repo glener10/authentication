@@ -18,7 +18,7 @@ _All useCases: Documentation BDD, Route Documentation, Tests, Security Documenta
 
 - Use JWT
 
-**Interceptor of request for private routes**
+**Interceptor of request for private routes to check JWT**
 
 **Account Update (Logged)**
 
