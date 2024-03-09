@@ -18,7 +18,7 @@ _All useCases: Documentation BDD, Route Documentation, Tests, Security Documenta
 
 - Use JWT
 
-**Interceptor of request for private routes to check JWT**
+**Interceptor/Guard of request for private routes to check JWT**
 
 **Account Update (Logged)**
 
@@ -37,6 +37,12 @@ _All useCases: Documentation BDD, Route Documentation, Tests, Security Documenta
 - Use a unique token
 
 **Login with google**
+
+**E-mail verification**
+
+**2FA**
+
+**Use notification when strange login ocurred**
 
 **Operation history**
 
