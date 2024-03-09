@@ -1,5 +1,6 @@
 - CI/CD process (Lint, Build, Tests)
 - Setup tests (integration)
+- Database creation (basic access)
 - Docker Ambient
 - Security documentation
 - Active all GitHub security features
@@ -59,3 +60,5 @@ _All useCases: Documentation BDD, Route Documentation, Tests, Security Documenta
 -> Good logging of application (Success/Error)
 -> How to monitor and have observability
 -> CI/CD securely (_snyk_, _app.codacy_)
+-> Security tests
+-> Load Tests
