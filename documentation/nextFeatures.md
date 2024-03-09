@@ -42,6 +42,12 @@ _All useCases: Documentation BDD, Route Documentation, Tests, Security Documenta
 
 **2FA**
 
+**Control with use**
+
+- Log out, block, delete (Only users with permission can due)
+
+**Database backups, rules and administration**
+
 **Use notification when strange login ocurred**
 
 **Operation history**
