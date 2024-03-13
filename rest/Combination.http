@@ -1,8 +1,0 @@
-###Combination, Return a CombinationEntity and increment a Combination Generation Counter
-POST http://localhost:8080/combination
-Authorization: Bearer {{$dotenv SECRET}}
-content-type: application/json
-
-{
-  "NumberOfInputs": 2
-}
