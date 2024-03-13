@@ -1,9 +1,7 @@
+- Active all GitHub security features
 - Database creation (basic access)
 - Setup tests (integration) see the https://www.youtube.com/watch?v=x2C-n5ybyqQ&t=973s&ab_channel=ErickWendel
-- Formatting Badges of README.md
-- Docker Ambient
 - Security documentation
-- Active all GitHub security features
 
 # UseCases
 
@@ -65,3 +63,5 @@ _All useCases: Documentation BDD, Route Documentation, Tests, Security Documenta
 **Operation history**
 
 - User, location, IP, success or not, date, time
+
+- Docker Ambient
