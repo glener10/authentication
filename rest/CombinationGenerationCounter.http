@@ -1,0 +1,12 @@
+###CombinationGenerationCounter, Increment a Combination Generation Counter
+POST http://localhost:8080/combinationGenerationCounter
+Authorization: Bearer {{$dotenv SECRET}}
+content-type: application/json
+
+{
+  "NumberOfInputs": 2
+}
+
+###CombinationGenerationCounter, Get all Combination Generation Counter order by Count
+GET http://localhost:8080/combinationGenerationCounter
+Authorization: Bearer {{$dotenv SECRET}}

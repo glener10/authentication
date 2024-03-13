@@ -1,0 +1,8 @@
+###Combination, Try Generate a new Combination without repetitions
+POST http://localhost:8080/generate
+Authorization: Bearer {{$dotenv SECRET}}
+content-type: application/json
+
+{
+  "NumberOfInputs": 4
+}

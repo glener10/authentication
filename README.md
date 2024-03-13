@@ -6,7 +6,7 @@
 ![Bitbucket open issues](https://img.shields.io/bitbucket/issues/glener10/authentication)
 ![Bitbucket open pull requests](https://img.shields.io/bitbucket/pr-raw/glener10/authentication)
 
-![Build Status](https://github.com/glener10/authentication/workflows/CICDNAME/badge.svg)
+![Build Status](https://github.com/glener10/authentication/workflows/go/badge.svg)
 [![Release](https://img.shields.io/github/release/glener10/authentication.svg)](https://github.com/glener10/authentication/releases/latest)
 [![GitHub Releases Stats](https://img.shields.io/github/downloads/glener10/authentication/total.svg?logo=github)](https://somsubhra.github.io/github-release-stats/?username=glener10&repository=authentication)
 [![Last commit](https://img.shields.io/github/last-commit/glener10/authentication.svg?style=flat)](https://github.com/glener10/authentication/commits)
@@ -62,6 +62,14 @@ Funcionalities:
 
 ## 💻 **Dependencies and Environment**
 
+My dependencies and versions
+
+**Go**: go version go1.22.0 windows/amd64
+
+**Docker**: Docker version 25.0.3, build 4debf41
+
+**docker-compose**: Docker Compose version v2.24.5-desktop.1
+
 <div id="installing"></div>
 
 ## 🚀 **Installing**
@@ -70,13 +78,37 @@ Funcionalities:
 
 ## 🧹 **Formatting the Code**
 
+To check the code format you can run the following command in the root folder:
+
+```
+golangci-lint run
+```
+
 <div id="testing"></div>
 
 ## 🧪 **Testing**
 
+To exec all the tests run the following command in the root folder:
+
+```
+go test -p 1 ./src/...
+```
+
 <div id="using"></div>
 
 ## ☕ **Using**
+
+First, check the [dependencies](#dependenciesandenvironment) and the [installation](#installing) process:
+
+Going to _root_ folder and exec:
+
+```
+go run .\main.go
+```
+
+Now you can open [http://localhost:8080](http://localhost:8080) with your browser to see the result.
+
+You can see the routes documentation in '_rest_' folder, this files using de REST Client extension of VSCode, but you can export it any way you want
 
 <div id="technical"></div>
 
@@ -88,7 +120,11 @@ Funcionalities:
 
 To learn more about technologies used in the application:
 
-- [Framework X](https://nextjs.org/docs) - learn about Framework X features and API.
+- [Go](https://golang.org/) - learn about Go features and API.
+
+- [Docker](https://www.docker.com/) - learn about Docker features and API.
+
+- [Docker Compose](https://docs.docker.com/compose/) - learn about Docker Compose features and API.
 
 <div id="license"></div>
 
