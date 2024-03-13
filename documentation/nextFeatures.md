@@ -1,5 +1,6 @@
 - CI/CD process (Lint, Build, Tests)
 - Setup tests (integration)
+- Formatting Badges of README.md
 - Database creation (basic access)
 - Docker Ambient
 - Security documentation
