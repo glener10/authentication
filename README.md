@@ -249,6 +249,12 @@ migrate create -ext sql -dir src/db/migrations -seq MIGRATION_NAME
 
 ## 💡 **Technical Decisions**
 
+The project seeks to use some programming paradigms such as:
+
+- Clean Code
+- Scream Architecture
+- Commit Lint
+
 <div id="learnmore"></div>
 
 ## 📖 **Learn More**
