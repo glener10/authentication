@@ -16,9 +16,6 @@
         </tr>
       </tbody>
     </table>
-  </div>
-
-  <div style="display: flex; justify-content: center; align-items: center;">
     <table>
       <thead>
         <tr>
@@ -47,9 +44,6 @@
         </tr>
       </tbody>
     </table>
-  </div>
-
-  <div style="display: flex; justify-content: center; align-items: center;">
     <table>
       <thead>
         <tr>
@@ -80,9 +74,6 @@
         </tr>
       </tbody>
     </table>
-  </div>
-
-  <!-- <div style="display: flex; justify-content: center; align-items: center;">
     <table>
       <thead>
         <tr>
@@ -96,9 +87,6 @@
         </tr>
       </tbody>
     </table>
-  </div> -->
-
-  <div style="display: flex; justify-content: center; align-items: center;">
     <table>
       <thead>
         <tr>
