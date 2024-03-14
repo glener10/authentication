@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	utils "github.com/glener10/rotating-pairs-back/src/common/utils"
 	"github.com/glener10/rotating-pairs-back/src/db"
 	"github.com/glener10/rotating-pairs-back/src/routes"
+	utils "github.com/glener10/rotating-pairs-back/src/utils"
 )
 
 func main() {

@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	Utils "github.com/glener10/rotating-pairs-back/src/common/utils"
+	Utils "github.com/glener10/rotating-pairs-back/src/utils"
 	"github.com/stretchr/testify/assert"
 )
 
