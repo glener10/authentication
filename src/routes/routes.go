@@ -8,7 +8,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	Middlewares "github.com/glener10/rotating-pairs-back/src/routes/middlewares"
+	middlewares "github.com/glener10/rotating-pairs-back/src/routes/middlewares"
 )
 
 func HandlerRoutes() *gin.Engine {
@@ -22,13 +22,13 @@ func HandlerRoutes() *gin.Engine {
 		ExposeHeaders:    []string{"Content-Length", "Content-Type"},
 		MaxAge:           12 * time.Hour,
 	}))
-	rateLimiter := Middlewares.NewRateLimiter(11, time.Minute)
-	r.Use(Middlewares.RequestLimitMiddleware(rateLimiter))
+	rateLimiter := middlewares.NewRateLimiter(11, time.Minute)
+	r.Use(middlewares.RequestLimitMiddleware(rateLimiter))
 
-	r.GET("/", Middlewares.HelloWorld)
+	r.GET("/", middlewares.HelloWorld)
 
-	r.Use(Middlewares.AuthMiddleware())
-	//r.Use(Middlewares.HTTPSOnlyMiddleware())
+	r.Use(middlewares.AuthMiddleware())
+	//r.Use(middlewares.HTTPSOnlyMiddleware())
 
 	return r
 }
