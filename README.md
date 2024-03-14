@@ -15,8 +15,6 @@
           <td><img src="https://img.shields.io/github/forks/glener10/authentication" alt="Forks"></td>
         </tr>
       </tbody>
-    </table>
-    <table>
       <thead>
         <tr>
           <th colspan="2">Open Tasks</th>
