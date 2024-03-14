@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"os"
 
-	db_postgres "github.com/glener10/rotating-pairs-back/src/db/postgres"
+	postgres_db "github.com/glener10/rotating-pairs-back/src/db/postgres_db"
 )
 
 var db *sql.DB
-var postgres *db_postgres.Postgres
+var postgres *postgres_db.Postgres
 
 func ConnectDb() {
-	postgres = &db_postgres.Postgres{}
+	postgres = &postgres_db.Postgres{}
 
 	var err error
 	db, err = postgres.Connect()
