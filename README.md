@@ -233,6 +233,12 @@ Now you can open [http://localhost:8080](http://localhost:8080) with your browse
 
 You can see the routes documentation in '_rest_' folder, this files using de REST Client extension of VSCode, but you can export it any way you want
 
+You can create new migrations using the command
+
+```
+migrate create -ext sql -dir db/migrations -seq MIGRATION_NAME
+```
+
 <div id="technical"></div>
 
 ## 💡 **Technical Decisions**
