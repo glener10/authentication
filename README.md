@@ -1,7 +1,7 @@
 # **Authentication**
 
-<div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap;">
-  <div style="display: flex; justify-content: center; align-items: center;">
+<div>
+  <div>
     <table>
       <thead>
         <tr>
@@ -21,7 +21,7 @@
     </table>
   </div>
 
-  <div style="display: flex; justify-content: center; align-items: center;">
+  <div>
     <table>
       <thead>
         <tr>
@@ -41,7 +41,7 @@
     </table>
   </div>
 
-  <div style="display: flex; justify-content: center; align-items: center;">
+  <div>
     <table>
       <thead>
         <tr>
