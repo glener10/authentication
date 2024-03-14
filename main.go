@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 
 	utils "github.com/glener10/rotating-pairs-back/src/common/utils"
 	"github.com/glener10/rotating-pairs-back/src/db"
@@ -16,13 +15,8 @@ func main() {
 	}
 
 	r := routes.HandlerRoutes()
-	postgres := &db.Postgres{}
+	db.ConnectDb()
+	defer db.DisconnectDb()
 
-	_, err := postgres.Connect()
-	if err != nil {
-		fmt.Println("Error in Postgres connection: " + err.Error())
-		os.Exit(-1)
-	}
-	defer postgres.Disconnect()
 	routes.Listening(r)
 }
