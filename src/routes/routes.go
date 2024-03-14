@@ -14,19 +14,19 @@ import (
 func HandlerRoutes() *gin.Engine {
 	r := gin.Default()
 
-	r.GET("/", Middlewares.HelloWorld)
-
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     getAllowedURLs(),
-		AllowMethods:     []string{"GET", "POST"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length", "Content-Type"},
+		AllowMethods:     []string{"GET", "POST", "PATCH", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Content-Type", "Authorization"},
 		AllowCredentials: true,
+		ExposeHeaders:    []string{"Content-Length", "Content-Type"},
 		MaxAge:           12 * time.Hour,
 	}))
-
 	rateLimiter := Middlewares.NewRateLimiter(11, time.Minute)
 	r.Use(Middlewares.RequestLimitMiddleware(rateLimiter))
+
+	r.GET("/", Middlewares.HelloWorld)
+
 	r.Use(Middlewares.AuthMiddleware())
 	//r.Use(Middlewares.HTTPSOnlyMiddleware())
 

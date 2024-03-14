@@ -177,10 +177,24 @@ My dependencies and versions
 
 ## 🚀 **Installing**
 
-To install the dependencies you can run the following command in the root folder:
+**1-** To install the dependencies you can run the following command in the root folder:
 
 ```
-go mod download
+$ go mod download
+```
+
+**OBS**: We have the development .env file committed to the project, but you can change it as you see fit
+
+**2-** (If you already have a PostgresSQL instance, you can skip this part) You will need a postgresSQL instance, we have a docker-compose ready to create a container, you can run the following command in the root folder
+
+```
+$ docker-compose up -d
+```
+
+**3-** Up the migrations with
+
+```
+$ migrate -database postgres://myuser:mypassword@localhost:5432/mydatabase?sslmode=disable -path db/migrations up
 ```
 
 <div id="formatting"></div>
@@ -190,7 +204,7 @@ go mod download
 To check the code format you can run the following command in the root folder:
 
 ```
-golangci-lint run
+$ golangci-lint run
 ```
 
 <div id="testing"></div>
@@ -200,7 +214,7 @@ golangci-lint run
 To exec all the tests run the following command in the root folder:
 
 ```
-go test -p 1 ./src/...
+$ go test -p 1 ./src/...
 ```
 
 <div id="using"></div>
@@ -212,7 +226,7 @@ First, check the [dependencies](#dependenciesandenvironment) and the [installati
 Going to _root_ folder and exec:
 
 ```
-go run .\main.go
+$ go run .\main.go
 ```
 
 Now you can open [http://localhost:8080](http://localhost:8080) with your browser to see the result.
