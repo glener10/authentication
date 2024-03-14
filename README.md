@@ -6,6 +6,7 @@
       <thead>
         <tr>
           <th colspan="3">Repository Informations</th>
+          <th colspan="2">Open Tasks</th>
         </tr>
       </thead>
       <tbody>
@@ -13,15 +14,6 @@
           <td><img src="https://img.shields.io/github/repo-size/glener10/authentication" alt="GitHub Repo size"></td>
           <td><img src="https://img.shields.io/github/stars/glener10/authentication" alt="GitHub Stars"></td>
           <td><img src="https://img.shields.io/github/forks/glener10/authentication" alt="Forks"></td>
-        </tr>
-      </tbody>
-      <thead>
-        <tr>
-          <th colspan="2">Open Tasks</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
           <td><img src="https://img.shields.io/bitbucket/issues/glener10/authentication" alt="Open Issues"></td>
           <td><img src="https://img.shields.io/bitbucket/pr-raw/glener10/authentication" alt="Open Pull Requests"></td>
         </tr>
@@ -34,22 +26,12 @@
       <thead>
         <tr>
           <th colspan="2">Current version</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><img src="https://github.com/glener10/authentication/workflows/go/badge.svg" alt="Build Status"></td>
-        </tr>
-      </tbody>
-    </table>
-    <table>
-      <thead>
-        <tr>
           <th colspan="4">Last Updates</th>
         </tr>
       </thead>
       <tbody>
         <tr>
+          <td><img src="https://github.com/glener10/authentication/workflows/go/badge.svg" alt="Build Status"></td>
           <td><img src="https://github.com/glener10/authentication/commits" alt="Last Commit"></td>
           <td><img src="https://github.com/glener10/authentication/tags" alt="Last Tag"></td>
           <td><img src="https://github.com/glener10/authentication/releases/latest" alt="Last Release"></td>
@@ -64,35 +46,15 @@
       <thead>
         <tr>
           <th colspan="1">Docker</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><img src="https://hub.docker.com/r/glener10/REPOSITORIONAME" alt="Docker"></td>
-        </tr>
-      </tbody>
-    </table>
-    <table>
-      <thead>
-        <tr>
           <th colspan="2">Security</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><img src="https://snyk.io/test/github/glener10/REPOSITORIONAME?targetFile=app%2Fbuild.gradle" alt="Know Vulnerabilities"></td>
-          <td><img src="https://app.codacy.com/gh/glener10/REPOSITORIONAME/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade" alt="Codacy"></td>
-        </tr>
-      </tbody>
-    </table>
-    <table>
-      <thead>
-        <tr>
           <th colspan="2">Copyright</th>
         </tr>
       </thead>
       <tbody>
         <tr>
+          <td><img src="https://hub.docker.com/r/glener10/REPOSITORIONAME" alt="Docker"></td>
+          <td><img src="https://snyk.io/test/github/glener10/REPOSITORIONAME?targetFile=app%2Fbuild.gradle" alt="Know Vulnerabilities"></td>
+          <td><img src="https://app.codacy.com/gh/glener10/REPOSITORIONAME/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade" alt="Codacy"></td>
           <td><img src="https://img.shields.io/github/license/glener10/authentication" alt="License"></td>
           <td><img src="https://img.shields.io/github/contributors/glener10/authentication.svg" alt="Contributors"></td>
         </tr>
