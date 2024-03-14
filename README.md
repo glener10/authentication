@@ -153,6 +153,12 @@
 
 ## 🐱‍🏍 **Features**
 
+🧾 **Documentation**
+
+- Migrations
+- BDD (Behavior Driven Development) to use cases
+- The release and tag concept
+
 ⚙ **General**
 
 -
@@ -194,7 +200,7 @@ $ docker-compose up -d
 **3-** Up the migrations with
 
 ```
-$ migrate -database postgres://myuser:mypassword@localhost:5432/mydatabase?sslmode=disable -path db/migrations up
+$ migrate -database postgres://myuser:mypassword@localhost:5432/mydatabase?sslmode=disable -path src/db/migrations up
 ```
 
 <div id="formatting"></div>
@@ -236,7 +242,7 @@ You can see the routes documentation in '_rest_' folder, this files using de RES
 You can create new migrations using the command
 
 ```
-migrate create -ext sql -dir db/migrations -seq MIGRATION_NAME
+migrate create -ext sql -dir src/db/migrations -seq MIGRATION_NAME
 ```
 
 <div id="technical"></div>
