@@ -1,0 +1,8 @@
+###createUser!
+POST http://localhost:8080/user
+content-type: application/json
+
+{
+	"Email": "Roi",
+	"Password": "PASSWORd"
+}
