@@ -1,9 +1,5 @@
-- CI/CD process (Lint, Build, Tests)
-- Setup tests (integration)
-- Database creation (basic access)
-- Docker Ambient
+- Setup tests (integration) see the https://www.youtube.com/watch?v=x2C-n5ybyqQ&t=973s&ab_channel=ErickWendel
 - Security documentation
-- Active all GitHub security features
 
 # UseCases
 
@@ -14,6 +10,17 @@ _All useCases: Documentation BDD, Route Documentation, Tests, Security Documenta
 - Do not allow invalid email
 - Do not allow weak password
 - Do not allow repeated email
+
+-> Create pre-commit triggers with actions, to check interesting things like code checking, formatting, security checks and commit message pattern
+-> Security Documentation of CreateUser
+-> Route documentation
+-> Response Format Standard
+-> Exception/Error Format Standard
+-> Good logging of application (Success/Error)
+-> How to monitor and have observability
+-> CI/CD securely (_snyk_, _app.codacy_)
+-> Security tests
+-> Load Tests
 
 **Login**
 
@@ -55,10 +62,4 @@ _All useCases: Documentation BDD, Route Documentation, Tests, Security Documenta
 
 - User, location, IP, success or not, date, time
 
--> Response Format Standard
--> Exception/Error Format Standard
--> Good logging of application (Success/Error)
--> How to monitor and have observability
--> CI/CD securely (_snyk_, _app.codacy_)
--> Security tests
--> Load Tests
+- Docker Ambient
