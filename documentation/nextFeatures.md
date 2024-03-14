@@ -1,5 +1,3 @@
-- Active all GitHub security features
-- Database creation (basic access)
 - Setup tests (integration) see the https://www.youtube.com/watch?v=x2C-n5ybyqQ&t=973s&ab_channel=ErickWendel
 - Security documentation
 
