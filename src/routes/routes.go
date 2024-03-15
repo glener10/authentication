@@ -25,6 +25,7 @@ func HandlerRoutes() *gin.Engine {
 	}))
 	rateLimiter := middlewares.NewRateLimiter(11, time.Minute)
 	r.Use(middlewares.RequestLimitMiddleware(rateLimiter))
+	r.Use(middlewares.TimeoutMiddleware())
 
 	r.GET("/", middlewares.HelloWorld)
 

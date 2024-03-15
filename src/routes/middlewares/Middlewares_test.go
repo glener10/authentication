@@ -129,3 +129,27 @@ func TestAuthWithValidToken(t *testing.T) {
 
 	assert.Equal(t, response.Code, 200, "Should return code 200 with a valid token")
 }
+
+func TestLimitTimeout(t *testing.T) {
+	r := SetupRoutes()
+	r.Use(TimeoutMiddleware())
+	r.GET("/", func(ctx *gin.Context) {
+		time.Sleep(4 * time.Second)
+	})
+	req, _ := http.NewRequest("GET", "/", nil)
+	response := httptest.NewRecorder()
+	r.ServeHTTP(response, req)
+
+	expected := ErrorResponse{
+		Error:      "timeout",
+		StatusCode: http.StatusRequestTimeout,
+	}
+
+	var actual ErrorResponse
+	err := json.NewDecoder(response.Body).Decode(&actual)
+	if err != nil {
+		t.Errorf("failed to decode response body: %v", err)
+	}
+
+	assert.Equal(t, actual, expected, "Should return 'timeout' and 408 if the requisition dont return in 3 seconds")
+}
