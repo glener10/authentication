@@ -1,6 +1,7 @@
 package create_user_usecase
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -9,6 +10,12 @@ import (
 )
 
 func Createuser(c *gin.Context, user user_dtos.CreateUserRequest) {
+	err := validateCreateUser(user)
+	if err != nil {
+		statusCode := http.StatusUnprocessableEntity
+		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		return
+	}
 	userCreated, err := user_repository.CreateUser(user)
 	if err != nil {
 		statusCode := http.StatusUnprocessableEntity
@@ -16,4 +23,16 @@ func Createuser(c *gin.Context, user user_dtos.CreateUserRequest) {
 		return
 	}
 	c.JSON(http.StatusCreated, userCreated)
+}
+
+func validateCreateUser(user user_dtos.CreateUserRequest) error {
+	if checkIfEmailAlreadyExists(user.Email) {
+		return errors.New(user.Email + " already exists")
+	}
+	return nil
+}
+
+func checkIfEmailAlreadyExists(email string) bool {
+	_, err := user_repository.FindByEmail(email)
+	return err == nil
 }

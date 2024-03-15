@@ -1,6 +1,8 @@
 package user_dtos
 
-import "errors"
+import (
+	"errors"
+)
 
 type CreateUserRequest struct {
 	Email    string
@@ -14,7 +16,10 @@ type CreateUserResponse struct {
 
 func Validate(user *CreateUserRequest) error {
 	if user.Email == "" {
-		return errors.New("Erro email")
+		return errors.New("email is required")
+	}
+	if user.Password == "" {
+		return errors.New("password is required")
 	}
 	return nil
 }
