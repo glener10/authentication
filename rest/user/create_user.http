@@ -1,8 +1,8 @@
-###createUser!
+###create_user: with valid email and password
 POST http://localhost:8080/user
 content-type: application/json
 
 {
-	"Email": "4@test.com",
-	"Password": "aaaaaaa"
+	"Email": "fulano@fulano.com",
+	"Password": "aaaaaA#7"
 }
