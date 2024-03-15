@@ -105,15 +105,15 @@
 
 - Migrations
 - BDD (Behavior Driven Development) to use cases
-- The release and tag concept
+- Concept of semantic versioning with tags and releases
 
 ⚙ **General**
 
--
+- CI/CD process with github actions to perform code formatting check (golangci-lint), build and run automated tests
 
 🏗 **Use Cases**
 
--
+- create_user: Do not allow repeated emails and weak passwords
 
 <div id="dependenciesandenvironment"></div>
 

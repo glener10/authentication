@@ -1,5 +1,4 @@
 - Setup tests (integration) see the https://www.youtube.com/watch?v=x2C-n5ybyqQ&t=973s&ab_channel=ErickWendel
-- Security documentation
 
 # UseCases
 
@@ -11,6 +10,7 @@ _All useCases: Documentation BDD, Route Documentation, Tests, Security Documenta
 - Do not allow weak password
 - Do not allow repeated email
 
+-> Security documentation
 -> Create pre-commit triggers with actions, to check interesting things like code checking, formatting, security checks and commit message pattern
 -> Security Documentation of CreateUser
 -> Route documentation
