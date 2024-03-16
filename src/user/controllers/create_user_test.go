@@ -13,6 +13,7 @@ import (
 	"github.com/glener10/rotating-pairs-back/src/db"
 	postgres_db "github.com/glener10/rotating-pairs-back/src/db/postgres"
 	user_dtos "github.com/glener10/rotating-pairs-back/src/user/dtos"
+	user_repository "github.com/glener10/rotating-pairs-back/src/user/repositories"
 	Utils "github.com/glener10/rotating-pairs-back/src/utils"
 	"gotest.tools/v3/assert"
 )
@@ -215,4 +216,56 @@ func TestCreateUserWithWeakPassword(t *testing.T) {
 		assert.Equal(t, response.Result().StatusCode, http.StatusUnprocessableEntity, "should return a 422 status code")
 		assert.Equal(t, expected, actual, "should return "+data.ExpectedReturn+" and 422 in the body")
 	}
+}
+
+func TestCreateUserWithValidEmailButAlreadysExists(t *testing.T) {
+	BeforeEach()
+	r := SetupRoutes()
+	r.POST("/user", CreateUser)
+	requestBody := user_dtos.CreateUserRequest{
+		Email:    validEmail,
+		Password: validPassword,
+	}
+	_, err := user_repository.CreateUser(requestBody)
+	if err != nil {
+		t.Errorf("failed to create user in 'TestCreateUserWithValidEmailButAlreadysExists' test: %v", err)
+	}
+	bodyConverted, _ := json.Marshal(requestBody)
+	req, _ := http.NewRequest("POST", "/user", bytes.NewBuffer(bodyConverted))
+	response := httptest.NewRecorder()
+
+	r.ServeHTTP(response, req)
+	var actual ErrorResponse
+	err = json.NewDecoder(response.Body).Decode(&actual)
+	if err != nil {
+		t.Errorf("failed to decode response body: %v", err)
+	}
+
+	expected := ErrorResponse{
+		Error:      validEmail + " already exists",
+		StatusCode: 422,
+	}
+	assert.Equal(t, response.Result().StatusCode, http.StatusUnprocessableEntity, "should return a 422 status code")
+	assert.Equal(t, expected, actual, "should return 'email is not in the correct format' and 422 in the body")
+}
+
+func TestCreateUserWithSuccess(t *testing.T) {
+	BeforeEach()
+	r := SetupRoutes()
+	r.POST("/user", CreateUser)
+	requestBody := user_dtos.CreateUserRequest{
+		Email:    validEmail,
+		Password: validPassword,
+	}
+	bodyConverted, _ := json.Marshal(requestBody)
+	req, _ := http.NewRequest("POST", "/user", bytes.NewBuffer(bodyConverted))
+	response := httptest.NewRecorder()
+
+	r.ServeHTTP(response, req)
+	var actual user_dtos.CreateUserResponse
+	err := json.NewDecoder(response.Body).Decode(&actual)
+	if err != nil {
+		t.Errorf("failed to decode response body: %v", err)
+	}
+	assert.Equal(t, response.Result().StatusCode, http.StatusCreated, "should return a 201 status code")
 }
