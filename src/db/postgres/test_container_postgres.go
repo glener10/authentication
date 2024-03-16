@@ -16,7 +16,6 @@ func UpTestContainerPostgres() (*postgres.PostgresContainer, error) {
 	ctx = context.Background()
 	pgContainer, err := postgres.RunContainer(ctx,
 		testcontainers.WithImage("postgres:15.3-alpine"),
-		//postgres.WithInitScripts(filepath.Join("..", "migrations", "000001_create_user_table.up.sql")),
 		postgres.WithDatabase("test-db"),
 		postgres.WithUsername("postgres"),
 		postgres.WithPassword("postgres"),

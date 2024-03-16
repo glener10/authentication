@@ -23,7 +23,10 @@ func TestMain(m *testing.M) {
 	}
 	db.ConnectDb(*connStr)
 	exitCode := m.Run()
-	postgres_db.DownTestContainerPostgres(pg_container)
+	err = postgres_db.DownTestContainerPostgres(pg_container)
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
 	os.Exit(exitCode)
 }
 

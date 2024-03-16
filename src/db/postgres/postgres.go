@@ -26,6 +26,11 @@ func (p *Postgres) Connect(connectionString string) (*sql.DB, error) {
 	return p.db, nil
 }
 
+func (p *Postgres) RunMigrations(connectionString string) error {
+	fmt.Println(connectionString)
+	return nil
+}
+
 func (p *Postgres) Disconnect() error {
 	if p.db != nil {
 		err := p.db.Close()
