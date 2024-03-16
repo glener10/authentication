@@ -15,13 +15,9 @@ import (
 	user_dtos "github.com/glener10/rotating-pairs-back/src/user/dtos"
 	user_repository "github.com/glener10/rotating-pairs-back/src/user/repositories"
 	Utils "github.com/glener10/rotating-pairs-back/src/utils"
+	utils_interfaces "github.com/glener10/rotating-pairs-back/src/utils/interfaces"
 	"gotest.tools/v3/assert"
 )
-
-type ErrorResponse struct {
-	Error      string `json:"error"`
-	StatusCode int    `json:"statusCode"`
-}
 
 func TestMain(m *testing.M) {
 	if err := Utils.LoadEnvironmentVariables("../../../.env"); err != nil {
@@ -66,11 +62,11 @@ func TestCreateUserWithoutBody(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/user", nil)
 	response := httptest.NewRecorder()
 	r.ServeHTTP(response, req)
-	expected := ErrorResponse{
+	expected := utils_interfaces.ErrorResponse{
 		Error:      "invalid request body",
 		StatusCode: 422,
 	}
-	var actual ErrorResponse
+	var actual utils_interfaces.ErrorResponse
 	err := json.NewDecoder(response.Body).Decode(&actual)
 	if err != nil {
 		t.Errorf("failed to decode response body: %v", err)
@@ -92,13 +88,13 @@ func TestCreateUserWithoutEmail(t *testing.T) {
 	response := httptest.NewRecorder()
 
 	r.ServeHTTP(response, req)
-	var actual ErrorResponse
+	var actual utils_interfaces.ErrorResponse
 	err := json.NewDecoder(response.Body).Decode(&actual)
 	if err != nil {
 		t.Errorf("failed to decode response body: %v", err)
 	}
 
-	expected := ErrorResponse{
+	expected := utils_interfaces.ErrorResponse{
 		Error:      "email is required",
 		StatusCode: 422,
 	}
@@ -119,13 +115,13 @@ func TestCreateUserWithoutPassword(t *testing.T) {
 	response := httptest.NewRecorder()
 
 	r.ServeHTTP(response, req)
-	var actual ErrorResponse
+	var actual utils_interfaces.ErrorResponse
 	err := json.NewDecoder(response.Body).Decode(&actual)
 	if err != nil {
 		t.Errorf("failed to decode response body: %v", err)
 	}
 
-	expected := ErrorResponse{
+	expected := utils_interfaces.ErrorResponse{
 		Error:      "password is required",
 		StatusCode: 422,
 	}
@@ -146,13 +142,13 @@ func TestCreateUserWithInvalidEmail(t *testing.T) {
 	response := httptest.NewRecorder()
 
 	r.ServeHTTP(response, req)
-	var actual ErrorResponse
+	var actual utils_interfaces.ErrorResponse
 	err := json.NewDecoder(response.Body).Decode(&actual)
 	if err != nil {
 		t.Errorf("failed to decode response body: %v", err)
 	}
 
-	expected := ErrorResponse{
+	expected := utils_interfaces.ErrorResponse{
 		Error:      "email is not in the correct format",
 		StatusCode: 422,
 	}
@@ -203,13 +199,13 @@ func TestCreateUserWithWeakPassword(t *testing.T) {
 		response := httptest.NewRecorder()
 
 		r.ServeHTTP(response, req)
-		var actual ErrorResponse
+		var actual utils_interfaces.ErrorResponse
 		err := json.NewDecoder(response.Body).Decode(&actual)
 		if err != nil {
 			t.Errorf("failed to decode response body: %v", err)
 		}
 
-		expected := ErrorResponse{
+		expected := utils_interfaces.ErrorResponse{
 			Error:      data.ExpectedReturn,
 			StatusCode: 422,
 		}
@@ -235,13 +231,13 @@ func TestCreateUserWithValidEmailButAlreadysExists(t *testing.T) {
 	response := httptest.NewRecorder()
 
 	r.ServeHTTP(response, req)
-	var actual ErrorResponse
+	var actual utils_interfaces.ErrorResponse
 	err = json.NewDecoder(response.Body).Decode(&actual)
 	if err != nil {
 		t.Errorf("failed to decode response body: %v", err)
 	}
 
-	expected := ErrorResponse{
+	expected := utils_interfaces.ErrorResponse{
 		Error:      validEmail + " already exists",
 		StatusCode: 422,
 	}
