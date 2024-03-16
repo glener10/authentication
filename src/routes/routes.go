@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"fmt"
+	"log"
 	"os"
 	"strings"
 	"time"
@@ -40,8 +40,7 @@ func HandlerRoutes() *gin.Engine {
 func Listening(r *gin.Engine) {
 	err := r.Run()
 	if err != nil {
-		fmt.Println("Error to up routes")
-		os.Exit(-1)
+		log.Fatalf("error to up routes")
 	}
 }
 

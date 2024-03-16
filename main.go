@@ -1,7 +1,8 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"os"
 
 	"github.com/glener10/rotating-pairs-back/src/db"
 	"github.com/glener10/rotating-pairs-back/src/routes"
@@ -10,12 +11,11 @@ import (
 
 func main() {
 	if err := utils.LoadEnvironmentVariables(".env"); err != nil {
-		fmt.Println("Error to load environment variables: ", err)
-		return
+		log.Fatalf("error to load environment variables: " + err.Error())
 	}
 
 	r := routes.HandlerRoutes()
-	db.ConnectDb()
+	db.ConnectDb(os.Getenv("DB_URL"), os.Getenv("DB_MIGRATION_URL"))
 	defer db.DisconnectDb()
 
 	routes.Listening(r)
