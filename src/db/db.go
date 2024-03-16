@@ -2,6 +2,8 @@ package db
 
 import (
 	"database/sql"
+	"errors"
+	"fmt"
 	"log"
 
 	postgres_db "github.com/glener10/rotating-pairs-back/src/db/postgres"
@@ -34,4 +36,23 @@ func DisconnectDb() {
 
 func GetDB() *sql.DB {
 	return db
+}
+
+func ClearDatabaseTables() error {
+	rows, err := db.Query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' and table_name <> 'schema_migrations'")
+	if err != nil {
+		return errors.New("error to get all tables name in clear database method")
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var tableName string
+		if err := rows.Scan(&tableName); err != nil {
+			return errors.New("error to scan all tables name in clear database method")
+		}
+		if _, err := db.Exec(fmt.Sprintf("DELETE FROM %s", tableName)); err != nil {
+			return errors.New("error to delete all elements of the " + tableName)
+		}
+	}
+	return nil
 }

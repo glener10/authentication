@@ -30,7 +30,15 @@ func TestMain(m *testing.M) {
 	os.Exit(exitCode)
 }
 
+func BeforeEach() {
+	err := db.ClearDatabaseTables()
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+}
+
 func TestCreateUser(t *testing.T) {
+	BeforeEach()
 	userDto := user_dtos.CreateUserRequest{
 		Email:    "roi@roi.com",
 		Password: "aasd12y37asd#8",
