@@ -12,7 +12,7 @@ func CreateUser(c *gin.Context) {
 	var user user_dtos.CreateUserRequest
 	if err := c.ShouldBindJSON(&user); err != nil {
 		statusCode := http.StatusUnprocessableEntity
-		c.JSON(statusCode, gin.H{"error": "Invalid request body", "statusCode": statusCode})
+		c.JSON(statusCode, gin.H{"error": "invalid request body", "statusCode": statusCode})
 		return
 	}
 	if err := user_dtos.Validate(&user); err != nil {

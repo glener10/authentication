@@ -125,6 +125,12 @@
 
 - create_user: Do not allow repeated emails and weak passwords
 
+💡 **Technical Decisions**
+
+- Clean Code
+- Scream Architecture
+- Commit Lint
+
 <div id="dependenciesandenvironment"></div>
 
 ## 💻 **Dependencies and Environment**
@@ -181,6 +187,12 @@ To exec all the tests run the following command in the root folder:
 $ go test -p 1 ./src/...
 ```
 
+You can add the "**-v**" flag to see detailed output
+
+```
+$ go test -v -p 1 ./src/...
+```
+
 <div id="using"></div>
 
 ## ☕ **Using**
@@ -202,16 +214,6 @@ You can create new migrations using the command
 ```
 migrate create -ext sql -dir src/db/migrations -seq MIGRATION_NAME
 ```
-
-<div id="technical"></div>
-
-## 💡 **Technical Decisions**
-
-The project seeks to use some programming paradigms such as:
-
-- Clean Code
-- Scream Architecture
-- Commit Lint
 
 <div id="learnmore"></div>
 
