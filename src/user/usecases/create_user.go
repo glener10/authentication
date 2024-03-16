@@ -6,8 +6,8 @@ import (
 	"regexp"
 
 	"github.com/gin-gonic/gin"
-	user_dtos "github.com/glener10/rotating-pairs-back/src/user/dtos"
-	user_repository "github.com/glener10/rotating-pairs-back/src/user/repositories"
+	user_dtos "github.com/glener10/authentication/src/user/dtos"
+	user_repository "github.com/glener10/authentication/src/user/repositories"
 )
 
 func Createuser(c *gin.Context, user user_dtos.CreateUserRequest) {

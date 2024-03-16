@@ -5,9 +5,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/glener10/rotating-pairs-back/src/db"
-	postgres_db "github.com/glener10/rotating-pairs-back/src/db/postgres"
-	user_dtos "github.com/glener10/rotating-pairs-back/src/user/dtos"
+	"github.com/glener10/authentication/src/db"
+	postgres_db "github.com/glener10/authentication/src/db/postgres"
+	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	"github.com/stretchr/testify/assert"
 )
 

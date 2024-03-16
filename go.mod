@@ -1,4 +1,4 @@
-module github.com/glener10/rotating-pairs-back
+module github.com/glener10/authentication
 
 go 1.22.0
 

@@ -10,14 +10,10 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	Utils "github.com/glener10/rotating-pairs-back/src/utils"
+	"github.com/glener10/authentication/src/utils"
+	utils_interfaces "github.com/glener10/authentication/src/utils/interfaces"
 	"github.com/stretchr/testify/assert"
 )
-
-type ErrorResponse struct {
-	Error      string `json:"error"`
-	StatusCode int    `json:"statusCode"`
-}
 
 func SetupRoutes() *gin.Engine {
 	r := gin.Default()
@@ -32,12 +28,12 @@ func TestOnlyHttps(t *testing.T) {
 	response := httptest.NewRecorder()
 	r.ServeHTTP(response, req)
 
-	expected := ErrorResponse{
+	expected := utils_interfaces.ErrorResponse{
 		Error:      "HTTPS only, your protocol is: HTTP/1.1",
 		StatusCode: 403,
 	}
 
-	var actual ErrorResponse
+	var actual utils_interfaces.ErrorResponse
 	err := json.NewDecoder(response.Body).Decode(&actual)
 	if err != nil {
 		t.Errorf("failed to decode response body: %v", err)
@@ -56,12 +52,12 @@ func TestRateLimiter(t *testing.T) {
 	r.ServeHTTP(response, req)
 	r.ServeHTTP(response, req)
 
-	expected := ErrorResponse{
+	expected := utils_interfaces.ErrorResponse{
 		Error:      "Too Many Requests",
 		StatusCode: 429,
 	}
 
-	var errorResponseDecoded ErrorResponse
+	var errorResponseDecoded utils_interfaces.ErrorResponse
 	err := json.NewDecoder(response.Body).Decode(&errorResponseDecoded)
 	if err != nil {
 		t.Errorf("failed to decode response body: %v", err)
@@ -78,12 +74,12 @@ func TestAuthWithNoToken(t *testing.T) {
 	response := httptest.NewRecorder()
 	r.ServeHTTP(response, req)
 
-	expected := ErrorResponse{
+	expected := utils_interfaces.ErrorResponse{
 		Error:      "Token not Provided",
 		StatusCode: 422,
 	}
 
-	var actual ErrorResponse
+	var actual utils_interfaces.ErrorResponse
 	err := json.NewDecoder(response.Body).Decode(&actual)
 	if err != nil {
 		t.Errorf("failed to decode response body: %v", err)
@@ -101,12 +97,12 @@ func TestAuthWithInvalidToken(t *testing.T) {
 	response := httptest.NewRecorder()
 	r.ServeHTTP(response, req)
 
-	expected := ErrorResponse{
+	expected := utils_interfaces.ErrorResponse{
 		Error:      "Invalid Token",
 		StatusCode: 401,
 	}
 
-	var actual ErrorResponse
+	var actual utils_interfaces.ErrorResponse
 	err := json.NewDecoder(response.Body).Decode(&actual)
 	if err != nil {
 		t.Errorf("failed to decode response body: %v", err)
@@ -116,7 +112,7 @@ func TestAuthWithInvalidToken(t *testing.T) {
 }
 
 func TestAuthWithValidToken(t *testing.T) {
-	if err := Utils.LoadEnvironmentVariables("../../../.env"); err != nil {
+	if err := utils.LoadEnvironmentVariables("../../../.env"); err != nil {
 		log.Fatalf("Error to load environment variables: %s", err.Error())
 	}
 	r := SetupRoutes()
@@ -140,12 +136,12 @@ func TestLimitTimeout(t *testing.T) {
 	response := httptest.NewRecorder()
 	r.ServeHTTP(response, req)
 
-	expected := ErrorResponse{
+	expected := utils_interfaces.ErrorResponse{
 		Error:      "timeout",
 		StatusCode: http.StatusRequestTimeout,
 	}
 
-	var actual ErrorResponse
+	var actual utils_interfaces.ErrorResponse
 	err := json.NewDecoder(response.Body).Decode(&actual)
 	if err != nil {
 		t.Errorf("failed to decode response body: %v", err)

@@ -10,12 +10,12 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/glener10/rotating-pairs-back/src/db"
-	postgres_db "github.com/glener10/rotating-pairs-back/src/db/postgres"
-	user_dtos "github.com/glener10/rotating-pairs-back/src/user/dtos"
-	user_repository "github.com/glener10/rotating-pairs-back/src/user/repositories"
-	Utils "github.com/glener10/rotating-pairs-back/src/utils"
-	utils_interfaces "github.com/glener10/rotating-pairs-back/src/utils/interfaces"
+	"github.com/glener10/authentication/src/db"
+	postgres_db "github.com/glener10/authentication/src/db/postgres"
+	user_dtos "github.com/glener10/authentication/src/user/dtos"
+	user_repository "github.com/glener10/authentication/src/user/repositories"
+	Utils "github.com/glener10/authentication/src/utils"
+	utils_interfaces "github.com/glener10/authentication/src/utils/interfaces"
 	"gotest.tools/v3/assert"
 )
 

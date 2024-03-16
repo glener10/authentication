@@ -8,8 +8,8 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	middlewares "github.com/glener10/rotating-pairs-back/src/routes/middlewares"
-	user_controller "github.com/glener10/rotating-pairs-back/src/user/controllers"
+	middlewares "github.com/glener10/authentication/src/routes/middlewares"
+	user_controller "github.com/glener10/authentication/src/user/controllers"
 )
 
 func HandlerRoutes() *gin.Engine {

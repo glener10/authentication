@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	user_dtos "github.com/glener10/rotating-pairs-back/src/user/dtos"
-	create_user_usecase "github.com/glener10/rotating-pairs-back/src/user/usecases"
+	user_dtos "github.com/glener10/authentication/src/user/dtos"
+	create_user_usecase "github.com/glener10/authentication/src/user/usecases"
 )
 
 func CreateUser(c *gin.Context) {

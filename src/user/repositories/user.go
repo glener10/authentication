@@ -3,9 +3,9 @@ package user_repository
 import (
 	"errors"
 
-	"github.com/glener10/rotating-pairs-back/src/db"
-	user_dtos "github.com/glener10/rotating-pairs-back/src/user/dtos"
-	user_entity "github.com/glener10/rotating-pairs-back/src/user/entities"
+	"github.com/glener10/authentication/src/db"
+	user_dtos "github.com/glener10/authentication/src/user/dtos"
+	user_entity "github.com/glener10/authentication/src/user/entities"
 )
 
 func CreateUser(user user_dtos.CreateUserRequest) (*user_dtos.CreateUserResponse, error) {

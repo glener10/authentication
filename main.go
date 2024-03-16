@@ -4,9 +4,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/glener10/rotating-pairs-back/src/db"
-	"github.com/glener10/rotating-pairs-back/src/routes"
-	utils "github.com/glener10/rotating-pairs-back/src/utils"
+	"github.com/glener10/authentication/src/db"
+	"github.com/glener10/authentication/src/routes"
+	utils "github.com/glener10/authentication/src/utils"
 )
 
 func main() {

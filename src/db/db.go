@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	postgres_db "github.com/glener10/rotating-pairs-back/src/db/postgres"
+	postgres_db "github.com/glener10/authentication/src/db/postgres"
 )
 
 var db *sql.DB
