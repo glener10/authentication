@@ -1,7 +1,6 @@
 package user_repository
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"testing"
@@ -37,16 +36,23 @@ func BeforeEach() {
 	}
 }
 
-func TestCreateUser(t *testing.T) {
+func TestCreateUserWithSuccess(t *testing.T) {
 	BeforeEach()
 	userDto := user_dtos.CreateUserRequest{
-		Email:    "roi@roi.com",
-		Password: "aasd12y37asd#8",
+		Email:    "fulano@fulano.com",
+		Password: "aaaaaA#7",
 	}
 	user, err := CreateUser(userDto)
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
-	fmt.Println(user)
-	assert.Equal(t, 2, 2, "The create object need to be equal to expected object")
+	assert.NoError(t, err)
+	assert.NotNil(t, user, "the created object cannot be null")
+	findUserByEmail, err := FindByEmail("fulano@fulano.com")
+	assert.NoError(t, err)
+	assert.NotNil(t, findUserByEmail, "the created object must be persisted in database")
+}
+
+func TestFindByEmailWhenNoEmailExists(t *testing.T) {
+	BeforeEach()
+	findUserByEmail, err := FindByEmail("fulano@fulano.com")
+	assert.Error(t, err)
+	assert.Nil(t, findUserByEmail, "You shouldn't find any records with an email address provided")
 }
