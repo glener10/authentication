@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	postgres_db "github.com/glener10/rotating-pairs-back/src/db/postgres_db"
+	postgres_db "github.com/glener10/rotating-pairs-back/src/db/postgres"
 )
 
 var db *sql.DB
@@ -17,7 +17,7 @@ func ConnectDb(connectionString string) {
 	var err error
 	db, err = postgres.Connect(connectionString)
 	if err != nil {
-		fmt.Println("Error in Postgres connection: " + err.Error())
+		fmt.Println("error in Postgres connection: " + err.Error())
 		os.Exit(-1)
 	}
 }
@@ -25,7 +25,7 @@ func ConnectDb(connectionString string) {
 func DisconnectDb() {
 	err := postgres.Disconnect()
 	if err != nil {
-		fmt.Println("Error in Postgres desconnection: " + err.Error())
+		fmt.Println("error in Postgres desconnection: " + err.Error())
 		os.Exit(-1)
 	}
 }
