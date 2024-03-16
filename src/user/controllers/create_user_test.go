@@ -158,3 +158,61 @@ func TestCreateUserWithInvalidEmail(t *testing.T) {
 	assert.Equal(t, response.Result().StatusCode, http.StatusUnprocessableEntity, "should return a 422 status code")
 	assert.Equal(t, expected, actual, "should return 'email is not in the correct format' and 422 in the body")
 }
+
+type DataProviderWeakPasswordType struct {
+	WeakPassword   string
+	ExpectedReturn string
+}
+
+func TestCreateUserWithWeakPassword(t *testing.T) {
+	BeforeEach()
+	r := SetupRoutes()
+	r.POST("/user", CreateUser)
+
+	dataProviderWeakPassword := []*DataProviderWeakPasswordType{
+		{
+			WeakPassword:   "a",
+			ExpectedReturn: "the password must be at least 8 characters long",
+		},
+		{
+			WeakPassword:   "AAAAAAAA",
+			ExpectedReturn: "the password must be at least 1 lowercase character",
+		},
+		{
+			WeakPassword:   "aaaaaaaa",
+			ExpectedReturn: "the password must be at least 1 uppercase character",
+		},
+		{
+			WeakPassword:   "aaaaaaaA",
+			ExpectedReturn: `the password must be at least 1 special character: [!@#$%^&*()\-_=+{}[\]:;'"<>,.?/\\|]`,
+		},
+		{
+			WeakPassword:   "aaaaaaaA:",
+			ExpectedReturn: "the password must be at least 1 number",
+		},
+	}
+
+	for _, data := range dataProviderWeakPassword {
+		requestBody := user_dtos.CreateUserRequest{
+			Email:    validEmail,
+			Password: data.WeakPassword,
+		}
+		bodyConverted, _ := json.Marshal(requestBody)
+		req, _ := http.NewRequest("POST", "/user", bytes.NewBuffer(bodyConverted))
+		response := httptest.NewRecorder()
+
+		r.ServeHTTP(response, req)
+		var actual ErrorResponse
+		err := json.NewDecoder(response.Body).Decode(&actual)
+		if err != nil {
+			t.Errorf("failed to decode response body: %v", err)
+		}
+
+		expected := ErrorResponse{
+			Error:      data.ExpectedReturn,
+			StatusCode: 422,
+		}
+		assert.Equal(t, response.Result().StatusCode, http.StatusUnprocessableEntity, "should return a 422 status code")
+		assert.Equal(t, expected, actual, "should return "+data.ExpectedReturn+" and 422 in the body")
+	}
+}
