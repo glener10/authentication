@@ -1,4 +1,3 @@
-All tests create_user (repository, usecase)
 Route documentation of create_user
 Security Documentation of CreateUser
 
