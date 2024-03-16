@@ -1,4 +1,3 @@
-Route documentation of create_user
 Security Documentation of CreateUser
 
 Login: Use JWT
