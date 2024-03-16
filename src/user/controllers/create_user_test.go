@@ -69,6 +69,6 @@ func TestCreateUserWithoutBody(t *testing.T) {
 	if err != nil {
 		t.Errorf("failed to decode response body: %v", err)
 	}
-	assert.Equal(t, expected, actual, "Should return 'Invalid request body' and 422 if the requisition doenst have a body")
-
+	assert.Equal(t, response.Result().StatusCode, http.StatusUnprocessableEntity, "should return a 422 status code")
+	assert.Equal(t, expected, actual, "should return 'Invalid request body' and 422 in the body if the requisition doenst have a body")
 }
