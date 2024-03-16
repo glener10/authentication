@@ -35,9 +35,14 @@ func (p *Postgres) RunMigrations(migrationUrl string, connectionString string) e
 		return errors.New("error to create migration config: " + err.Error())
 	}
 	if err = migration.Up(); err != nil {
-		return errors.New("error to run migrate up: " + err.Error())
+		if err.Error() != "no change" {
+			return errors.New("error to run migrate up: " + err.Error())
+		} else {
+			log.Println("no change in migrations")
+		}
+	} else {
+		log.Println("db migrated successfully")
 	}
-	log.Println("db migrated successfully")
 	return nil
 }
 
