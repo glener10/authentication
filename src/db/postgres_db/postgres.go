@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"os"
 
 	_ "github.com/lib/pq"
 )
@@ -13,9 +12,9 @@ type Postgres struct {
 	db *sql.DB
 }
 
-func (p *Postgres) Connect() (*sql.DB, error) {
+func (p *Postgres) Connect(connectionString string) (*sql.DB, error) {
 	var err error
-	p.db, err = sql.Open("postgres", returnConnectionString())
+	p.db, err = sql.Open("postgres", connectionString)
 	if err != nil {
 		return nil, errors.New(err.Error())
 	}
@@ -25,11 +24,6 @@ func (p *Postgres) Connect() (*sql.DB, error) {
 	}
 	fmt.Println("Postgres database connection established successfully!")
 	return p.db, nil
-}
-
-func returnConnectionString() string {
-	stringConexao := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"))
-	return stringConexao
 }
 
 func (p *Postgres) Disconnect() error {

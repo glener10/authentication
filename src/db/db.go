@@ -11,11 +11,11 @@ import (
 var db *sql.DB
 var postgres *postgres_db.Postgres
 
-func ConnectDb() {
+func ConnectDb(connectionString string) {
 	postgres = &postgres_db.Postgres{}
 
 	var err error
-	db, err = postgres.Connect()
+	db, err = postgres.Connect(connectionString)
 	if err != nil {
 		fmt.Println("Error in Postgres connection: " + err.Error())
 		os.Exit(-1)
