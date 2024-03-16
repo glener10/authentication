@@ -15,7 +15,7 @@ func main() {
 	}
 
 	r := routes.HandlerRoutes()
-	db.ConnectDb(os.Getenv("DB_URL"))
+	db.ConnectDb(os.Getenv("DB_URL"), os.Getenv("DB_MIGRATION_URL"))
 	defer db.DisconnectDb()
 
 	routes.Listening(r)

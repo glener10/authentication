@@ -21,7 +21,7 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	db.ConnectDb(*connStr)
+	db.ConnectDb(*connStr, "file://src/db/migrations")
 	exitCode := m.Run()
 	err = postgres_db.DownTestContainerPostgres(pg_container)
 	if err != nil {

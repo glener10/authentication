@@ -29,7 +29,7 @@ func (p *Postgres) Connect(connectionString string) (*sql.DB, error) {
 	return p.db, nil
 }
 
-func (p *Postgres) RunMigrations(migrationUrl string, connectionString string) error {
+func (p *Postgres) RunMigrations(connectionString string, migrationUrl string) error {
 	migration, err := migrate.New(migrationUrl, connectionString)
 	if err != nil {
 		return errors.New("error to create migration config: " + err.Error())
