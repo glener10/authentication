@@ -1,4 +1,5 @@
-- Setup tests (integration) see the https://www.youtube.com/watch?v=x2C-n5ybyqQ&t=973s&ab_channel=ErickWendel
+- How exec migrations in pg testcontainer
+- all documentation about setup tests
 - All tests create_user (repository, usecase)
 
 # UseCases
