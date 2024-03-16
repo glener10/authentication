@@ -6,13 +6,13 @@ import (
 )
 
 type CreateUserRequest struct {
-	Email    string
-	Password string
+	Email    string `validate:"required" example:"fulano@fulano.com"`
+	Password string `validate:"required" example:"aaaaaaaA#1"`
 }
 
 type CreateUserResponse struct {
-	Id    int
-	Email string
+	Id    int    `example:"1"`
+	Email string `example:"fulano@fulano.com"`
 }
 
 func Validate(user *CreateUserRequest) error {

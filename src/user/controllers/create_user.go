@@ -10,11 +10,14 @@ import (
 
 // CreateUser create user with e-mail and password
 // @Summary Create User
-// @Description do ping
+// @Description create user with e-mail and password if the e-mail doesnt already exists and the password is strong
+// @Param tags body user_dtos.CreateUserRequest true "Create user"
 // @Tags user
 // @Accept json
 // @Produce json
-// @Success 201
+// @Success 201 {object} user_dtos.CreateUserResponse
+// @Failure      422 {object} utils_interfaces.ErrorResponse
+// @Failure      408 {object} utils_interfaces.ErrorResponse
 // @Router /user [post]
 func CreateUser(c *gin.Context) {
 	var user user_dtos.CreateUserRequest

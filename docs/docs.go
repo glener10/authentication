@@ -17,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/user": {
             "post": {
-                "description": "do ping",
+                "description": "create user with e-mail and password if the e-mail doesnt already exists and the password is strong",
                 "consumes": [
                     "application/json"
                 ],
@@ -28,10 +28,81 @@ const docTemplate = `{
                     "user"
                 ],
                 "summary": "Create User",
+                "parameters": [
+                    {
+                        "description": "Create user",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_dtos.CreateUserRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
-                        "description": "Created"
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/user_dtos.CreateUserResponse"
+                        }
+                    },
+                    "408": {
+                        "description": "Request Timeout",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "user_dtos.CreateUserRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "fulano@fulano.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "aaaaaaaA#1"
+                }
+            }
+        },
+        "user_dtos.CreateUserResponse": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "fulano@fulano.com"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "utils_interfaces.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "variable error message"
+                },
+                "statusCode": {
+                    "type": "integer",
+                    "example": -1
                 }
             }
         }
@@ -40,12 +111,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
+	Version:          "1.0",
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "API",
+	Description:      "Authentication API",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

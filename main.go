@@ -9,6 +9,9 @@ import (
 	utils "github.com/glener10/authentication/src/utils"
 )
 
+// @title API
+// @version 1.0
+// @description Authentication API
 func main() {
 	if err := utils.LoadEnvironmentVariables(".env"); err != nil {
 		log.Fatalf("error to load environment variables: " + err.Error())

@@ -1,16 +1,68 @@
+definitions:
+  user_dtos.CreateUserRequest:
+    properties:
+      email:
+        example: fulano@fulano.com
+        type: string
+      password:
+        example: aaaaaaaA#1
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  user_dtos.CreateUserResponse:
+    properties:
+      email:
+        example: fulano@fulano.com
+        type: string
+      id:
+        example: 1
+        type: integer
+    type: object
+  utils_interfaces.ErrorResponse:
+    properties:
+      error:
+        example: variable error message
+        type: string
+      statusCode:
+        example: -1
+        type: integer
+    type: object
 info:
   contact: {}
+  description: Authentication API
+  title: API
+  version: "1.0"
 paths:
   /user:
     post:
       consumes:
       - application/json
-      description: do ping
+      description: create user with e-mail and password if the e-mail doesnt already
+        exists and the password is strong
+      parameters:
+      - description: Create user
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/user_dtos.CreateUserRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
+          schema:
+            $ref: '#/definitions/user_dtos.CreateUserResponse'
+        "408":
+          description: Request Timeout
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
       summary: Create User
       tags:
       - user
