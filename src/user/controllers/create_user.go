@@ -8,6 +8,14 @@ import (
 	create_user_usecase "github.com/glener10/authentication/src/user/usecases"
 )
 
+// CreateUser create user with e-mail and password
+// @Summary Create User
+// @Description do ping
+// @Tags user
+// @Accept json
+// @Produce json
+// @Success 201
+// @Router /user [post]
 func CreateUser(c *gin.Context) {
 	var user user_dtos.CreateUserRequest
 	if err := c.ShouldBindJSON(&user); err != nil {

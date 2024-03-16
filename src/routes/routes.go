@@ -8,8 +8,11 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	_ "github.com/glener10/authentication/docs"
 	middlewares "github.com/glener10/authentication/src/routes/middlewares"
 	user_controller "github.com/glener10/authentication/src/user/controllers"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func HandlerRoutes() *gin.Engine {
@@ -33,7 +36,7 @@ func HandlerRoutes() *gin.Engine {
 	//r.Use(middlewares.HTTPSOnlyMiddleware())
 
 	r.POST("/user", user_controller.CreateUser)
-
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	return r
 }
 
