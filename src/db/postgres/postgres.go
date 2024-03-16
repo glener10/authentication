@@ -3,8 +3,11 @@ package postgres_db
 import (
 	"database/sql"
 	"errors"
-	"fmt"
+	"log"
 
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 )
 
@@ -22,12 +25,19 @@ func (p *Postgres) Connect(connectionString string) (*sql.DB, error) {
 	if err != nil {
 		return nil, errors.New("error to test Postgres database connection")
 	}
-	fmt.Println("Postgres database connection established successfully!")
+	log.Println("postgres database connection established successfully!")
 	return p.db, nil
 }
 
-func (p *Postgres) RunMigrations(connectionString string) error {
-	fmt.Println(connectionString)
+func (p *Postgres) RunMigrations(migrationUrl string, connectionString string) error {
+	migration, err := migrate.New(migrationUrl, connectionString)
+	if err != nil {
+		return errors.New("error to create migration config: " + err.Error())
+	}
+	if err = migration.Up(); err != nil {
+		return errors.New("error to run migrate up: " + err.Error())
+	}
+	log.Println("db migrated successfully")
 	return nil
 }
 
@@ -35,9 +45,9 @@ func (p *Postgres) Disconnect() error {
 	if p.db != nil {
 		err := p.db.Close()
 		if err != nil {
-			return errors.New("Error to disconnect Postgres database: " + err.Error())
+			return errors.New("error to disconnect Postgres database: " + err.Error())
 		}
-		fmt.Println("Disconnecting from Postgres database successfully!")
+		log.Println("disconnecting from Postgres database successfully!")
 	}
 	return nil
 }

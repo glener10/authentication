@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	postgres_db "github.com/glener10/rotating-pairs-back/src/db/postgres"
 )
@@ -19,7 +20,7 @@ func ConnectDb(connectionString string) {
 		log.Fatalf("error in Postgres connection: " + err.Error())
 	}
 
-	err = postgres.RunMigrations(connectionString)
+	err = postgres.RunMigrations(os.Getenv("DB_MIGRATION_URL"), connectionString)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
