@@ -105,11 +105,21 @@
 
 - Migrations
 - BDD (Behavior Driven Development) to use cases
+- Gin Swagger to routes
 - Concept of semantic versioning with tags and releases
 
 ⚙ **General**
 
 - CI/CD process with github actions to perform code formatting check (golangci-lint), build and run automated tests
+- Test setup with [TestContainers](https://testcontainers.com/):
+
+  1- For each test switch/file that uses the database, a Postgres container is created with a database just for testing
+
+  2- Then all migrations are run in this container
+
+  3- Before each test, a script is run to clean all records from the tables
+
+  4- After executing the switch, the container is terminated
 
 🏗 **Use Cases**
 
@@ -145,7 +155,7 @@ $ go mod download
 $ docker-compose up -d
 ```
 
-**3-** Up the migrations with
+**3-** Up the migrations: Naturally, when [running the server](#☕-using) it will execute the migrations, but they can be executed by code with:
 
 ```
 $ migrate -database postgres://myuser:mypassword@localhost:5432/mydatabase?sslmode=disable -path src/db/migrations up
