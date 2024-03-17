@@ -1,4 +1,4 @@
-package user_repository
+package user_repositories
 
 import (
 	"errors"
@@ -8,7 +8,9 @@ import (
 	user_entity "github.com/glener10/authentication/src/user/entities"
 )
 
-func CreateUser(user user_dtos.CreateUserRequest) (*user_dtos.CreateUserResponse, error) {
+type Postgres_repository struct{}
+
+func (repository *Postgres_repository) CreateUser(user user_dtos.CreateUserRequest) (*user_dtos.CreateUserResponse, error) {
 	db := db.GetDB()
 
 	query := "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id"
@@ -24,7 +26,7 @@ func CreateUser(user user_dtos.CreateUserRequest) (*user_dtos.CreateUserResponse
 	return &object, nil
 }
 
-func FindByEmail(email string) (*user_entity.User, error) {
+func (repository *Postgres_repository) FindByEmail(email string) (*user_entity.User, error) {
 	db := db.GetDB()
 
 	var user user_entity.User

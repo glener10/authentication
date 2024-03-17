@@ -13,7 +13,7 @@ import (
 	"github.com/glener10/authentication/src/db"
 	postgres_db "github.com/glener10/authentication/src/db/postgres"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
-	user_repository "github.com/glener10/authentication/src/user/repositories"
+	user_repositories "github.com/glener10/authentication/src/user/repositories"
 	Utils "github.com/glener10/authentication/src/utils"
 	utils_interfaces "github.com/glener10/authentication/src/utils/interfaces"
 	"gotest.tools/v3/assert"
@@ -214,6 +214,8 @@ func TestCreateUserWithWeakPassword(t *testing.T) {
 	}
 }
 
+var repository user_repositories.Postgres_repository
+
 func TestCreateUserWithValidEmailButAlreadysExists(t *testing.T) {
 	BeforeEach()
 	r := SetupRoutes()
@@ -222,7 +224,7 @@ func TestCreateUserWithValidEmailButAlreadysExists(t *testing.T) {
 		Email:    validEmail,
 		Password: validPassword,
 	}
-	_, err := user_repository.CreateUser(requestBody)
+	_, err := repository.CreateUser(requestBody)
 	if err != nil {
 		t.Errorf("failed to create user in 'TestCreateUserWithValidEmailButAlreadysExists' test: %v", err)
 	}

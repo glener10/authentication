@@ -1,4 +1,4 @@
-package user_repository
+package user_repositories
 
 import (
 	"log"
@@ -29,6 +29,8 @@ func TestMain(m *testing.M) {
 	os.Exit(exitCode)
 }
 
+var repository Postgres_repository
+
 func BeforeEach() {
 	err := db.ClearDatabaseTables()
 	if err != nil {
@@ -42,17 +44,17 @@ func TestCreateUserWithSuccess(t *testing.T) {
 		Email:    "fulano@fulano.com",
 		Password: "aaaaaA#7",
 	}
-	user, err := CreateUser(userDto)
+	user, err := repository.CreateUser(userDto)
 	assert.NoError(t, err)
 	assert.NotNil(t, user, "the created object cannot be null")
-	findUserByEmail, err := FindByEmail("fulano@fulano.com")
+	findUserByEmail, err := repository.FindByEmail("fulano@fulano.com")
 	assert.NoError(t, err)
 	assert.NotNil(t, findUserByEmail, "the created object must be persisted in database")
 }
 
 func TestFindByEmailWhenNoEmailExists(t *testing.T) {
 	BeforeEach()
-	findUserByEmail, err := FindByEmail("fulano@fulano.com")
+	findUserByEmail, err := repository.FindByEmail("fulano@fulano.com")
 	assert.Error(t, err)
 	assert.Nil(t, findUserByEmail, "You shouldn't find any records with an email address provided")
 }

@@ -6,6 +6,6 @@ import (
 )
 
 type IUserRepository interface {
-	CreateUser(user user_dtos.CreateUserRequest) *user_dtos.CreateUserResponse
-	FindByEmail(email string) *user_entity.User
+	CreateUser(user user_dtos.CreateUserRequest) (*user_dtos.CreateUserResponse, error)
+	FindByEmail(email string) (*user_entity.User, error)
 }
