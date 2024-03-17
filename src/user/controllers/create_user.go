@@ -20,6 +20,7 @@ import (
 // @Success 201 {object} user_dtos.CreateUserResponse
 // @Failure      422 {object} utils_interfaces.ErrorResponse
 // @Failure      408 {object} utils_interfaces.ErrorResponse
+// @Failure      500 {object} utils_interfaces.ErrorResponse
 // @Router /user [post]
 func CreateUser(c *gin.Context) {
 	var user user_dtos.CreateUserRequest
