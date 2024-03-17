@@ -10,18 +10,16 @@ import (
 	user_usecases "github.com/glener10/authentication/src/user/usecases"
 )
 
-// CreateUser create user with e-mail and password
-// @Summary Create User
-// @Description create user with e-mail and password if the e-mail doesnt already exists and the password is strong
-// @Param tags body user_dtos.CreateUserRequest true "Create user"
+// FindUser
+// @Summary Find User
+// @Description find user by e-mail or id
 // @Tags user
-// @Accept json
 // @Produce json
-// @Success 201 {object} user_dtos.CreateUserResponse
+// @Success 200 {object} user_dtos.FindUserResponse
 // @Failure      422 {object} utils_interfaces.ErrorResponse
-// @Failure      408 {object} utils_interfaces.ErrorResponse
-// @Failure      500 {object} utils_interfaces.ErrorResponse
-// @Router /user [post]
+// @Failure      404 {object} utils_interfaces.ErrorResponse
+// @Failure      401 {object} utils_interfaces.ErrorResponse
+// @Router /user/{find} [get]
 func FindUser(c *gin.Context) {
 	parameter := c.Param("find")
 	if err := user_dtos.ValidateFindUser(parameter); err != nil {

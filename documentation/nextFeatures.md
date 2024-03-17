@@ -1,14 +1,12 @@
-documentation new route findUser
-test findUser by id
-test dto find user
 test controller find user
 
 documentation of CreateUser? C1 model?
 Login: Use JWT, Go routine and channels https://www.youtube.com/watch?v=jr6nbTALUAA&ab_channel=Yuri
 Interceptor/Guard of request for private routes to check JWT
+Update User information route to only allow if the user has a JWT of hinself(logger)
+
 Account Update (Logged): Do not allow invalid email, do not allow weak password, do not allow repeated email
 Delete Account (Logged)
-User information (logger)
 Password Recovery: use a unique token
 Login with google
 E-mail verification

@@ -18,5 +18,5 @@ func (u *FindUser) Executar(c *gin.Context, find string) {
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
 		return
 	}
-	c.JSON(http.StatusCreated, user)
+	c.JSON(http.StatusOK, user)
 }

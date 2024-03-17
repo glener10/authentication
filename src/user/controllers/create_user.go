@@ -10,7 +10,7 @@ import (
 	user_usecases "github.com/glener10/authentication/src/user/usecases"
 )
 
-// CreateUser create user with e-mail and password
+// CreateUser
 // @Summary Create User
 // @Description create user with e-mail and password if the e-mail doesnt already exists and the password is strong
 // @Param tags body user_dtos.CreateUserRequest true "Create user"
