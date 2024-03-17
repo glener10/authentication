@@ -1,4 +1,4 @@
-package user_controller
+package create_user_controller
 
 import (
 	"bytes"
@@ -21,7 +21,7 @@ import (
 var repository user_repositories.SQLRepository
 
 func TestMain(m *testing.M) {
-	if err := Utils.LoadEnvironmentVariables("../../../.env"); err != nil {
+	if err := Utils.LoadEnvironmentVariables("../../../../.env"); err != nil {
 		log.Fatalf("Error to load environment variables: %s", err.Error())
 	}
 	pg_container, err := db_postgres.UpTestContainerPostgres()

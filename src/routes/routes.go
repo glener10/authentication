@@ -10,7 +10,8 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/glener10/authentication/docs"
 	middlewares "github.com/glener10/authentication/src/routes/middlewares"
-	user_controller "github.com/glener10/authentication/src/user/controllers"
+	create_user_controller "github.com/glener10/authentication/src/user/controllers/create_user"
+	find_user_controller "github.com/glener10/authentication/src/user/controllers/find_user"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -31,12 +32,12 @@ func HandlerRoutes() *gin.Engine {
 	r.Use(middlewares.TimeoutMiddleware())
 
 	r.GET("/", middlewares.HelloWorld)
-	r.POST("/user", user_controller.CreateUser)
+	r.POST("/user", create_user_controller.CreateUser)
 
 	//r.Use(middlewares.AuthMiddleware())
 	//r.Use(middlewares.HTTPSOnlyMiddleware())
 
-	r.GET("/user/:find", user_controller.FindUser)
+	r.GET("/user/:find", find_user_controller.FindUser)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	return r
 }

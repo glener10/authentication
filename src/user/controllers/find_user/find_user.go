@@ -1,4 +1,4 @@
-package user_controller
+package find_user_controller
 
 import (
 	"net/http"
