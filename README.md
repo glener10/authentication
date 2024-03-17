@@ -113,7 +113,7 @@
 - CI/CD process with github actions to perform code formatting check (golangci-lint), build and run automated tests
 - Test setup with [TestContainers](https://testcontainers.com/):
 
-  1- For each test switch/file that uses the database, a Postgres container is created with a database just for testing
+  1- For each test switch/file that uses the database, a Postgres container is created just for testing
 
   2- Then all migrations are run in this container
 
@@ -153,10 +153,11 @@ My dependencies and versions
 **1-** To install the dependencies you can run the following command in the root folder:
 
 ```
+$ go mod tidy
 $ go mod download
 ```
 
-**OBS**: We have the development .env file committed to the project, but you can change it as you see fit
+**OBS**: We have the development [.env](.env) file committed to the project, but you can change it as you see fit
 
 **2-** (If you already have a PostgresSQL instance, you can skip this part) You will need a postgresSQL instance, we have a docker-compose ready to create a container, you can run the following command in the root folder
 
@@ -164,7 +165,7 @@ $ go mod download
 $ docker-compose up -d
 ```
 
-**3-** Up the migrations: Naturally, when [running the server](#☕-using) it will execute the migrations, but they can be executed by code with:
+**3-** Up the migrations: Naturally, when [running the server](#☕-using) it will execute the migrations, but they can be executed by code with (change pg url to yours):
 
 ```
 $ migrate -database postgres://myuser:mypassword@localhost:5432/mydatabase?sslmode=disable -path src/db/migrations up

@@ -18,7 +18,7 @@ func main() {
 	}
 
 	r := routes.HandlerRoutes()
-	postgres := &db_postgres.Postgres{ConnectionString: os.Getenv("DB_URL"), MigrationUrl: os.Getenv("DB_MIGRATION_URL")}
+	postgres := &db_postgres.Postgres{ConnectionString: os.Getenv("DB_URL"), MigrationUrl: "file://src/db/migrations"}
 	postgres.Connect()
 	defer postgres.Disconnect()
 
