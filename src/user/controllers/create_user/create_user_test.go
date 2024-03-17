@@ -7,14 +7,20 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
+	user_repositories "github.com/glener10/authentication/src/user/repositories"
 	utils_interfaces "github.com/glener10/authentication/src/utils/interfaces"
 	"github.com/glener10/authentication/tests"
 	"gotest.tools/v3/assert"
 )
 
+var repository user_repositories.SQLRepository
+
 func TestMain(m *testing.M) {
 	tests.SetupDb(m, "file://../../../db/migrations")
+	repository = user_repositories.SQLRepository{Db: db_postgres.GetDb()}
+	tests.ExecuteAndFinish(m)
 }
 
 var validPassword = "aaaaaA#7"
@@ -241,7 +247,7 @@ func TestCreateUserWithValidEmailButAlreadysExists(t *testing.T) {
 		Email:    validEmail,
 		Password: validPassword,
 	}
-	_, err := tests.RepositoryTest.CreateUser(requestBody)
+	_, err := repository.CreateUser(requestBody)
 	if err != nil {
 		t.Errorf("failed to create user in 'TestCreateUserWithValidEmailButAlreadysExists' test: %v", err)
 	}

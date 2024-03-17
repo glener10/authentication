@@ -7,13 +7,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
-	user_repositories "github.com/glener10/authentication/src/user/repositories"
+	"github.com/testcontainers/testcontainers-go/modules/postgres"
 )
 
-var RepositoryTest user_repositories.SQLRepository
+var pg_container *postgres.PostgresContainer
 
 func SetupDb(m *testing.M, migrationUrl string) {
-	pg_container, err := db_postgres.UpTestContainerPostgres()
+	var err error
+	pg_container, err = db_postgres.UpTestContainerPostgres()
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
@@ -23,9 +24,11 @@ func SetupDb(m *testing.M, migrationUrl string) {
 	}
 	postgres := &db_postgres.Postgres{ConnectionString: *connStr, MigrationUrl: migrationUrl}
 	postgres.Connect()
-	RepositoryTest = user_repositories.SQLRepository{Db: db_postgres.GetDb()}
+}
+
+func ExecuteAndFinish(m *testing.M) {
 	exitCode := m.Run()
-	err = db_postgres.DownTestContainerPostgres(pg_container)
+	err := db_postgres.DownTestContainerPostgres(pg_container)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
