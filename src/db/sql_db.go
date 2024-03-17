@@ -11,7 +11,7 @@ import (
 var globalDb *sql.DB
 
 type SqlDb struct {
-	Driver db_interfaces.IConnectDb
+	Driver db_interfaces.ISqlDb
 }
 
 func (me *SqlDb) Connect() {
