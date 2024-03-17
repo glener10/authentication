@@ -3,6 +3,7 @@ package user_dtos
 import (
 	"testing"
 
+	"github.com/glener10/authentication/tests"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -22,6 +23,6 @@ func TestSuccessWhenParamIsInteger(t *testing.T) {
 }
 
 func TestSuccessWhenParamIsEmail(t *testing.T) {
-	err := ValidateFindUser(validEmail)
+	err := ValidateFindUser(tests.ValidEmail)
 	assert.NoError(t, err)
 }

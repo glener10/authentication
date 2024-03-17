@@ -3,13 +3,14 @@ package user_dtos
 import (
 	"testing"
 
+	"github.com/glener10/authentication/tests"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestSendErrorIfEmailIsEmptyOrNull(t *testing.T) {
 	dto := &CreateUserRequest{
 		Email:    "",
-		Password: validPassword,
+		Password: tests.ValidPassword,
 	}
 	err := Validate(dto)
 	assert.Equal(t, err.Error(), "email is required", "e-mail should be required")
@@ -17,7 +18,7 @@ func TestSendErrorIfEmailIsEmptyOrNull(t *testing.T) {
 
 func TestSendErrorIfPasswordIsTooLong(t *testing.T) {
 	dto := &CreateUserRequest{
-		Email:    validEmail,
+		Email:    tests.ValidEmail,
 		Password: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 	}
 	err := Validate(dto)
@@ -27,7 +28,7 @@ func TestSendErrorIfPasswordIsTooLong(t *testing.T) {
 func TestSendErrorIfEmailIsTooLong(t *testing.T) {
 	dto := &CreateUserRequest{
 		Email:    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@fulano.com",
-		Password: validPassword,
+		Password: tests.ValidPassword,
 	}
 	err := Validate(dto)
 	assert.Equal(t, err.Error(), "email is too long", "email should be less than 60")
@@ -35,7 +36,7 @@ func TestSendErrorIfEmailIsTooLong(t *testing.T) {
 
 func TestSendErrorIfPasswordIsEmptyOrNull(t *testing.T) {
 	dto := &CreateUserRequest{
-		Email:    validEmail,
+		Email:    tests.ValidEmail,
 		Password: "",
 	}
 	err := Validate(dto)
@@ -45,11 +46,11 @@ func TestSendErrorIfPasswordIsEmptyOrNull(t *testing.T) {
 func TestSendErrorIfEmailIsNotInTheCorrectFormat(t *testing.T) {
 	testCases := &[]CreateUserRequest{
 		{Email: "wrongemail",
-			Password: validPassword},
+			Password: tests.ValidPassword},
 		{Email: "wrongemail@.com",
-			Password: validPassword},
+			Password: tests.ValidPassword},
 		{Email: "wrongemail@domain",
-			Password: validPassword},
+			Password: tests.ValidPassword},
 	}
 	for _, tc := range *testCases {
 		err := Validate(&tc)
@@ -59,8 +60,8 @@ func TestSendErrorIfEmailIsNotInTheCorrectFormat(t *testing.T) {
 
 func TestShouldPassIfEmailAndPasswordIsValid(t *testing.T) {
 	dto := &CreateUserRequest{
-		Email:    validEmail,
-		Password: validPassword,
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
 	}
 	err := Validate(dto)
 	assert.Equal(t, err, nil, "Should pass with valid email and password")

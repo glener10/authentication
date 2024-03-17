@@ -65,8 +65,8 @@ func TestFindUserWithInvalidParam(t *testing.T) {
 func TestFindUserByIdWithSuccess(t *testing.T) {
 	tests.BeforeEach()
 	requestBody := user_dtos.CreateUserRequest{
-		Email:    "valid@email.com",
-		Password: "validpasS#1",
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
 	}
 	_, err := repository.CreateUser(requestBody)
 	if err != nil {
@@ -84,7 +84,7 @@ func TestFindUserByEmailWithSuccess(t *testing.T) {
 	tests.BeforeEach()
 	requestBody := user_dtos.CreateUserRequest{
 		Email:    "valid@email.com",
-		Password: "validpasS#1",
+		Password: tests.ValidPassword,
 	}
 	_, err := repository.CreateUser(requestBody)
 	if err != nil {

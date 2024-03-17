@@ -22,7 +22,7 @@ func TestCreateUserWithSuccessAndFindByEmail(t *testing.T) {
 	tests.BeforeEach()
 	userDto := user_dtos.CreateUserRequest{
 		Email:    "fulano@fulano.com",
-		Password: "aaaaaA#7",
+		Password: tests.ValidPassword,
 	}
 	user, err := repository.CreateUser(userDto)
 	assert.NoError(t, err)
@@ -42,8 +42,8 @@ func TestFindByEmailWhenNoEmailExists(t *testing.T) {
 func TestFindUserByIdWithSuccess(t *testing.T) {
 	tests.BeforeEach()
 	userDto := user_dtos.CreateUserRequest{
-		Email:    "fulano@fulano.com",
-		Password: "aaaaaA#7",
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
 	}
 	user, err := repository.CreateUser(userDto)
 	assert.NoError(t, err)
