@@ -22,6 +22,12 @@ func Validate(user *CreateUserRequest) error {
 	if user.Password == "" {
 		return errors.New("password is required")
 	}
+	if len(user.Password) > 60 {
+		return errors.New("password is too long")
+	}
+	if len(user.Email) > 60 {
+		return errors.New("email is too long")
+	}
 	if !IsValidEmail(user.Email) {
 		return errors.New("email is not in the correct format")
 	}
