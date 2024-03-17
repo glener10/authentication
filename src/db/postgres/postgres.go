@@ -1,8 +1,9 @@
-package postgres_db
+package db_postgres
 
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -12,25 +13,31 @@ import (
 )
 
 type Postgres struct {
-	db *sql.DB
+	ConnectionString string
+	MigrationUrl     string
+	Db               *sql.DB
 }
 
-func (p *Postgres) Connect(connectionString string) (*sql.DB, error) {
+func (p *Postgres) Connect() (*sql.DB, error) {
 	var err error
-	p.db, err = sql.Open("postgres", connectionString)
+	p.Db, err = sql.Open("postgres", p.ConnectionString)
 	if err != nil {
 		return nil, errors.New(err.Error())
 	}
-	err = p.db.Ping()
+	err = p.Db.Ping()
 	if err != nil {
 		return nil, errors.New("error to test Postgres database connection")
 	}
+	err = p.RunMigrations()
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
 	log.Println("postgres database connection established successfully!")
-	return p.db, nil
+	return p.Db, nil
 }
 
-func (p *Postgres) RunMigrations(connectionString string, migrationUrl string) error {
-	migration, err := migrate.New(migrationUrl, connectionString)
+func (p *Postgres) RunMigrations() error {
+	migration, err := migrate.New(p.MigrationUrl, p.ConnectionString)
 	if err != nil {
 		return errors.New("error to create migration config: " + err.Error())
 	}
@@ -47,12 +54,31 @@ func (p *Postgres) RunMigrations(connectionString string, migrationUrl string) e
 }
 
 func (p *Postgres) Disconnect() error {
-	if p.db != nil {
-		err := p.db.Close()
+	if p.Db != nil {
+		err := p.Db.Close()
 		if err != nil {
 			return errors.New("error to disconnect Postgres database: " + err.Error())
 		}
 		log.Println("disconnecting from Postgres database successfully!")
+	}
+	return nil
+}
+
+func (p *Postgres) ClearDatabaseTables() error {
+	rows, err := p.Db.Query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' and table_name <> 'schema_migrations'")
+	if err != nil {
+		return errors.New("error to get all tables name in clear database method")
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var tableName string
+		if err := rows.Scan(&tableName); err != nil {
+			return errors.New("error to scan all tables name in clear database method")
+		}
+		if _, err := p.Db.Exec(fmt.Sprintf("DELETE FROM %s", tableName)); err != nil {
+			return errors.New("error to delete all elements of the " + tableName)
+		}
 	}
 	return nil
 }

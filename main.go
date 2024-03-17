@@ -4,7 +4,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/glener10/authentication/src/db"
+	dbs "github.com/glener10/authentication/src/db"
+	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	"github.com/glener10/authentication/src/routes"
 	utils "github.com/glener10/authentication/src/utils"
 )
@@ -18,8 +19,10 @@ func main() {
 	}
 
 	r := routes.HandlerRoutes()
-	db.ConnectDb(os.Getenv("DB_URL"), os.Getenv("DB_MIGRATION_URL"))
-	defer db.DisconnectDb()
+	postgres := &db_postgres.Postgres{ConnectionString: os.Getenv("DB_URL"), MigrationUrl: os.Getenv("DB_MIGRATION_URL")}
+	db := dbs.SqlDb{Driver: postgres}
+	db.Connect()
+	defer db.Disconnect()
 
 	routes.Listening(r)
 }

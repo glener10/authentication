@@ -10,8 +10,8 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/glener10/authentication/src/db"
-	postgres_db "github.com/glener10/authentication/src/db/postgres"
+	dbs "github.com/glener10/authentication/src/db"
+	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_repositories "github.com/glener10/authentication/src/user/repositories"
 	Utils "github.com/glener10/authentication/src/utils"
@@ -19,24 +19,31 @@ import (
 	"gotest.tools/v3/assert"
 )
 
+var db dbs.SqlDb
+var repository user_repositories.SQLRepository
+
 func TestMain(m *testing.M) {
 	if err := Utils.LoadEnvironmentVariables("../../../.env"); err != nil {
 		log.Fatalf("Error to load environment variables: %s", err.Error())
 	}
-	pg_container, err := postgres_db.UpTestContainerPostgres()
+	pg_container, err := db_postgres.UpTestContainerPostgres()
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	connStr, err := postgres_db.ReturnTestContainerConnectionString(pg_container)
+	connStr, err := db_postgres.ReturnTestContainerConnectionString(pg_container)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	db.ConnectDb(*connStr, "file://../../db/migrations")
+	postgres := &db_postgres.Postgres{ConnectionString: *connStr, MigrationUrl: "file://../../db/migrations"}
+	db = dbs.SqlDb{Driver: postgres}
+	db.Connect()
+	repository = user_repositories.SQLRepository{Db: dbs.GetDB()}
 	exitCode := m.Run()
-	err = postgres_db.DownTestContainerPostgres(pg_container)
+	err = db_postgres.DownTestContainerPostgres(pg_container)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
+	db.Disconnect()
 	os.Exit(exitCode)
 }
 
@@ -213,8 +220,6 @@ func TestCreateUserWithWeakPassword(t *testing.T) {
 		assert.Equal(t, expected, actual, "should return "+data.ExpectedReturn+" and 422 in the body")
 	}
 }
-
-var repository user_repositories.PostgresRepository
 
 func TestCreateUserWithValidEmailButAlreadysExists(t *testing.T) {
 	BeforeEach()

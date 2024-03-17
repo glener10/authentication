@@ -1,21 +1,21 @@
 package user_repositories
 
 import (
+	"database/sql"
 	"errors"
 
-	"github.com/glener10/authentication/src/db"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_entity "github.com/glener10/authentication/src/user/entities"
 )
 
-type PostgresRepository struct{}
+type SQLRepository struct {
+	Db *sql.DB
+}
 
-func (repository *PostgresRepository) CreateUser(user user_dtos.CreateUserRequest) (*user_dtos.CreateUserResponse, error) {
-	db := db.GetDB()
-
+func (r *SQLRepository) CreateUser(user user_dtos.CreateUserRequest) (*user_dtos.CreateUserResponse, error) {
 	query := "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id"
 	var pk int
-	err := db.QueryRow(query, user.Email, user.Password).Scan(&pk)
+	err := r.Db.QueryRow(query, user.Email, user.Password).Scan(&pk)
 	if err != nil {
 		return nil, errors.New("Error creating user: " + err.Error())
 	}
@@ -26,11 +26,9 @@ func (repository *PostgresRepository) CreateUser(user user_dtos.CreateUserReques
 	return &object, nil
 }
 
-func (repository *PostgresRepository) FindByEmail(email string) (*user_entity.User, error) {
-	db := db.GetDB()
-
+func (r *SQLRepository) FindByEmail(email string) (*user_entity.User, error) {
 	var user user_entity.User
-	err := db.QueryRow("SELECT id, email, password FROM users WHERE email = $1", email).Scan(&user.Id, &user.Email, &user.Password)
+	err := r.Db.QueryRow("SELECT id, email, password FROM users WHERE email = $1", email).Scan(&user.Id, &user.Email, &user.Password)
 	if err != nil {
 		return nil, errors.New("error to find by email: " + email)
 	}

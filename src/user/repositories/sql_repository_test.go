@@ -5,31 +5,37 @@ import (
 	"os"
 	"testing"
 
-	"github.com/glener10/authentication/src/db"
-	postgres_db "github.com/glener10/authentication/src/db/postgres"
+	dbs "github.com/glener10/authentication/src/db"
+	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	"github.com/stretchr/testify/assert"
 )
 
+var db dbs.SqlDb
+
+var repository SQLRepository
+
 func TestMain(m *testing.M) {
-	pg_container, err := postgres_db.UpTestContainerPostgres()
+	pg_container, err := db_postgres.UpTestContainerPostgres()
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	connStr, err := postgres_db.ReturnTestContainerConnectionString(pg_container)
+	connStr, err := db_postgres.ReturnTestContainerConnectionString(pg_container)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	db.ConnectDb(*connStr, "file://../../db/migrations")
+	postgres := &db_postgres.Postgres{ConnectionString: *connStr, MigrationUrl: "file://../../db/migrations", Db: nil}
+	db = dbs.SqlDb{Driver: postgres}
+	db.Connect()
+	repository = SQLRepository{Db: dbs.GetDB()}
 	exitCode := m.Run()
-	err = postgres_db.DownTestContainerPostgres(pg_container)
+	err = db_postgres.DownTestContainerPostgres(pg_container)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
+	db.Disconnect()
 	os.Exit(exitCode)
 }
-
-var repository PostgresRepository
 
 func BeforeEach() {
 	err := db.ClearDatabaseTables()
