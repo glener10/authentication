@@ -1,6 +1,6 @@
 Security Documentation of CreateUser
 
-Login: Use JWT
+Login: Use JWT, Go routine and channels
 Interceptor/Guard of request for private routes to check JWT
 Account Update (Logged): Do not allow invalid email, do not allow weak password, do not allow repeated email
 Delete Account (Logged)
