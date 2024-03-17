@@ -1,8 +1,3 @@
-Find_user E2E tests (controller)
-C1 model?
-More documentation of Create User use case?
-More documentation of Find User use case?
-
 Login: Use JWT, Go routine and channels? https://www.youtube.com/watch?v=jr6nbTALUAA&ab_channel=Yuri
 Interceptor/Guard of request for private routes to check if the JWT is valid (And your tests)
 Update User information (GET user/{find}) route to only allow if the user has a JWT of himself(logger)
