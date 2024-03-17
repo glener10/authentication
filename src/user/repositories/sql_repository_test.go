@@ -45,14 +45,14 @@ func TestCreateUserWithSuccess(t *testing.T) {
 	user, err := repository.CreateUser(userDto)
 	assert.NoError(t, err)
 	assert.NotNil(t, user, "the created object cannot be null")
-	findUserByEmail, err := repository.FindByEmail("fulano@fulano.com")
+	findUserByEmail, err := repository.FindUser("fulano@fulano.com")
 	assert.NoError(t, err)
 	assert.NotNil(t, findUserByEmail, "the created object must be persisted in database")
 }
 
 func TestFindByEmailWhenNoEmailExists(t *testing.T) {
 	BeforeEach()
-	findUserByEmail, err := repository.FindByEmail("fulano@fulano.com")
+	findUserByEmail, err := repository.FindUser("fulano@fulano.com")
 	assert.Error(t, err)
 	assert.Nil(t, findUserByEmail, "You shouldn't find any records with an email address provided")
 }

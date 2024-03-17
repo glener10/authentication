@@ -2,7 +2,8 @@ package user_dtos
 
 import (
 	"errors"
-	"regexp"
+
+	utils_validators "github.com/glener10/authentication/src/utils/validators"
 )
 
 type CreateUserRequest struct {
@@ -28,14 +29,8 @@ func Validate(user *CreateUserRequest) error {
 	if len(user.Email) > 60 {
 		return errors.New("email is too long")
 	}
-	if !IsValidEmail(user.Email) {
+	if !utils_validators.IsValidEmail(user.Email) {
 		return errors.New("email is not in the correct format")
 	}
 	return nil
-}
-
-func IsValidEmail(email string) bool {
-	pattern := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
-	regex := regexp.MustCompile(pattern)
-	return regex.MatchString(email)
 }

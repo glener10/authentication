@@ -6,6 +6,7 @@ import (
 
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_entity "github.com/glener10/authentication/src/user/entities"
+	utils_validators "github.com/glener10/authentication/src/utils/validators"
 )
 
 type SQLRepository struct {
@@ -26,11 +27,16 @@ func (r *SQLRepository) CreateUser(user user_dtos.CreateUserRequest) (*user_dtos
 	return &object, nil
 }
 
-func (r *SQLRepository) FindByEmail(email string) (*user_entity.User, error) {
+func (r *SQLRepository) FindUser(find string) (*user_entity.User, error) {
 	var user user_entity.User
-	err := r.Db.QueryRow("SELECT id, email FROM users WHERE email = $1", email).Scan(&user.Id, &user.Email)
+	var err error
+	if utils_validators.IsValidEmail(find) {
+		err = r.Db.QueryRow("SELECT id, email FROM users WHERE email = $1", find).Scan(&user.Id, &user.Email)
+	} else {
+		err = r.Db.QueryRow("SELECT id, email FROM users WHERE id = $1", find).Scan(&user.Id, &user.Email)
+	}
 	if err != nil {
-		return nil, errors.New("error to find by email: " + email)
+		return nil, errors.New("error to find by parameter '" + find + "' error: " + err.Error())
 	}
 	return &user, nil
 }

@@ -62,7 +62,7 @@ func (u *CreateUser) ValidateCreateUser(user user_dtos.CreateUserRequest) error 
 }
 
 func (u *CreateUser) CheckIfEmailAlreadyExists(email string) bool {
-	_, err := u.Repository.FindByEmail(email)
+	_, err := u.Repository.FindUser(email)
 	return err == nil
 }
 
