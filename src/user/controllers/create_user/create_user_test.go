@@ -3,57 +3,26 @@ package create_user_controller
 import (
 	"bytes"
 	"encoding/json"
-	"log"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
 
-	"github.com/gin-gonic/gin"
-	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
-	user_repositories "github.com/glener10/authentication/src/user/repositories"
 	utils_interfaces "github.com/glener10/authentication/src/utils/interfaces"
+	"github.com/glener10/authentication/tests"
 	"gotest.tools/v3/assert"
 )
 
-var repository user_repositories.SQLRepository
-
 func TestMain(m *testing.M) {
-	pg_container, err := db_postgres.UpTestContainerPostgres()
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
-	connStr, err := db_postgres.ReturnTestContainerConnectionString(pg_container)
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
-	postgres := &db_postgres.Postgres{ConnectionString: *connStr, MigrationUrl: "file://../../../db/migrations"}
-	postgres.Connect()
-	repository = user_repositories.SQLRepository{Db: db_postgres.GetDb()}
-	exitCode := m.Run()
-	err = db_postgres.DownTestContainerPostgres(pg_container)
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
-	os.Exit(exitCode)
-}
-
-func BeforeEach() {
-	db_postgres.ClearDatabaseTables()
-}
-
-func SetupRoutes() *gin.Engine {
-	routes := gin.Default()
-	return routes
+	tests.SetupDb(m, "file://../../../db/migrations")
 }
 
 var validPassword = "aaaaaA#7"
 var validEmail = "fulano@fulano.com"
 
 func TestCreateUserWithoutBody(t *testing.T) {
-	BeforeEach()
-	r := SetupRoutes()
+	tests.BeforeEach()
+	r := tests.SetupRoutes()
 	r.POST("/user", CreateUser)
 	req, _ := http.NewRequest("POST", "/user", nil)
 	response := httptest.NewRecorder()
@@ -72,8 +41,8 @@ func TestCreateUserWithoutBody(t *testing.T) {
 }
 
 func TestCreateUserWithoutEmail(t *testing.T) {
-	BeforeEach()
-	r := SetupRoutes()
+	tests.BeforeEach()
+	r := tests.SetupRoutes()
 	r.POST("/user", CreateUser)
 	requestBody := user_dtos.CreateUserRequest{
 		Email:    "",
@@ -99,8 +68,8 @@ func TestCreateUserWithoutEmail(t *testing.T) {
 }
 
 func TestCreateUserWithoutPassword(t *testing.T) {
-	BeforeEach()
-	r := SetupRoutes()
+	tests.BeforeEach()
+	r := tests.SetupRoutes()
 	r.POST("/user", CreateUser)
 	requestBody := user_dtos.CreateUserRequest{
 		Email:    validEmail,
@@ -126,8 +95,8 @@ func TestCreateUserWithoutPassword(t *testing.T) {
 }
 
 func TestCreateUserWithInvalidEmail(t *testing.T) {
-	BeforeEach()
-	r := SetupRoutes()
+	tests.BeforeEach()
+	r := tests.SetupRoutes()
 	r.POST("/user", CreateUser)
 	requestBody := user_dtos.CreateUserRequest{
 		Email:    "invalidemail",
@@ -153,8 +122,8 @@ func TestCreateUserWithInvalidEmail(t *testing.T) {
 }
 
 func TestCreateUserWithTooLongEmail(t *testing.T) {
-	BeforeEach()
-	r := SetupRoutes()
+	tests.BeforeEach()
+	r := tests.SetupRoutes()
 	r.POST("/user", CreateUser)
 	requestBody := user_dtos.CreateUserRequest{
 		Email:    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@fulano.com",
@@ -180,8 +149,8 @@ func TestCreateUserWithTooLongEmail(t *testing.T) {
 }
 
 func TestCreateUserWithTooLongPassword(t *testing.T) {
-	BeforeEach()
-	r := SetupRoutes()
+	tests.BeforeEach()
+	r := tests.SetupRoutes()
 	r.POST("/user", CreateUser)
 	requestBody := user_dtos.CreateUserRequest{
 		Email:    validEmail,
@@ -212,8 +181,8 @@ type DataProviderWeakPasswordType struct {
 }
 
 func TestCreateUserWithWeakPassword(t *testing.T) {
-	BeforeEach()
-	r := SetupRoutes()
+	tests.BeforeEach()
+	r := tests.SetupRoutes()
 	r.POST("/user", CreateUser)
 
 	dataProviderWeakPassword := []*DataProviderWeakPasswordType{
@@ -265,14 +234,14 @@ func TestCreateUserWithWeakPassword(t *testing.T) {
 }
 
 func TestCreateUserWithValidEmailButAlreadysExists(t *testing.T) {
-	BeforeEach()
-	r := SetupRoutes()
+	tests.BeforeEach()
+	r := tests.SetupRoutes()
 	r.POST("/user", CreateUser)
 	requestBody := user_dtos.CreateUserRequest{
 		Email:    validEmail,
 		Password: validPassword,
 	}
-	_, err := repository.CreateUser(requestBody)
+	_, err := tests.RepositoryTest.CreateUser(requestBody)
 	if err != nil {
 		t.Errorf("failed to create user in 'TestCreateUserWithValidEmailButAlreadysExists' test: %v", err)
 	}
@@ -296,8 +265,8 @@ func TestCreateUserWithValidEmailButAlreadysExists(t *testing.T) {
 }
 
 func TestCreateUserWithSuccess(t *testing.T) {
-	BeforeEach()
-	r := SetupRoutes()
+	tests.BeforeEach()
+	r := tests.SetupRoutes()
 	r.POST("/user", CreateUser)
 	requestBody := user_dtos.CreateUserRequest{
 		Email:    validEmail,
