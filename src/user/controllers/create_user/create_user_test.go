@@ -13,7 +13,6 @@ import (
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_repositories "github.com/glener10/authentication/src/user/repositories"
-	Utils "github.com/glener10/authentication/src/utils"
 	utils_interfaces "github.com/glener10/authentication/src/utils/interfaces"
 	"gotest.tools/v3/assert"
 )
@@ -21,9 +20,6 @@ import (
 var repository user_repositories.SQLRepository
 
 func TestMain(m *testing.M) {
-	if err := Utils.LoadEnvironmentVariables("../../../../.env"); err != nil {
-		log.Fatalf("Error to load environment variables: %s", err.Error())
-	}
 	pg_container, err := db_postgres.UpTestContainerPostgres()
 	if err != nil {
 		log.Fatalf(err.Error())
@@ -32,7 +28,7 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	postgres := &db_postgres.Postgres{ConnectionString: *connStr, MigrationUrl: "file://../../db/migrations"}
+	postgres := &db_postgres.Postgres{ConnectionString: *connStr, MigrationUrl: "file://../../../db/migrations"}
 	postgres.Connect()
 	repository = user_repositories.SQLRepository{Db: db_postgres.GetDb()}
 	exitCode := m.Run()
