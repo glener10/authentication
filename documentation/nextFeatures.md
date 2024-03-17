@@ -1,6 +1,7 @@
-Security Documentation of CreateUser
+documentation of CreateUser? C1 model?
+save encrypted password
 
-Login: Use JWT, Go routine and channels
+Login: Use JWT, Go routine and channels https://www.youtube.com/watch?v=jr6nbTALUAA&ab_channel=Yuri
 Interceptor/Guard of request for private routes to check JWT
 Account Update (Logged): Do not allow invalid email, do not allow weak password, do not allow repeated email
 Delete Account (Logged)
