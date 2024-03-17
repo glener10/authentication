@@ -6,9 +6,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var validPassword = "aaaaaA#7"
-var validEmail = "fulano@fulano.com"
-
 func TestSendErrorIfEmailIsEmptyOrNull(t *testing.T) {
 	dto := &CreateUserRequest{
 		Email:    "",

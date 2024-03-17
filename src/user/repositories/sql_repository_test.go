@@ -3,6 +3,7 @@ package user_repositories
 import (
 	"log"
 	"os"
+	"strconv"
 	"testing"
 
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
@@ -36,7 +37,7 @@ func BeforeEach() {
 	db_postgres.ClearDatabaseTables()
 }
 
-func TestCreateUserWithSuccess(t *testing.T) {
+func TestCreateUserWithSuccessAndFindByEmail(t *testing.T) {
 	BeforeEach()
 	userDto := user_dtos.CreateUserRequest{
 		Email:    "fulano@fulano.com",
@@ -55,4 +56,18 @@ func TestFindByEmailWhenNoEmailExists(t *testing.T) {
 	findUserByEmail, err := repository.FindUser("fulano@fulano.com")
 	assert.Error(t, err)
 	assert.Nil(t, findUserByEmail, "You shouldn't find any records with an email address provided")
+}
+
+func TestFindUserByIdWithSuccess(t *testing.T) {
+	BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    "fulano@fulano.com",
+		Password: "aaaaaA#7",
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+	assert.NotNil(t, user, "the created object cannot be null")
+	findUserByEmail, err := repository.FindUser(strconv.Itoa(user.Id))
+	assert.NoError(t, err)
+	assert.NotNil(t, findUserByEmail, "the created object must be persisted in database")
 }
