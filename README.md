@@ -85,10 +85,6 @@
 
 ☕ [Using](#using)
 
-💡 [Technical Decisions](#technical)
-
-📖 [Learn More](#learnmore)
-
 🔒 [License](#license)
 
 👷 [Author](#author)
@@ -140,11 +136,11 @@
 
 My dependencies and versions
 
-**Go**: go version go1.22.0 windows/amd64
+[**Go**](https://golang.org/): go version go1.22.0 windows/amd64
 
-**Docker**: Docker version 25.0.3, build 4debf41
+[**Docker**](https://www.docker.com/): Docker version 25.0.3, build 4debf41
 
-**docker-compose**: Docker Compose version v2.24.5-desktop.1
+[**docker-compose**](https://docs.docker.com/compose/): Docker Compose version v2.24.5-desktop.1
 
 <div id="installing"></div>
 
@@ -218,18 +214,6 @@ You can create new migrations using the command
 ```
 migrate create -ext sql -dir src/db/migrations -seq MIGRATION_NAME
 ```
-
-<div id="learnmore"></div>
-
-## 📖 **Learn More**
-
-To learn more about technologies used in the application:
-
-- [Go](https://golang.org/) - learn about Go features and API.
-
-- [Docker](https://www.docker.com/) - learn about Docker features and API.
-
-- [Docker Compose](https://docs.docker.com/compose/) - learn about Docker Compose features and API.
 
 <div id="license"></div>
 
