@@ -1,9 +1,11 @@
-test controller find user
+Find_user E2E tests (controller)
+C1 model?
+More documentation of Create User use case?
+More documentation of Find User use case?
 
-documentation of CreateUser? C1 model?
-Login: Use JWT, Go routine and channels https://www.youtube.com/watch?v=jr6nbTALUAA&ab_channel=Yuri
-Interceptor/Guard of request for private routes to check JWT
-Update User information route to only allow if the user has a JWT of hinself(logger)
+Login: Use JWT, Go routine and channels? https://www.youtube.com/watch?v=jr6nbTALUAA&ab_channel=Yuri
+Interceptor/Guard of request for private routes to check if the JWT is valid (And your tests)
+Update User information (GET user/{find}) route to only allow if the user has a JWT of himself(logger)
 
 Account Update (Logged): Do not allow invalid email, do not allow weak password, do not allow repeated email
 Delete Account (Logged)
@@ -12,10 +14,10 @@ Login with google
 E-mail verification
 2FA
 User Control: Log out, block, delete (Only users with permission can due)
-Database backups, rules and administration
-Use notification when strange login ocurred
+User notification when strange login ocurred
 Operation history: User, location, IP, success or not, date, time
 
+Database backups, rules and administration
 Docker Ambient
 Security documentation
 Create pre-commit triggers with actions, to check interesting things like code checking, formatting, security checks and commit message pattern
