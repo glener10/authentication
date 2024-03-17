@@ -2,7 +2,6 @@ package db_postgres
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"log"
 
@@ -12,73 +11,72 @@ import (
 	_ "github.com/lib/pq"
 )
 
+var GlobalDb *sql.DB
+
 type Postgres struct {
 	ConnectionString string
 	MigrationUrl     string
-	Db               *sql.DB
 }
 
-func (p *Postgres) Connect() (*sql.DB, error) {
+func (p *Postgres) Connect() {
 	var err error
-	p.Db, err = sql.Open("postgres", p.ConnectionString)
+	GlobalDb, err = sql.Open("postgres", p.ConnectionString)
 	if err != nil {
-		return nil, errors.New(err.Error())
+		log.Fatalf(err.Error())
 	}
-	err = p.Db.Ping()
+	err = GlobalDb.Ping()
 	if err != nil {
-		return nil, errors.New("error to test Postgres database connection")
+		log.Fatalf("error to test Postgres database connection")
 	}
-	err = p.RunMigrations()
-	if err != nil {
-		return nil, errors.New(err.Error())
-	}
+	RunMigrations(p.ConnectionString, p.MigrationUrl)
 	log.Println("postgres database connection established successfully!")
-	return p.Db, nil
 }
 
-func (p *Postgres) RunMigrations() error {
-	migration, err := migrate.New(p.MigrationUrl, p.ConnectionString)
+func (p *Postgres) Disconnect() {
+	if GlobalDb != nil {
+		err := GlobalDb.Close()
+		if err != nil {
+			log.Fatalf("error to disconnect Postgres database: " + err.Error())
+		}
+		log.Println("disconnecting from Postgres database successfully!")
+	}
+}
+
+func RunMigrations(connectionString string, migrationUrl string) {
+	migration, err := migrate.New(migrationUrl, connectionString)
 	if err != nil {
-		return errors.New("error to create migration config: " + err.Error())
+		log.Fatalf("error to create migration config: " + err.Error())
 	}
 	if err = migration.Up(); err != nil {
 		if err.Error() != "no change" {
-			return errors.New("error to run migrate up: " + err.Error())
+			log.Fatalf("error to run migrate up: " + err.Error())
 		} else {
 			log.Println("no change in migrations")
 		}
 	} else {
 		log.Println("db migrated successfully")
 	}
-	return nil
 }
 
-func (p *Postgres) Disconnect() error {
-	if p.Db != nil {
-		err := p.Db.Close()
-		if err != nil {
-			return errors.New("error to disconnect Postgres database: " + err.Error())
-		}
-		log.Println("disconnecting from Postgres database successfully!")
-	}
-	return nil
-}
-
-func (p *Postgres) ClearDatabaseTables() error {
-	rows, err := p.Db.Query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' and table_name <> 'schema_migrations'")
+func ClearDatabaseTables() {
+	rows, err := GlobalDb.Query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' and table_name <> 'schema_migrations'")
 	if err != nil {
-		return errors.New("error to get all tables name in clear database method")
+		log.Fatalf("error to get all tables name in clear database method")
 	}
 	defer rows.Close()
 
 	for rows.Next() {
 		var tableName string
 		if err := rows.Scan(&tableName); err != nil {
-			return errors.New("error to scan all tables name in clear database method")
+			log.Fatalf("error to scan all tables name in clear database method")
 		}
-		if _, err := p.Db.Exec(fmt.Sprintf("DELETE FROM %s", tableName)); err != nil {
-			return errors.New("error to delete all elements of the " + tableName)
+		if _, err := GlobalDb.Exec(fmt.Sprintf("DELETE FROM %s", tableName)); err != nil {
+			log.Fatalf("error to delete all elements of the " + tableName)
 		}
 	}
-	return nil
+	log.Println("all data base cleaned")
+}
+
+func GetDb() *sql.DB {
+	return GlobalDb
 }

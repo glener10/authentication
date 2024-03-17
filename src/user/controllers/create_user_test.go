@@ -10,7 +10,6 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	dbs "github.com/glener10/authentication/src/db"
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_repositories "github.com/glener10/authentication/src/user/repositories"
@@ -19,7 +18,6 @@ import (
 	"gotest.tools/v3/assert"
 )
 
-var db dbs.SqlDb
 var repository user_repositories.SQLRepository
 
 func TestMain(m *testing.M) {
@@ -35,23 +33,18 @@ func TestMain(m *testing.M) {
 		log.Fatalf(err.Error())
 	}
 	postgres := &db_postgres.Postgres{ConnectionString: *connStr, MigrationUrl: "file://../../db/migrations"}
-	db = dbs.SqlDb{Driver: postgres}
-	db.Connect()
-	repository = user_repositories.SQLRepository{Db: dbs.GetDB()}
+	postgres.Connect()
+	repository = user_repositories.SQLRepository{Db: db_postgres.GetDb()}
 	exitCode := m.Run()
 	err = db_postgres.DownTestContainerPostgres(pg_container)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	db.Disconnect()
 	os.Exit(exitCode)
 }
 
 func BeforeEach() {
-	err := db.ClearDatabaseTables()
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
+	db_postgres.ClearDatabaseTables()
 }
 
 func SetupRoutes() *gin.Engine {

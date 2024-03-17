@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	dbs "github.com/glener10/authentication/src/db"
+	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_repositories "github.com/glener10/authentication/src/user/repositories"
 	user_usecases "github.com/glener10/authentication/src/user/usecases"
@@ -33,7 +33,7 @@ func CreateUser(c *gin.Context) {
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
 		return
 	}
-	repository := &user_repositories.SQLRepository{Db: dbs.GetDB()}
+	repository := &user_repositories.SQLRepository{Db: db_postgres.GetDb()}
 	useCase := &user_usecases.CreateUser{Repository: repository}
 	useCase.Executar(c, user)
 }

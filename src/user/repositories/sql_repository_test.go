@@ -5,13 +5,10 @@ import (
 	"os"
 	"testing"
 
-	dbs "github.com/glener10/authentication/src/db"
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	"github.com/stretchr/testify/assert"
 )
-
-var db dbs.SqlDb
 
 var repository SQLRepository
 
@@ -24,24 +21,19 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	postgres := &db_postgres.Postgres{ConnectionString: *connStr, MigrationUrl: "file://../../db/migrations", Db: nil}
-	db = dbs.SqlDb{Driver: postgres}
-	db.Connect()
-	repository = SQLRepository{Db: dbs.GetDB()}
+	postgres := &db_postgres.Postgres{ConnectionString: *connStr, MigrationUrl: "file://../../db/migrations"}
+	postgres.Connect()
+	repository = SQLRepository{Db: db_postgres.GetDb()}
 	exitCode := m.Run()
 	err = db_postgres.DownTestContainerPostgres(pg_container)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	db.Disconnect()
 	os.Exit(exitCode)
 }
 
 func BeforeEach() {
-	err := db.ClearDatabaseTables()
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
+	db_postgres.ClearDatabaseTables()
 }
 
 func TestCreateUserWithSuccess(t *testing.T) {
