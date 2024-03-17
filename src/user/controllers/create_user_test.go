@@ -156,6 +156,60 @@ func TestCreateUserWithInvalidEmail(t *testing.T) {
 	assert.Equal(t, expected, actual, "should return 'email is not in the correct format' and 422 in the body")
 }
 
+func TestCreateUserWithTooLongEmail(t *testing.T) {
+	BeforeEach()
+	r := SetupRoutes()
+	r.POST("/user", CreateUser)
+	requestBody := user_dtos.CreateUserRequest{
+		Email:    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@fulano.com",
+		Password: validPassword,
+	}
+	bodyConverted, _ := json.Marshal(requestBody)
+	req, _ := http.NewRequest("POST", "/user", bytes.NewBuffer(bodyConverted))
+	response := httptest.NewRecorder()
+
+	r.ServeHTTP(response, req)
+	var actual utils_interfaces.ErrorResponse
+	err := json.NewDecoder(response.Body).Decode(&actual)
+	if err != nil {
+		t.Errorf("failed to decode response body: %v", err)
+	}
+
+	expected := utils_interfaces.ErrorResponse{
+		Error:      "email is too long",
+		StatusCode: 422,
+	}
+	assert.Equal(t, response.Result().StatusCode, http.StatusUnprocessableEntity, "should return a 422 status code")
+	assert.Equal(t, expected, actual, "should return 'email is too long' and 422 in the body")
+}
+
+func TestCreateUserWithTooLongPassword(t *testing.T) {
+	BeforeEach()
+	r := SetupRoutes()
+	r.POST("/user", CreateUser)
+	requestBody := user_dtos.CreateUserRequest{
+		Email:    validEmail,
+		Password: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+	}
+	bodyConverted, _ := json.Marshal(requestBody)
+	req, _ := http.NewRequest("POST", "/user", bytes.NewBuffer(bodyConverted))
+	response := httptest.NewRecorder()
+
+	r.ServeHTTP(response, req)
+	var actual utils_interfaces.ErrorResponse
+	err := json.NewDecoder(response.Body).Decode(&actual)
+	if err != nil {
+		t.Errorf("failed to decode response body: %v", err)
+	}
+
+	expected := utils_interfaces.ErrorResponse{
+		Error:      "password is too long",
+		StatusCode: 422,
+	}
+	assert.Equal(t, response.Result().StatusCode, http.StatusUnprocessableEntity, "should return a 422 status code")
+	assert.Equal(t, expected, actual, "should return 'password is too long' and 422 in the body")
+}
+
 type DataProviderWeakPasswordType struct {
 	WeakPassword   string
 	ExpectedReturn string
