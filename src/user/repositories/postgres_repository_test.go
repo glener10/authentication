@@ -29,7 +29,7 @@ func TestMain(m *testing.M) {
 	os.Exit(exitCode)
 }
 
-var repository Postgres_repository
+var repository PostgresRepository
 
 func BeforeEach() {
 	err := db.ClearDatabaseTables()

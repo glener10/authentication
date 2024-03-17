@@ -214,7 +214,7 @@ func TestCreateUserWithWeakPassword(t *testing.T) {
 	}
 }
 
-var repository user_repositories.Postgres_repository
+var repository user_repositories.PostgresRepository
 
 func TestCreateUserWithValidEmailButAlreadysExists(t *testing.T) {
 	BeforeEach()

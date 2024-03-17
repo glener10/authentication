@@ -32,7 +32,7 @@ func CreateUser(c *gin.Context) {
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
 		return
 	}
-	repository := &user_repositories.Postgres_repository{}
+	repository := &user_repositories.PostgresRepository{}
 	useCase := &user_usecases.CreateUser{Repository: repository}
 	useCase.Executar(c, user)
 }
