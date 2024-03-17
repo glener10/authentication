@@ -28,7 +28,7 @@ func (r *SQLRepository) CreateUser(user user_dtos.CreateUserRequest) (*user_dtos
 
 func (r *SQLRepository) FindByEmail(email string) (*user_entity.User, error) {
 	var user user_entity.User
-	err := r.Db.QueryRow("SELECT id, email, password FROM users WHERE email = $1", email).Scan(&user.Id, &user.Email, &user.Password)
+	err := r.Db.QueryRow("SELECT id, email FROM users WHERE email = $1", email).Scan(&user.Id, &user.Email)
 	if err != nil {
 		return nil, errors.New("error to find by email: " + email)
 	}
