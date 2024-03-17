@@ -1,5 +1,6 @@
+Save encrypted password
+SOLID?
 documentation of CreateUser? C1 model?
-save encrypted password
 
 Login: Use JWT, Go routine and channels https://www.youtube.com/watch?v=jr6nbTALUAA&ab_channel=Yuri
 Interceptor/Guard of request for private routes to check JWT
