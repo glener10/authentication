@@ -130,6 +130,8 @@
 - Clean Code
 - Scream Architecture
 - Commit Lint
+- SOLID
+- Clean Architecture
 
 <div id="dependenciesandenvironment"></div>
 

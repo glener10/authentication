@@ -1,5 +1,4 @@
 Save encrypted password
-SOLID?
 documentation of CreateUser? C1 model?
 
 Login: Use JWT, Go routine and channels https://www.youtube.com/watch?v=jr6nbTALUAA&ab_channel=Yuri

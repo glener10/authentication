@@ -1,28 +1,31 @@
-package user_repository
+package user_repositories
 
 import (
 	"log"
 	"os"
 	"testing"
 
-	"github.com/glener10/authentication/src/db"
-	postgres_db "github.com/glener10/authentication/src/db/postgres"
+	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	"github.com/stretchr/testify/assert"
 )
 
+var repository SQLRepository
+
 func TestMain(m *testing.M) {
-	pg_container, err := postgres_db.UpTestContainerPostgres()
+	pg_container, err := db_postgres.UpTestContainerPostgres()
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	connStr, err := postgres_db.ReturnTestContainerConnectionString(pg_container)
+	connStr, err := db_postgres.ReturnTestContainerConnectionString(pg_container)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	db.ConnectDb(*connStr, "file://../../db/migrations")
+	postgres := &db_postgres.Postgres{ConnectionString: *connStr, MigrationUrl: "file://../../db/migrations"}
+	postgres.Connect()
+	repository = SQLRepository{Db: db_postgres.GetDb()}
 	exitCode := m.Run()
-	err = postgres_db.DownTestContainerPostgres(pg_container)
+	err = db_postgres.DownTestContainerPostgres(pg_container)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
@@ -30,10 +33,7 @@ func TestMain(m *testing.M) {
 }
 
 func BeforeEach() {
-	err := db.ClearDatabaseTables()
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
+	db_postgres.ClearDatabaseTables()
 }
 
 func TestCreateUserWithSuccess(t *testing.T) {
@@ -42,17 +42,17 @@ func TestCreateUserWithSuccess(t *testing.T) {
 		Email:    "fulano@fulano.com",
 		Password: "aaaaaA#7",
 	}
-	user, err := CreateUser(userDto)
+	user, err := repository.CreateUser(userDto)
 	assert.NoError(t, err)
 	assert.NotNil(t, user, "the created object cannot be null")
-	findUserByEmail, err := FindByEmail("fulano@fulano.com")
+	findUserByEmail, err := repository.FindByEmail("fulano@fulano.com")
 	assert.NoError(t, err)
 	assert.NotNil(t, findUserByEmail, "the created object must be persisted in database")
 }
 
 func TestFindByEmailWhenNoEmailExists(t *testing.T) {
 	BeforeEach()
-	findUserByEmail, err := FindByEmail("fulano@fulano.com")
+	findUserByEmail, err := repository.FindByEmail("fulano@fulano.com")
 	assert.Error(t, err)
 	assert.Nil(t, findUserByEmail, "You shouldn't find any records with an email address provided")
 }

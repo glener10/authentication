@@ -4,8 +4,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
-	create_user_usecase "github.com/glener10/authentication/src/user/usecases"
+	user_repositories "github.com/glener10/authentication/src/user/repositories"
+	user_usecases "github.com/glener10/authentication/src/user/usecases"
 )
 
 // CreateUser create user with e-mail and password
@@ -31,5 +33,7 @@ func CreateUser(c *gin.Context) {
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
 		return
 	}
-	create_user_usecase.Createuser(c, user)
+	repository := &user_repositories.SQLRepository{Db: db_postgres.GetDb()}
+	useCase := &user_usecases.CreateUser{Repository: repository}
+	useCase.Executar(c, user)
 }

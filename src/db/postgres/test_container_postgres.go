@@ -1,4 +1,4 @@
-package postgres_db
+package db_postgres
 
 import (
 	"context"

@@ -10,30 +10,33 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/glener10/authentication/src/db"
-	postgres_db "github.com/glener10/authentication/src/db/postgres"
+	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
-	user_repository "github.com/glener10/authentication/src/user/repositories"
+	user_repositories "github.com/glener10/authentication/src/user/repositories"
 	Utils "github.com/glener10/authentication/src/utils"
 	utils_interfaces "github.com/glener10/authentication/src/utils/interfaces"
 	"gotest.tools/v3/assert"
 )
 
+var repository user_repositories.SQLRepository
+
 func TestMain(m *testing.M) {
 	if err := Utils.LoadEnvironmentVariables("../../../.env"); err != nil {
 		log.Fatalf("Error to load environment variables: %s", err.Error())
 	}
-	pg_container, err := postgres_db.UpTestContainerPostgres()
+	pg_container, err := db_postgres.UpTestContainerPostgres()
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	connStr, err := postgres_db.ReturnTestContainerConnectionString(pg_container)
+	connStr, err := db_postgres.ReturnTestContainerConnectionString(pg_container)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
-	db.ConnectDb(*connStr, "file://../../db/migrations")
+	postgres := &db_postgres.Postgres{ConnectionString: *connStr, MigrationUrl: "file://../../db/migrations"}
+	postgres.Connect()
+	repository = user_repositories.SQLRepository{Db: db_postgres.GetDb()}
 	exitCode := m.Run()
-	err = postgres_db.DownTestContainerPostgres(pg_container)
+	err = db_postgres.DownTestContainerPostgres(pg_container)
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
@@ -41,10 +44,7 @@ func TestMain(m *testing.M) {
 }
 
 func BeforeEach() {
-	err := db.ClearDatabaseTables()
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
+	db_postgres.ClearDatabaseTables()
 }
 
 func SetupRoutes() *gin.Engine {
@@ -222,7 +222,7 @@ func TestCreateUserWithValidEmailButAlreadysExists(t *testing.T) {
 		Email:    validEmail,
 		Password: validPassword,
 	}
-	_, err := user_repository.CreateUser(requestBody)
+	_, err := repository.CreateUser(requestBody)
 	if err != nil {
 		t.Errorf("failed to create user in 'TestCreateUserWithValidEmailButAlreadysExists' test: %v", err)
 	}

@@ -1,4 +1,4 @@
-package user_entity
+package user_entities
 
 type User struct {
 	Id       int
