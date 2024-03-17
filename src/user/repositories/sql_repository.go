@@ -36,7 +36,7 @@ func (r *SQLRepository) FindUser(find string) (*user_entity.User, error) {
 		err = r.Db.QueryRow("SELECT id, email FROM users WHERE id = $1", find).Scan(&user.Id, &user.Email)
 	}
 	if err != nil {
-		return nil, errors.New("error to find by parameter '" + find + "' error: " + err.Error())
+		return nil, errors.New("no element with the parameter (id/email) '" + find + "'")
 	}
 	return &user, nil
 }
