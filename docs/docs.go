@@ -26,6 +26,12 @@ const docTemplate = `{
                 ],
                 "summary": "Login",
                 "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/user_dtos.LoginResponse"
+                        }
+                    },
                     "404": {
                         "description": "Not Found",
                         "schema": {
@@ -173,6 +179,15 @@ const docTemplate = `{
                 "id": {
                     "type": "integer",
                     "example": 1
+                }
+            }
+        },
+        "user_dtos.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "jwt": {
+                    "type": "string",
+                    "example": "randomJwt"
                 }
             }
         },

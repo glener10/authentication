@@ -120,6 +120,7 @@
 🏗 **Use Cases**
 
 - create_user: Do not allow repeated emails and weak passwords
+- login: With JWT
 - find_user (need to be logged in): find by id or e-mail
 
 💡 **Technical Decisions**

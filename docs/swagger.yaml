@@ -29,6 +29,12 @@ definitions:
         example: 1
         type: integer
     type: object
+  user_dtos.LoginResponse:
+    properties:
+      jwt:
+        example: randomJwt
+        type: string
+    type: object
   utils_interfaces.ErrorResponse:
     properties:
       error:
@@ -50,6 +56,10 @@ paths:
       produces:
       - application/json
       responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dtos.LoginResponse'
         "404":
           description: Not Found
           schema:
