@@ -1,11 +1,19 @@
 package find_user_controller
 
 import (
+	"encoding/json"
+	"log"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
+	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
+	user_entities "github.com/glener10/authentication/src/user/entities"
 	user_repositories "github.com/glener10/authentication/src/user/repositories"
+	utils_interfaces "github.com/glener10/authentication/src/utils/interfaces"
 	"github.com/glener10/authentication/tests"
+	"gotest.tools/v3/assert"
 )
 
 var repository user_repositories.SQLRepository
@@ -16,12 +24,21 @@ func TestMain(m *testing.M) {
 	tests.ExecuteAndFinish(m)
 }
 
-/*
-func TestFindUserByIdWithoutResult(t *testing.T) {
+func TestFindUserByIdWithoutResultWithValidJwt(t *testing.T) { //If you have a user's JWT but it has been removed and no longer exists
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
 	r.GET("/user/:find", FindUser)
 	req, _ := http.NewRequest("GET", "/user/1", nil)
+	userForJwt := user_entities.User{
+		Id:       1,
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
+	if err != nil {
+		log.Fatalf("error to generate jwt in 'TestFindUserByIdWithoutResultWithValidJwt' test: " + err.Error())
+	}
+	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
 	r.ServeHTTP(response, req)
 	expected := utils_interfaces.ErrorResponse{
@@ -29,7 +46,7 @@ func TestFindUserByIdWithoutResult(t *testing.T) {
 		StatusCode: 404,
 	}
 	var actual utils_interfaces.ErrorResponse
-	err := json.NewDecoder(response.Body).Decode(&actual)
+	err = json.NewDecoder(response.Body).Decode(&actual)
 	if err != nil {
 		t.Errorf("failed to decode response body: %v", err)
 	}
@@ -37,19 +54,30 @@ func TestFindUserByIdWithoutResult(t *testing.T) {
 	assert.Equal(t, expected, actual, "should return 'no element with the parameter (id/email) '1'' and 404 in the body")
 }
 
-func TestFindUserWithInvalidParam(t *testing.T) {
+func TestFindUserWithInvalidParamAndValidJwt(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
 	r.GET("/user/:find", FindUser)
-	req, _ := http.NewRequest("GET", "/user/invalidFindParameter", nil)
+	req, _ := http.NewRequest("GET", "/user/invalidParameter", nil)
+	userForJwt := user_entities.User{
+		Id:       1,
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
+	if err != nil {
+		log.Fatalf("error to generate jwt in 'TestFindUserWithInvalidParamAndValidJwt' test: " + err.Error())
+	}
+	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
 	r.ServeHTTP(response, req)
+
 	expected := utils_interfaces.ErrorResponse{
 		Error:      "wrong format, parameter need to be a id or a e-mail",
 		StatusCode: 422,
 	}
 	var actual utils_interfaces.ErrorResponse
-	err := json.NewDecoder(response.Body).Decode(&actual)
+	err = json.NewDecoder(response.Body).Decode(&actual)
 	if err != nil {
 		t.Errorf("failed to decode response body: %v", err)
 	}
@@ -57,6 +85,30 @@ func TestFindUserWithInvalidParam(t *testing.T) {
 	assert.Equal(t, expected, actual, "should return 'wrong format, parameter need to be a id or a e-mail' and 422 in the body")
 }
 
+func TestFindUserWithInvalidJwt(t *testing.T) {
+	tests.BeforeEach()
+	r := tests.SetupRoutes()
+	r.GET("/user/:find", FindUser)
+	req, _ := http.NewRequest("GET", "/user/1", nil)
+
+	req.Header.Set("Authorization", "Bearer invalidjwt")
+	response := httptest.NewRecorder()
+	r.ServeHTTP(response, req)
+
+	expected := utils_interfaces.ErrorResponse{
+		Error:      "invalid token",
+		StatusCode: 401,
+	}
+	var actual utils_interfaces.ErrorResponse
+	err := json.NewDecoder(response.Body).Decode(&actual)
+	if err != nil {
+		t.Errorf("failed to decode response body: %v", err)
+	}
+	assert.Equal(t, response.Result().StatusCode, http.StatusUnauthorized, "should return a 401 status code")
+	assert.Equal(t, expected, actual, "should return 'invalid token' and 401 in the body")
+}
+
+/*
 func TestFindUserByIdWithSuccess(t *testing.T) {
 	tests.BeforeEach()
 	requestBody := user_dtos.CreateUserRequest{
