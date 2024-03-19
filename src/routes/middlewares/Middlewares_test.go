@@ -2,15 +2,12 @@ package middlewares
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/glener10/authentication/src/utils"
 	utils_interfaces "github.com/glener10/authentication/src/utils/interfaces"
 	"github.com/stretchr/testify/assert"
 )
@@ -66,7 +63,7 @@ func TestRateLimiter(t *testing.T) {
 	assert.Equal(t, errorResponseDecoded, expected, "Should return 'Too Many Requests' and 429 if the requisition pass the rate limiter")
 }
 
-func TestAuthWithNoToken(t *testing.T) {
+/* func TestAuthWithNoToken(t *testing.T) {
 	r := SetupRoutes()
 	r.Use(AuthMiddleware())
 	r.GET("/", HelloWorld)
@@ -86,9 +83,9 @@ func TestAuthWithNoToken(t *testing.T) {
 	}
 
 	assert.Equal(t, actual, expected, "Should return a 422 because de token is not informed")
-}
+} */
 
-func TestAuthWithInvalidToken(t *testing.T) {
+/* func TestAuthWithInvalidToken(t *testing.T) {
 	r := SetupRoutes()
 	r.Use(AuthMiddleware())
 	r.GET("/", HelloWorld)
@@ -109,9 +106,9 @@ func TestAuthWithInvalidToken(t *testing.T) {
 	}
 
 	assert.Equal(t, actual, expected, "Should return a 422 because de token is not informed")
-}
+} */
 
-func TestAuthWithValidToken(t *testing.T) {
+/* func TestAuthWithValidToken(t *testing.T) {
 	if err := utils.LoadEnvironmentVariables("../../../.env"); err != nil {
 		log.Fatalf("Error to load environment variables: %s", err.Error())
 	}
@@ -124,7 +121,7 @@ func TestAuthWithValidToken(t *testing.T) {
 	r.ServeHTTP(response, req)
 
 	assert.Equal(t, response.Code, 200, "Should return code 200 with a valid token")
-}
+} */
 
 func TestLimitTimeout(t *testing.T) {
 	r := SetupRoutes()

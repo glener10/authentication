@@ -34,11 +34,11 @@ func HandlerRoutes() *gin.Engine {
 
 	r.GET("/", middlewares.HelloWorld)
 	r.POST("/user", create_user_controller.CreateUser)
+	r.POST("/login", login_controller.Login)
 
-	//r.Use(middlewares.AuthMiddleware())
+	r.Use(middlewares.JwtMiddleware())
 	//r.Use(middlewares.HTTPSOnlyMiddleware())
 
-	r.POST("/login", login_controller.Login)
 	r.GET("/user/:find", find_user_controller.FindUser)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	return r

@@ -1,4 +1,7 @@
+@validToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6ImZ1bGFub0BmdWxhbm8uY29tIiwiSWQiOjEsImV4cCI6MTcxMDkzNjU0Nn0.C0yHeAXTbS1Qck1CcPhC5WIf7OHvz0F-lVxNUsjsOlQ
+
 ###find_user: find user per id or email
 # @prompt idOrEmail
 GET http://localhost:8080/user/{{idOrEmail}}
 content-type: application/json
+Authorization: Bearer {{validToken}}
