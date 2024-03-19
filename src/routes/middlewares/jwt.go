@@ -2,11 +2,10 @@ package middlewares
 
 import (
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt"
+	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
 )
 
 func JwtMiddleware() gin.HandlerFunc {
@@ -20,20 +19,9 @@ func JwtMiddleware() gin.HandlerFunc {
 		}
 
 		jwtHeader := strings.Split(authHeader, " ")[1]
-		if jwtHeader == "" {
-			statusCode := http.StatusUnauthorized
-			c.JSON(statusCode, gin.H{"error": "invalid token format", "statusCode": statusCode})
-			c.Abort()
-			return
-		}
-
-		token, err := jwt.Parse(jwtHeader, func(token *jwt.Token) (interface{}, error) {
-			return []byte(os.Getenv("JWT_SECRET")), nil
-		})
-
-		if err != nil || !token.Valid {
-			statusCode := http.StatusBadRequest
-			c.JSON(statusCode, gin.H{"error": "invalid token", "statusCode": statusCode})
+		_, statusCode, err := jwt_usecases.CheckSignatureAndReturnClaims(jwtHeader)
+		if err != nil {
+			c.JSON(*statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
 			c.Abort()
 			return
 		}

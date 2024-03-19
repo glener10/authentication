@@ -16,22 +16,17 @@ type FindUser struct {
 func (u *FindUser) Executar(c *gin.Context, find string) {
 	authorizationHeader := c.GetHeader("Authorization")
 	jwtFromHeader := strings.Split(authorizationHeader, " ")[1]
-	claims, err := jwt_usecases.CheckSignatureAndReturnClaims(jwtFromHeader)
+	claims, statusCode, err := jwt_usecases.CheckSignatureAndReturnClaims(jwtFromHeader)
 	if err != nil {
-		statusCode := http.StatusBadRequest
-		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		c.JSON(*statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
 		return
 	}
-	idInClaims, ok := claims["Id"]
-	if !ok {
+
+	idInClaims := claims["Id"]
+	emailInClaims := claims["Email"]
+	if idInClaims == nil || emailInClaims == nil {
 		statusCode := http.StatusBadRequest
-		c.JSON(statusCode, gin.H{"error": "error to map id in claims", "statusCode": statusCode})
-		return
-	}
-	emailInClaims, ok := claims["Email"]
-	if !ok {
-		statusCode := http.StatusBadRequest
-		c.JSON(statusCode, gin.H{"error": "error to map email in claims", "statusCode": statusCode})
+		c.JSON(statusCode, gin.H{"error": "error to map id or email in claims", "statusCode": statusCode})
 		return
 	}
 

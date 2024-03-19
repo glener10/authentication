@@ -90,7 +90,7 @@ func TestJwtWithNoToken(t *testing.T) {
 	assert.Equal(t, actual, expected, "Should return a 401 because the token is not provided")
 }
 
-func TestJwtWithInvalidTokenFormat(t *testing.T) {
+func TestJwtWithInvalidToken(t *testing.T) {
 	r := SetupRoutes()
 	r.Use(JwtMiddleware())
 	r.GET("/", HelloWorld)
@@ -100,7 +100,7 @@ func TestJwtWithInvalidTokenFormat(t *testing.T) {
 	r.ServeHTTP(response, req)
 
 	expected := utils_interfaces.ErrorResponse{
-		Error:      "invalid token format",
+		Error:      "invalid token",
 		StatusCode: 401,
 	}
 
@@ -110,30 +110,7 @@ func TestJwtWithInvalidTokenFormat(t *testing.T) {
 		t.Errorf("failed to decode response body: %v", err)
 	}
 
-	assert.Equal(t, actual, expected, "Should return a 401 because the token format is invalid")
-}
-
-func TestJwtWithInvalidToken(t *testing.T) {
-	r := SetupRoutes()
-	r.Use(JwtMiddleware())
-	r.GET("/", HelloWorld)
-	req, _ := http.NewRequest("GET", "/", nil)
-	req.Header.Set("Authorization", "Bearer invalidTokenUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6ImZ1bGFub0BmdWxhbm8uY29tIiwiSWQiOjEsImV4cCI6MTcxMDkzNjU0Nn0.C0yHeAXTbS1Qck1CcPhC5WIf7OHvz0F-lVxNUsjsOlX")
-	response := httptest.NewRecorder()
-	r.ServeHTTP(response, req)
-
-	expected := utils_interfaces.ErrorResponse{
-		Error:      "invalid token",
-		StatusCode: 400,
-	}
-
-	var actual utils_interfaces.ErrorResponse
-	err := json.NewDecoder(response.Body).Decode(&actual)
-	if err != nil {
-		t.Errorf("failed to decode response body: %v", err)
-	}
-
-	assert.Equal(t, actual, expected, "Should return a 400 because the token and signature is invalid")
+	assert.Equal(t, actual, expected, "Should return a 401 because the token and signature is invalid")
 }
 
 func TestJwtWithSuccess(t *testing.T) {
