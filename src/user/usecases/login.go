@@ -43,6 +43,8 @@ func (u *Login) Executar(c *gin.Context, user user_dtos.CreateUserRequest) {
 		c.JSON(statusCode, gin.H{"error": "error in token signature:", "statusCode": statusCode})
 		return
 	}
-
-	c.JSON(http.StatusOK, signedToken)
+	response := user_dtos.LoginResponse{
+		Jwt: signedToken,
+	}
+	c.JSON(http.StatusOK, response)
 }
