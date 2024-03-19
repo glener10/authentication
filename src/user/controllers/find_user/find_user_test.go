@@ -9,6 +9,7 @@ import (
 
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
+	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_entities "github.com/glener10/authentication/src/user/entities"
 	user_repositories "github.com/glener10/authentication/src/user/repositories"
 	utils_interfaces "github.com/glener10/authentication/src/utils/interfaces"
@@ -108,8 +109,7 @@ func TestFindUserWithInvalidJwt(t *testing.T) {
 	assert.Equal(t, expected, actual, "should return 'invalid token' and 401 in the body")
 }
 
-/*
-func TestFindUserByIdWithSuccess(t *testing.T) {
+func TestFindUserByIdAndValidJwtWithSuccess(t *testing.T) {
 	tests.BeforeEach()
 	requestBody := user_dtos.CreateUserRequest{
 		Email:    tests.ValidEmail,
@@ -117,31 +117,130 @@ func TestFindUserByIdWithSuccess(t *testing.T) {
 	}
 	_, err := repository.CreateUser(requestBody)
 	if err != nil {
-		t.Errorf("failed to create user in 'TestFindUserWithInvalidParam' test: %v", err)
+		t.Errorf("failed to create user in 'TestFindUserByIdAndValidJwtWithSuccess' test: %v", err)
 	}
 	r := tests.SetupRoutes()
 	r.GET("/user/:find", FindUser)
 	req, _ := http.NewRequest("GET", "/user/1", nil)
+	userForJwt := user_entities.User{
+		Id:       1,
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
+	if err != nil {
+		log.Fatalf("error to generate jwt in 'TestFindUserByIdAndValidJwtWithSuccess' test: " + err.Error())
+	}
+	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
 	r.ServeHTTP(response, req)
+
 	assert.Equal(t, response.Result().StatusCode, http.StatusOK, "should return a 200 status code")
 }
 
-func TestFindUserByEmailWithSuccess(t *testing.T) {
+func TestFindUserByEmailAndValidJwtWithSuccess(t *testing.T) {
 	tests.BeforeEach()
 	requestBody := user_dtos.CreateUserRequest{
-		Email:    "valid@email.com",
+		Email:    tests.ValidEmail,
 		Password: tests.ValidPassword,
 	}
 	_, err := repository.CreateUser(requestBody)
 	if err != nil {
-		t.Errorf("failed to create user in 'TestFindUserByEmailWithSuccess' test: %v", err)
+		t.Errorf("failed to create user in 'TestFindUserByEmailAndValidJwtWithSuccess' test: %v", err)
 	}
 	r := tests.SetupRoutes()
 	r.GET("/user/:find", FindUser)
-	req, _ := http.NewRequest("GET", "/user/valid@email.com", nil)
+	req, _ := http.NewRequest("GET", "/user/"+tests.ValidEmail, nil)
+	userForJwt := user_entities.User{
+		Id:       1,
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
+	if err != nil {
+		log.Fatalf("error to generate jwt in 'TestFindUserByEmailAndValidJwtWithSuccess' test: " + err.Error())
+	}
+	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
 	r.ServeHTTP(response, req)
+
 	assert.Equal(t, response.Result().StatusCode, http.StatusOK, "should return a 200 status code")
 }
-*/
+
+func TestFindUserByIdAndJwtOfOtherUser(t *testing.T) {
+	tests.BeforeEach()
+	requestBody := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	_, err := repository.CreateUser(requestBody)
+	if err != nil {
+		t.Errorf("failed to create user in 'TestFindUserByIdAndJwtOfOtherUser' test: %v", err)
+	}
+	r := tests.SetupRoutes()
+	r.GET("/user/:find", FindUser)
+	req, _ := http.NewRequest("GET", "/user/1", nil)
+	jwtOfOtherUser := user_entities.User{
+		Id:       10,
+		Email:    "another@email.com",
+		Password: tests.ValidPassword,
+	}
+	jwtForTest, err := jwt_usecases.GenerateJwt(&jwtOfOtherUser)
+	if err != nil {
+		log.Fatalf("error to generate jwt in 'TestFindUserByIdAndJwtOfOtherUser' test: " + err.Error())
+	}
+	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
+	response := httptest.NewRecorder()
+	r.ServeHTTP(response, req)
+
+	expected := utils_interfaces.ErrorResponse{
+		Error:      "you do not have permission to perform this operation",
+		StatusCode: 401,
+	}
+	var actual utils_interfaces.ErrorResponse
+	err = json.NewDecoder(response.Body).Decode(&actual)
+	if err != nil {
+		t.Errorf("failed to decode response body: %v", err)
+	}
+	assert.Equal(t, response.Result().StatusCode, http.StatusUnauthorized, "should return a 401 status code")
+	assert.Equal(t, expected, actual, "should return 'you do not have permission to perform this operation' and 401 in the body")
+}
+
+func TestFindUserByEmailAndJwtOfOtherUser(t *testing.T) {
+	tests.BeforeEach()
+	requestBody := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	_, err := repository.CreateUser(requestBody)
+	if err != nil {
+		t.Errorf("failed to create user in 'TestFindUserByEmailAndJwtOfOtherUser' test: %v", err)
+	}
+	r := tests.SetupRoutes()
+	r.GET("/user/:find", FindUser)
+	req, _ := http.NewRequest("GET", "/user/"+tests.ValidEmail, nil)
+	jwtOfOtherUser := user_entities.User{
+		Id:       10,
+		Email:    "another@email.com",
+		Password: tests.ValidPassword,
+	}
+	jwtForTest, err := jwt_usecases.GenerateJwt(&jwtOfOtherUser)
+	if err != nil {
+		log.Fatalf("error to generate jwt in 'TestFindUserByEmailAndJwtOfOtherUser' test: " + err.Error())
+	}
+	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
+	response := httptest.NewRecorder()
+	r.ServeHTTP(response, req)
+
+	expected := utils_interfaces.ErrorResponse{
+		Error:      "you do not have permission to perform this operation",
+		StatusCode: 401,
+	}
+	var actual utils_interfaces.ErrorResponse
+	err = json.NewDecoder(response.Body).Decode(&actual)
+	if err != nil {
+		t.Errorf("failed to decode response body: %v", err)
+	}
+	assert.Equal(t, response.Result().StatusCode, http.StatusUnauthorized, "should return a 401 status code")
+	assert.Equal(t, expected, actual, "should return 'you do not have permission to perform this operation' and 401 in the body")
+}
