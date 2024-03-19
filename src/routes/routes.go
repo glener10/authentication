@@ -12,6 +12,7 @@ import (
 	middlewares "github.com/glener10/authentication/src/routes/middlewares"
 	create_user_controller "github.com/glener10/authentication/src/user/controllers/create_user"
 	find_user_controller "github.com/glener10/authentication/src/user/controllers/find_user"
+	login_controller "github.com/glener10/authentication/src/user/controllers/login"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -37,6 +38,7 @@ func HandlerRoutes() *gin.Engine {
 	//r.Use(middlewares.AuthMiddleware())
 	//r.Use(middlewares.HTTPSOnlyMiddleware())
 
+	r.POST("/login", login_controller.Login)
 	r.GET("/user/:find", find_user_controller.FindUser)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	return r

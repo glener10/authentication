@@ -44,6 +44,23 @@ info:
   title: API
   version: "1.0"
 paths:
+  /login:
+    post:
+      description: JWT Login
+      produces:
+      - application/json
+      responses:
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      summary: Login
+      tags:
+      - user
   /user:
     post:
       consumes:
