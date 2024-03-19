@@ -2,7 +2,10 @@ package user_usecases
 
 import (
 	"net/http"
+	"os"
+	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_interfaces "github.com/glener10/authentication/src/user/interfaces"
@@ -27,5 +30,19 @@ func (u *Login) Executar(c *gin.Context, user user_dtos.CreateUserRequest) {
 		c.JSON(statusCode, gin.H{"error": "email or password is incorret", "statusCode": statusCode})
 		return
 	}
-	c.JSON(http.StatusCreated, "returning JWT")
+
+	claims := jwt.MapClaims{
+		"Id":    userInDb.Id,
+		"Email": userInDb.Email,
+		"exp":   time.Now().Add(time.Hour * 24).Unix(),
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signedToken, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
+	if err != nil {
+		statusCode := http.StatusInternalServerError
+		c.JSON(statusCode, gin.H{"error": "error in token signature:", "statusCode": statusCode})
+		return
+	}
+
+	c.JSON(http.StatusOK, signedToken)
 }

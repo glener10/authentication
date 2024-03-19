@@ -18,6 +18,7 @@ import (
 // @Success 200 {object} user_dtos.LoginResponse
 // @Failure      422 {object} utils_interfaces.ErrorResponse
 // @Failure      404 {object} utils_interfaces.ErrorResponse
+// @Failure      500 {object} utils_interfaces.ErrorResponse
 // @Router /login [post]
 func Login(c *gin.Context) {
 	var user user_dtos.CreateUserRequest
