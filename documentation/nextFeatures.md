@@ -1,5 +1,3 @@
-Interceptor/Guard of request for private routes to check if the JWT is valid (And your tests)
-
 Update User information (find_user) (GET user/{find}) route to only allow if the user has a JWT of himself(logger)
 update tests of find_user use case
 create BDD find_user documentation
