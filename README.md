@@ -117,6 +117,8 @@
 
   4- After executing the switch, the container is terminated
 
+- Common middlewares to routes: rate limiter, timeout, only https, jwt signature checker
+
 🏗 **Use Cases**
 
 - create_user: Do not allow repeated emails and weak passwords
