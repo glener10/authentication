@@ -11,10 +11,13 @@ import (
 )
 
 // FindUser
-// @Summary Find User
-// @Description find user by e-mail or id
+// @Summary Find User (You nee send a JWT token and send in authorization header, you can get it in the login route)
+// @Description Find user by e-mail or id
 // @Tags user
 // @Produce json
+// @Security Bearer
+// @Param find path string true "Search parameter: e-mail or id"
+// @Param Authorization header string true "JWT Token" default(Bearer <token>)
 // @Success 200 {object} user_dtos.FindUserResponse
 // @Failure      422 {object} utils_interfaces.ErrorResponse
 // @Failure      404 {object} utils_interfaces.ErrorResponse

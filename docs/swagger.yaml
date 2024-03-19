@@ -68,6 +68,10 @@ paths:
           description: Unprocessable Entity
           schema:
             $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
       summary: Login
       tags:
       - user
@@ -108,7 +112,19 @@ paths:
       - user
   /user/{find}:
     get:
-      description: find user by e-mail or id
+      description: Find user by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -128,7 +144,10 @@ paths:
           description: Unprocessable Entity
           schema:
             $ref: '#/definitions/utils_interfaces.ErrorResponse'
-      summary: Find User
+      security:
+      - Bearer: []
+      summary: Find User (You nee send a JWT token and send in authorization header,
+        you can get it in the login route)
       tags:
       - user
 swagger: "2.0"

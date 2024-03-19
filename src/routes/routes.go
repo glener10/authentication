@@ -32,6 +32,7 @@ func HandlerRoutes() *gin.Engine {
 	r.Use(middlewares.RequestLimitMiddleware(rateLimiter))
 	r.Use(middlewares.TimeoutMiddleware())
 
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	r.GET("/", middlewares.HelloWorld)
 	r.POST("/user", create_user_controller.CreateUser)
 	r.POST("/login", login_controller.Login)
@@ -40,7 +41,6 @@ func HandlerRoutes() *gin.Engine {
 	//r.Use(middlewares.HTTPSOnlyMiddleware())
 
 	r.GET("/user/:find", find_user_controller.FindUser)
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	return r
 }
 
