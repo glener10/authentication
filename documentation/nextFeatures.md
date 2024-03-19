@@ -1,7 +1,3 @@
-Update User information (find_user) (GET user/{find}) route to only allow if the user has a JWT of himself(logger)
-update tests of find_user use case
-create BDD find_user documentation
-
 Account Update (Logged): Do not allow invalid email, do not allow weak password, do not allow repeated email
 Delete Account (Logged)
 Password Recovery: use a unique token
