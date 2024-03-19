@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
 	user_entities "github.com/glener10/authentication/src/user/entities"
-	user_usecases "github.com/glener10/authentication/src/user/usecases"
 	"github.com/glener10/authentication/src/utils"
 	utils_interfaces "github.com/glener10/authentication/src/utils/interfaces"
 	"github.com/glener10/authentication/tests"
@@ -122,7 +122,7 @@ func TestJwtWithSuccess(t *testing.T) {
 		Email:    tests.ValidEmail,
 		Password: tests.ValidPassword,
 	}
-	jwtForTest, err := user_usecases.GenerateJwt(&userForJwt)
+	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
 		log.Fatalf("error to generate jwt in 'TestJwtWithSuccess' middlewares tests: " + err.Error())
 	}

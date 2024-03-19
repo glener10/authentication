@@ -1,4 +1,4 @@
-@validToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6ImZ1bGFub0BmdWxhbm8uY29tIiwiSWQiOjEsImV4cCI6MTcxMDkzNjU0Nn0.C0yHeAXTbS1Qck1CcPhC5WIf7OHvz0F-lVxNUsjsOlQ
+@validToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6ImZ1bGFub0BmdWxhbm8uY29tIiwiSWQiOjEsImV4cCI6MTcxMDk0MzYyMn0.y5M0hz0gy5TFSAJD3AvykUBPw0m0l8NmOqBuDOgNwfI
 
 ###find_user: find user per id or email
 # @prompt idOrEmail

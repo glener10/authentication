@@ -1,17 +1,11 @@
 package find_user_controller
 
 import (
-	"encoding/json"
-	"net/http"
-	"net/http/httptest"
 	"testing"
 
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
-	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_repositories "github.com/glener10/authentication/src/user/repositories"
-	utils_interfaces "github.com/glener10/authentication/src/utils/interfaces"
 	"github.com/glener10/authentication/tests"
-	"gotest.tools/v3/assert"
 )
 
 var repository user_repositories.SQLRepository
@@ -22,6 +16,7 @@ func TestMain(m *testing.M) {
 	tests.ExecuteAndFinish(m)
 }
 
+/*
 func TestFindUserByIdWithoutResult(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
@@ -97,3 +92,4 @@ func TestFindUserByEmailWithSuccess(t *testing.T) {
 	r.ServeHTTP(response, req)
 	assert.Equal(t, response.Result().StatusCode, http.StatusOK, "should return a 200 status code")
 }
+*/

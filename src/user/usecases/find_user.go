@@ -2,6 +2,7 @@ package user_usecases
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -30,7 +31,8 @@ func (u *FindUser) Executar(c *gin.Context, find string) {
 		return
 	}
 
-	if find != idInClaims && find != emailInClaims {
+	idFinInNumber, _ := strconv.ParseFloat(find, 64)
+	if idFinInNumber != idInClaims && find != emailInClaims {
 		statusCode := http.StatusUnauthorized
 		c.JSON(statusCode, gin.H{"error": "you do not have permission to perform this operation", "statusCode": statusCode})
 		return
