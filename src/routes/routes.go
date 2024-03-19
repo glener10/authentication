@@ -36,7 +36,7 @@ func HandlerRoutes() *gin.Engine {
 	r.POST("/user", create_user_controller.CreateUser)
 	r.POST("/login", login_controller.Login)
 
-	r.Use(middlewares.JwtMiddleware())
+	//r.Use(middlewares.JwtMiddleware())
 	//r.Use(middlewares.HTTPSOnlyMiddleware())
 
 	r.GET("/user/:find", find_user_controller.FindUser)

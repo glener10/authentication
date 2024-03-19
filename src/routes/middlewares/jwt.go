@@ -32,7 +32,8 @@ func JwtMiddleware() gin.HandlerFunc {
 		})
 
 		if err != nil || !token.Valid {
-			c.JSON(http.StatusBadRequest, gin.H{"mensagem": "invalid token"})
+			statusCode := http.StatusBadRequest
+			c.JSON(statusCode, gin.H{"error": "invalid token", "statusCode": statusCode})
 			c.Abort()
 			return
 		}

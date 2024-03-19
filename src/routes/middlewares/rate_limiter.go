@@ -10,7 +10,7 @@ func RequestLimitMiddleware(rl *RateLimiter) gin.HandlerFunc {
 		count := rl.IncrementCounter(key)
 
 		if count >= rl.MaxLimit {
-			c.AbortWithStatusJSON(429, gin.H{"error": "Too Many Requests", "statusCode": 429})
+			c.AbortWithStatusJSON(429, gin.H{"error": "too Many Requests", "statusCode": 429})
 			return
 		} else {
 			c.Next()

@@ -12,7 +12,7 @@ func HTTPSOnlyMiddleware() gin.HandlerFunc {
 		protocol := c.Request.Proto
 		if !strings.Contains(protocol, "HTTPS") {
 			statusCode := http.StatusForbidden
-			c.AbortWithStatusJSON(statusCode, gin.H{"error": "HTTPS only, your protocol is: " + protocol, "statusCode": statusCode})
+			c.AbortWithStatusJSON(statusCode, gin.H{"error": "just HTTPS, your protocol is: " + protocol, "statusCode": statusCode})
 			return
 		}
 		c.Next()
