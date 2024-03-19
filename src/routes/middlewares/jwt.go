@@ -20,7 +20,7 @@ func JwtMiddleware() gin.HandlerFunc {
 		}
 
 		jwtHeader := strings.Split(authHeader, " ")[1]
-		if jwtHeader == "" || len(jwtHeader) != 152 {
+		if jwtHeader == "" {
 			statusCode := http.StatusUnauthorized
 			c.JSON(statusCode, gin.H{"error": "invalid token format", "statusCode": statusCode})
 			c.Abort()

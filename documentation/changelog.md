@@ -1,6 +1,6 @@
 # [v0.0.1] - XX/XX/XXXX
 
-- jwt middleware to check if the token is valid
+- jwt middleware to check if the token signature is valid
 - login use case, all tests, bdd and route documentation
 - find_user use case, all tests, bdd and route documentation
 - create_user use case, all tests, bdd and route documentation
