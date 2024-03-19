@@ -1,6 +1,8 @@
 Login: Use JWT, Go routine and channels? https://www.youtube.com/watch?v=jr6nbTALUAA&ab_channel=Yuri
+login use case, e2e tests
 Interceptor/Guard of request for private routes to check if the JWT is valid (And your tests)
 Update User information (GET user/{find}) route to only allow if the user has a JWT of himself(logger)
+create BDD find_user documentation
 
 Account Update (Logged): Do not allow invalid email, do not allow weak password, do not allow repeated email
 Delete Account (Logged)

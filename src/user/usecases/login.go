@@ -16,14 +16,14 @@ type Login struct {
 func (u *Login) Executar(c *gin.Context, user user_dtos.CreateUserRequest) {
 	userInDb, err := u.Repository.FindUser(user.Email)
 	if err != nil {
-		statusCode := http.StatusNotFound
+		statusCode := http.StatusUnauthorized
 		c.JSON(statusCode, gin.H{"error": "email or password is incorret", "statusCode": statusCode})
 		return
 	}
 
 	passwordIsValid := bcrypt.CompareHashAndPassword([]byte(userInDb.Password), []byte(user.Password))
 	if passwordIsValid == nil {
-		statusCode := http.StatusNotFound
+		statusCode := http.StatusUnauthorized
 		c.JSON(statusCode, gin.H{"error": "email or password is incorret", "statusCode": statusCode})
 		return
 	}
