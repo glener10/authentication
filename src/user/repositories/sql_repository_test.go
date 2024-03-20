@@ -52,3 +52,41 @@ func TestFindUserByIdWithSuccess(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, findUserByEmail, "the created object must be persisted in database")
 }
+
+func TestChangePasswordByIdWithSuccess(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+	assert.NotNil(t, user, "the created object cannot be null")
+	newPassword := "newPasswordToTest"
+	userWithPasswordChanged, err := repository.ChangePassword(strconv.Itoa(user.Id), newPassword)
+	assert.NoError(t, err)
+	assert.NotNil(t, userWithPasswordChanged, "change password with success")
+}
+
+func TestChangePasswordByEmailWithSuccess(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+	assert.NotNil(t, user, "the created object cannot be null")
+	newPassword := "newPasswordToTest"
+	userWithPasswordChanged, err := repository.ChangePassword(user.Email, newPassword)
+	assert.NoError(t, err)
+	assert.NotNil(t, userWithPasswordChanged, "change password with success")
+}
+
+func TestChangePasswordWithoutSuccessBecauseUserDoenstExists(t *testing.T) {
+	tests.BeforeEach()
+	newPassword := "newPasswordToTest"
+	userWithPasswordChanged, err := repository.ChangePassword(tests.ValidEmail, newPassword)
+	assert.Error(t, err)
+	assert.Nil(t, userWithPasswordChanged, "should not change password because the user with the find parameter doenst exists")
+}
