@@ -97,6 +97,66 @@
                 }
             }
         },
+        "/user/changePassword/{find}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Change Password by id or email",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Change Password (You will need send a JWT token in authorization header, you can get it in the login route)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search parameter: e-mail or id",
+                        "name": "find",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003ctoken\u003e",
+                        "description": "JWT Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/user_dtos.FindUserResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/user/{find}": {
             "get": {
                 "security": [
@@ -111,7 +171,7 @@
                 "tags": [
                     "user"
                 ],
-                "summary": "Find User (You nee send a JWT token and send in authorization header, you can get it in the login route)",
+                "summary": "Find User (You will need send a JWT token in authorization header, you can get it in the login route)",
                 "parameters": [
                     {
                         "type": "string",
