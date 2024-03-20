@@ -1,6 +1,7 @@
 package user_usecases
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -8,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
 	user_interfaces "github.com/glener10/authentication/src/user/interfaces"
+	utils_usecases "github.com/glener10/authentication/src/utils/usecases"
 )
 
 type ChangePassword struct {
@@ -38,9 +40,21 @@ func (u *ChangePassword) Executar(c *gin.Context, find string, newPassword strin
 		return
 	}
 
-	//TODO: Check if e-mail already exists (need exists)
-	//TODO: Encrypt passowrd
-	//TODO: Change password hear
+	user, err := u.Repository.FindUser(find)
+	if err != nil {
+		statusCode := http.StatusNotFound
+		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		return
+	}
 
-	c.JSON(http.StatusOK, "returning the user")
+	newPasswordInHash, err := utils_usecases.GenerateHash(newPassword)
+	if err != nil {
+		statusCode := http.StatusInternalServerError
+		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		return
+	}
+
+	//TODO: Change password of "user" with "newPasswordInHash"
+	fmt.Println(user)
+	c.JSON(http.StatusOK, newPasswordInHash)
 }
