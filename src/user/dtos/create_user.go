@@ -11,11 +11,6 @@ type CreateUserRequest struct {
 	Password string `validate:"required" example:"aaaaaaaA#1"`
 }
 
-type CreateUserResponse struct {
-	Id    int    `example:"1"`
-	Email string `example:"fulano@fulano.com"`
-}
-
 func Validate(user *CreateUserRequest) error {
 	if user.Email == "" {
 		return errors.New("email is required")

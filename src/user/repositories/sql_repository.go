@@ -13,18 +13,18 @@ type SQLRepository struct {
 	Db *sql.DB
 }
 
-func (r *SQLRepository) CreateUser(user user_dtos.CreateUserRequest) (*user_dtos.CreateUserResponse, error) {
+func (r *SQLRepository) CreateUser(user user_dtos.CreateUserRequest) (*user_dtos.UserWithoutSensitiveData, error) {
 	query := "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id"
 	var pk int
 	err := r.Db.QueryRow(query, user.Email, user.Password).Scan(&pk)
 	if err != nil {
 		return nil, errors.New("Error creating user: " + err.Error())
 	}
-	object := user_dtos.CreateUserResponse{
+	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
 		Id:    pk,
 		Email: user.Email,
 	}
-	return &object, nil
+	return &userWithoutSensitiveData, nil
 }
 
 func (r *SQLRepository) FindUser(find string) (*user_entity.User, error) {
@@ -41,7 +41,7 @@ func (r *SQLRepository) FindUser(find string) (*user_entity.User, error) {
 	return &user, nil
 }
 
-func (r *SQLRepository) ChangePassword(find string, newPassword string) (*user_entity.User, error) {
+func (r *SQLRepository) ChangePassword(find string, newPassword string) (*user_dtos.UserWithoutSensitiveData, error) {
 	var user user_entity.User
 	var err error
 	if utils_validators.IsValidEmail(find) {
@@ -52,5 +52,10 @@ func (r *SQLRepository) ChangePassword(find string, newPassword string) (*user_e
 	if err != nil {
 		return nil, errors.New("error to change in repository with the parameter (id/email) '" + find + "'")
 	}
-	return &user, nil
+
+	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
+		Id:    user.Id,
+		Email: user.Email,
+	}
+	return &userWithoutSensitiveData, nil
 }

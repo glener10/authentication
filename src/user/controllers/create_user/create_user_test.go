@@ -280,7 +280,7 @@ func TestCreateUserWithSuccess(t *testing.T) {
 	response := httptest.NewRecorder()
 
 	r.ServeHTTP(response, req)
-	var actual user_dtos.CreateUserResponse
+	var actual user_dtos.UserWithoutSensitiveData
 	err := json.NewDecoder(response.Body).Decode(&actual)
 	if err != nil {
 		t.Errorf("failed to decode response body: %v", err)

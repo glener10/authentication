@@ -1,4 +1,3 @@
-Repository new method to change password and your tests
 Change password (Logged)
 tests of utils/validators
 E2E Change Password tests
