@@ -7,11 +7,6 @@ import (
 	utils_validators "github.com/glener10/authentication/src/utils/validators"
 )
 
-type FindUserResponse struct {
-	Id    int    `example:"1"`
-	Email string `example:"fulano@fulano.com"`
-}
-
 func ValidateFindUser(findUserParameter string) error {
 	if findUserParameter == "" {
 		return errors.New("find parameter is required")

@@ -17,7 +17,7 @@ import (
 // @Tags user
 // @Accept json
 // @Produce json
-// @Success 201 {object} user_dtos.CreateUserResponse
+// @Success 201 {object} user_dtos.UserWithoutSensitiveData
 // @Failure      422 {object} utils_interfaces.ErrorResponse
 // @Failure      408 {object} utils_interfaces.ErrorResponse
 // @Failure      500 {object} utils_interfaces.ErrorResponse

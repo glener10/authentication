@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
+	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_interfaces "github.com/glener10/authentication/src/user/interfaces"
 )
 
@@ -44,5 +45,10 @@ func (u *FindUser) Executar(c *gin.Context, find string) {
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
 		return
 	}
-	c.JSON(http.StatusOK, user)
+
+	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
+		Id:    user.Id,
+		Email: user.Email,
+	}
+	c.JSON(http.StatusOK, userWithoutSensitiveData)
 }

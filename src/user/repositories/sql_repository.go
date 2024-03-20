@@ -31,9 +31,9 @@ func (r *SQLRepository) FindUser(find string) (*user_entity.User, error) {
 	var user user_entity.User
 	var err error
 	if utils_validators.IsValidEmail(find) {
-		err = r.Db.QueryRow("SELECT id, email FROM users WHERE email = $1", find).Scan(&user.Id, &user.Email)
+		err = r.Db.QueryRow("SELECT id, email, password FROM users WHERE email = $1", find).Scan(&user.Id, &user.Email, &user.Password)
 	} else {
-		err = r.Db.QueryRow("SELECT id, email FROM users WHERE id = $1", find).Scan(&user.Id, &user.Email)
+		err = r.Db.QueryRow("SELECT id, email, password FROM users WHERE id = $1", find).Scan(&user.Id, &user.Email, &user.Password)
 	}
 	if err != nil {
 		return nil, errors.New("no element with the parameter (id/email) '" + find + "'")
