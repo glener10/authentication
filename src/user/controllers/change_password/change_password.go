@@ -24,7 +24,6 @@ import (
 // @Failure      401 {object} utils_interfaces.ErrorResponse
 // @Router /user/changePassword/{find} [get]
 func ChangePassword(c *gin.Context) {
-	parameter := c.Param("find")
 	var newPassword user_dtos.ChangePasswordRequest
 	if err := c.ShouldBindJSON(&newPassword); err != nil {
 		statusCode := http.StatusUnprocessableEntity
@@ -32,6 +31,12 @@ func ChangePassword(c *gin.Context) {
 		return
 	}
 	if err := user_dtos.ValidateChangePassword(&newPassword); err != nil {
+		statusCode := http.StatusUnprocessableEntity
+		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		return
+	}
+	parameter := c.Param("find")
+	if err := user_dtos.ValidateFindUser(parameter); err != nil {
 		statusCode := http.StatusUnprocessableEntity
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
 		return
