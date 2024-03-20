@@ -11,29 +11,20 @@ definitions:
     - email
     - password
     type: object
-  user_dtos.CreateUserResponse:
-    properties:
-      email:
-        example: fulano@fulano.com
-        type: string
-      id:
-        example: 1
-        type: integer
-    type: object
-  user_dtos.FindUserResponse:
-    properties:
-      email:
-        example: fulano@fulano.com
-        type: string
-      id:
-        example: 1
-        type: integer
-    type: object
   user_dtos.LoginResponse:
     properties:
       jwt:
         example: randomJwt
         type: string
+    type: object
+  user_dtos.UserWithoutSensitiveData:
+    properties:
+      email:
+        example: fulano@fulano.com
+        type: string
+      id:
+        example: 1
+        type: integer
     type: object
   utils_interfaces.ErrorResponse:
     properties:
@@ -94,7 +85,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/user_dtos.CreateUserResponse'
+            $ref: '#/definitions/user_dtos.UserWithoutSensitiveData'
         "408":
           description: Request Timeout
           schema:
@@ -131,7 +122,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/user_dtos.FindUserResponse'
+            $ref: '#/definitions/user_dtos.UserWithoutSensitiveData'
         "401":
           description: Unauthorized
           schema:
@@ -171,7 +162,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/user_dtos.FindUserResponse'
+            $ref: '#/definitions/user_dtos.UserWithoutSensitiveData'
         "401":
           description: Unauthorized
           schema:

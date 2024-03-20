@@ -81,7 +81,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/user_dtos.CreateUserResponse"
+                            "$ref": "#/definitions/user_dtos.UserWithoutSensitiveData"
                         }
                     },
                     "408": {
@@ -141,7 +141,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/user_dtos.FindUserResponse"
+                            "$ref": "#/definitions/user_dtos.UserWithoutSensitiveData"
                         }
                     },
                     "401": {
@@ -201,7 +201,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/user_dtos.FindUserResponse"
+                            "$ref": "#/definitions/user_dtos.UserWithoutSensitiveData"
                         }
                     },
                     "401": {
@@ -244,38 +244,25 @@ const docTemplate = `{
                 }
             }
         },
-        "user_dtos.CreateUserResponse": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "fulano@fulano.com"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                }
-            }
-        },
-        "user_dtos.FindUserResponse": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "fulano@fulano.com"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                }
-            }
-        },
         "user_dtos.LoginResponse": {
             "type": "object",
             "properties": {
                 "jwt": {
                     "type": "string",
                     "example": "randomJwt"
+                }
+            }
+        },
+        "user_dtos.UserWithoutSensitiveData": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "fulano@fulano.com"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
                 }
             }
         },
