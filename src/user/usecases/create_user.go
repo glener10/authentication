@@ -9,7 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_interfaces "github.com/glener10/authentication/src/user/interfaces"
-	utils_validators "github.com/glener10/authentication/src/utils/validators"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -18,12 +17,12 @@ type CreateUser struct {
 }
 
 func (u *CreateUser) Executar(c *gin.Context, user user_dtos.CreateUserRequest) {
-	err := u.ValidateCreateUser(user)
-	if err != nil {
+	if u.CheckIfEmailAlreadyExists(user.Email) {
 		statusCode := http.StatusUnprocessableEntity
-		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		c.JSON(statusCode, gin.H{"error": user.Email + " already exists", "statusCode": statusCode})
 		return
 	}
+
 	hashPassword, err := u.GenerateHash(user.Password)
 	if err != nil {
 		statusCode := http.StatusInternalServerError
@@ -48,17 +47,6 @@ func (u *CreateUser) GenerateHash(password string) (*string, error) {
 	}
 	hashedPasswordInString := string(hashedPassword)
 	return &hashedPasswordInString, nil
-}
-
-func (u *CreateUser) ValidateCreateUser(user user_dtos.CreateUserRequest) error {
-	if u.CheckIfEmailAlreadyExists(user.Email) {
-		return errors.New(user.Email + " already exists")
-	}
-	err := utils_validators.ValidateStrongPassword(user.Password)
-	if err != nil {
-		return errors.New(err.Error())
-	}
-	return nil
 }
 
 func (u *CreateUser) CheckIfEmailAlreadyExists(email string) bool {

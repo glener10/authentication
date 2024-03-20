@@ -2,6 +2,8 @@ package user_dtos
 
 import (
 	"errors"
+
+	utils_validators "github.com/glener10/authentication/src/utils/validators"
 )
 
 type ChangePasswordRequest struct {
@@ -14,6 +16,10 @@ func ValidateChangePassword(request *ChangePasswordRequest) error {
 	}
 	if len(request.Password) > 60 {
 		return errors.New("password is too long")
+	}
+	err := utils_validators.ValidateStrongPassword(request.Password)
+	if err != nil {
+		return errors.New(err.Error())
 	}
 	return nil
 }

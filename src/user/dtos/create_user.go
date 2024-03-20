@@ -32,5 +32,9 @@ func Validate(user *CreateUserRequest) error {
 	if !utils_validators.IsValidEmail(user.Email) {
 		return errors.New("email is not in the correct format")
 	}
+	err := utils_validators.ValidateStrongPassword(user.Password)
+	if err != nil {
+		return errors.New(err.Error())
+	}
 	return nil
 }
