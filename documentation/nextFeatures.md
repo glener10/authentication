@@ -1,4 +1,5 @@
-Account Update (Logged): Do not allow invalid email, do not allow weak password, do not allow repeated email
+Change password (Logged)
+Change email (Logged)
 Delete Account (Logged)
 E-mail verification
 Password Recovery: use a unique token
