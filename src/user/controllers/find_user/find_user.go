@@ -11,7 +11,7 @@ import (
 )
 
 // FindUser
-// @Summary Find User (You nee send a JWT token and send in authorization header, you can get it in the login route)
+// @Summary Find User (You will need send a JWT token in authorization header, you can get it in the login route)
 // @Description Find user by e-mail or id
 // @Tags user
 // @Produce json

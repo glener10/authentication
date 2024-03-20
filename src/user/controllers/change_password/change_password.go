@@ -10,9 +10,9 @@ import (
 	user_usecases "github.com/glener10/authentication/src/user/usecases"
 )
 
-// FindUser
-// @Summary Find User (You nee send a JWT token and send in authorization header, you can get it in the login route)
-// @Description Find user by e-mail or id
+// ChangePassword
+// @Summary Change Password (You will need send a JWT token in authorization header, you can get it in the login route)
+// @Description Change Password by id or email
 // @Tags user
 // @Produce json
 // @Security Bearer
@@ -22,15 +22,22 @@ import (
 // @Failure      422 {object} utils_interfaces.ErrorResponse
 // @Failure      404 {object} utils_interfaces.ErrorResponse
 // @Failure      401 {object} utils_interfaces.ErrorResponse
-// @Router /user/{find} [get]
+// @Router /user/changePassword/{find} [get]
 func ChangePassword(c *gin.Context) {
 	parameter := c.Param("find")
-	if err := user_dtos.ValidateFindUser(parameter); err != nil {
+	var newPassword user_dtos.ChangePasswordRequest
+	if err := c.ShouldBindJSON(&newPassword); err != nil {
+		statusCode := http.StatusUnprocessableEntity
+		c.JSON(statusCode, gin.H{"error": "invalid request body", "statusCode": statusCode})
+		return
+	}
+	if err := user_dtos.ValidateChangePassword(&newPassword); err != nil {
 		statusCode := http.StatusUnprocessableEntity
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
 		return
 	}
+
 	repository := &user_repositories.SQLRepository{Db: db_postgres.GetDb()}
-	useCase := &user_usecases.FindUser{Repository: repository}
-	useCase.Executar(c, parameter)
+	useCase := &user_usecases.ChangePassword{Repository: repository}
+	useCase.Executar(c, parameter, newPassword.Password)
 }
