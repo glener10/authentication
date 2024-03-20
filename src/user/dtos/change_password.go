@@ -17,7 +17,7 @@ func ValidateChangePassword(request *ChangePasswordRequest) error {
 	if len(request.Password) > 60 {
 		return errors.New("password is too long")
 	}
-	err := utils_validators.ValidateStrongPassword(request.Password)
+	err := utils_validators.IsStrongPassword(request.Password)
 	if err != nil {
 		return errors.New(err.Error())
 	}

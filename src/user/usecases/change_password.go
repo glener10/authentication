@@ -31,13 +31,15 @@ func (u *ChangePassword) Executar(c *gin.Context, find string, newPassword strin
 		return
 	}
 
-	idFinInNumber, _ := strconv.ParseFloat(find, 64)
-	if idFinInNumber != idInClaims && find != emailInClaims {
+	idFindInNumber, _ := strconv.ParseFloat(find, 64)
+	if idFindInNumber != idInClaims && find != emailInClaims {
 		statusCode := http.StatusUnauthorized
 		c.JSON(statusCode, gin.H{"error": "you do not have permission to perform this operation", "statusCode": statusCode})
 		return
 	}
 
+	//TODO: Check if e-mail already exists (need exists)
+	//TODO: Encrypt passowrd
 	//TODO: Change password hear
 
 	c.JSON(http.StatusOK, "returning the user")
