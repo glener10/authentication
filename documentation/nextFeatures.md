@@ -1,7 +1,4 @@
-Change password (Logged)
 tests of utils/validators
-E2E Change Password tests
-Updating changelog.md and README.md
 
 Change email (Logged)
 Delete Account (Logged)
