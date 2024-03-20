@@ -1,7 +1,6 @@
 package user_usecases
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -40,7 +39,7 @@ func (u *ChangePassword) Executar(c *gin.Context, find string, newPassword strin
 		return
 	}
 
-	user, err := u.Repository.FindUser(find)
+	_, err = u.Repository.FindUser(find)
 	if err != nil {
 		statusCode := http.StatusNotFound
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
@@ -54,7 +53,11 @@ func (u *ChangePassword) Executar(c *gin.Context, find string, newPassword strin
 		return
 	}
 
-	//TODO: Change password of "user" with "newPasswordInHash"
-	fmt.Println(user)
-	c.JSON(http.StatusOK, newPasswordInHash)
+	userWithNewPassword, err := u.Repository.ChangePassword(find, *newPasswordInHash)
+	if err != nil {
+		statusCode := http.StatusInternalServerError
+		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		return
+	}
+	c.JSON(http.StatusOK, userWithNewPassword)
 }

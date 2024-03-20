@@ -40,3 +40,17 @@ func (r *SQLRepository) FindUser(find string) (*user_entity.User, error) {
 	}
 	return &user, nil
 }
+
+func (r *SQLRepository) ChangePassword(find string, newPassword string) (*user_entity.User, error) {
+	var user user_entity.User
+	var err error
+	if utils_validators.IsValidEmail(find) {
+		err = r.Db.QueryRow("UPDATE users SET password = $1 WHERE email = $2 RETURNING id, email", newPassword, find).Scan(&user.Id, &user.Email)
+	} else {
+		err = r.Db.QueryRow("UPDATE users SET password = $1 WHERE id = $2 RETURNING id, email", newPassword, find).Scan(&user.Id, &user.Email)
+	}
+	if err != nil {
+		return nil, errors.New("error to change in repository with the parameter (id/email) '" + find + "'")
+	}
+	return &user, nil
+}
