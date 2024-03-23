@@ -1,4 +1,6 @@
-In dellg15, install go swagger and check why login dont work
+In dellg15, install go swagger
+check why login dont work
+check delete use case
 
 Operation history: User, location, IP, success or not, date, time in all use cases
 E-mail verification
