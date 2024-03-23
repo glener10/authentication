@@ -90,3 +90,41 @@ func TestChangePasswordWithoutSuccessBecauseUserDoenstExists(t *testing.T) {
 	assert.Error(t, err)
 	assert.Nil(t, userWithPasswordChanged, "should not change password because the user with the find parameter doenst exists")
 }
+
+func TestChangeEmailByIdWithSuccess(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+	assert.NotNil(t, user, "the created object cannot be null")
+	newEmail := "newFulano@fulano.com"
+	userWithEmailChanged, err := repository.ChangeEmail(strconv.Itoa(user.Id), newEmail)
+	assert.NoError(t, err)
+	assert.NotNil(t, userWithEmailChanged, "change email with success")
+}
+
+func TestChangeEmailByEmailWithSuccess(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+	assert.NotNil(t, user, "the created object cannot be null")
+	newEmail := "newFulano@fulano.com"
+	userWithEmailChanged, err := repository.ChangeEmail(user.Email, newEmail)
+	assert.NoError(t, err)
+	assert.NotNil(t, userWithEmailChanged, "change email with success")
+}
+
+func TestChangeEmailWithoutSuccessBecauseUserDoenstExists(t *testing.T) {
+	tests.BeforeEach()
+	newEmail := "newFulano@fulano.com"
+	userWithEmailChanged, err := repository.ChangeEmail(tests.ValidEmail, newEmail)
+	assert.Error(t, err)
+	assert.Nil(t, userWithEmailChanged, "should not change email because the user with the find parameter doenst exists")
+}

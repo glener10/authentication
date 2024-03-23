@@ -50,7 +50,26 @@ func (r *SQLRepository) ChangePassword(find string, newPassword string) (*user_d
 		err = r.Db.QueryRow("UPDATE users SET password = $1 WHERE id = $2 RETURNING id, email", newPassword, find).Scan(&user.Id, &user.Email)
 	}
 	if err != nil {
-		return nil, errors.New("error to change in repository with the parameter (id/email) '" + find + "'")
+		return nil, errors.New("error to change password in repository with the parameter (id/email) '" + find + "'")
+	}
+
+	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
+		Id:    user.Id,
+		Email: user.Email,
+	}
+	return &userWithoutSensitiveData, nil
+}
+
+func (r *SQLRepository) ChangeEmail(find string, newEmail string) (*user_dtos.UserWithoutSensitiveData, error) {
+	var user user_entity.User
+	var err error
+	if utils_validators.IsValidEmail(find) {
+		err = r.Db.QueryRow("UPDATE users SET email = $1 WHERE email = $2 RETURNING id, email", newEmail, find).Scan(&user.Id, &user.Email)
+	} else {
+		err = r.Db.QueryRow("UPDATE users SET email = $1 WHERE id = $2 RETURNING id, email", newEmail, find).Scan(&user.Id, &user.Email)
+	}
+	if err != nil {
+		return nil, errors.New("error to change email in repository with the parameter (id/email) '" + find + "'")
 	}
 
 	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
