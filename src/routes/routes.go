@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/glener10/authentication/docs"
 	middlewares "github.com/glener10/authentication/src/routes/middlewares"
+	change_email_controller "github.com/glener10/authentication/src/user/controllers/change_email"
 	change_password_controller "github.com/glener10/authentication/src/user/controllers/change_password"
 	create_user_controller "github.com/glener10/authentication/src/user/controllers/create_user"
 	find_user_controller "github.com/glener10/authentication/src/user/controllers/find_user"
@@ -46,6 +47,7 @@ func HandlerRoutes() *gin.Engine {
 
 	r.GET("/user/:find", find_user_controller.FindUser)
 	r.PUT("/user/changePassword/:find", change_password_controller.ChangePassword)
+	r.PUT("/user/changeEmail/:find", change_email_controller.ChangeEmail)
 	return r
 }
 
