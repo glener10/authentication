@@ -102,6 +102,43 @@ paths:
       tags:
       - user
   /user/{find}:
+    delete:
+      description: Delete user by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Delete User (You will need send a JWT token in authorization header,
+        you can get it in the login route)
+      tags:
+      - user
     get:
       description: Find user by e-mail or id
       parameters:
@@ -141,8 +178,48 @@ paths:
         you can get it in the login route)
       tags:
       - user
+  /user/changeEmail/{find}:
+    patch:
+      description: Change Email by id or email
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dtos.UserWithoutSensitiveData'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Change Email (You will need send a JWT token in authorization header,
+        you can get it in the login route)
+      tags:
+      - user
   /user/changePassword/{find}:
-    get:
+    patch:
       description: Change Password by id or email
       parameters:
       - description: 'Search parameter: e-mail or id'
