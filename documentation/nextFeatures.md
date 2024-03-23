@@ -1,3 +1,5 @@
+In dellg15, install go swagger and check why login dont work
+
 Operation history: User, location, IP, success or not, date, time in all use cases
 E-mail verification
 Password Recovery: use a unique token sended to email
