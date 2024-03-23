@@ -9,7 +9,8 @@ import (
 )
 
 func GenerateHash(password string) (*string, error) {
-	saltConverted, _ := strconv.Atoi(os.Getenv("PASSWORD_SALT_NUMBER"))
+	saltNumber := os.Getenv("PASSWORD_SALT_NUMBER")
+	saltConverted, _ := strconv.Atoi(saltNumber)
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), saltConverted)
 	if err != nil {
 		return nil, errors.New("error in hash generation")

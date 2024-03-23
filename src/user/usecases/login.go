@@ -23,7 +23,7 @@ func (u *Login) Executar(c *gin.Context, user user_dtos.CreateUserRequest) {
 	}
 
 	passwordIsValid := bcrypt.CompareHashAndPassword([]byte(userInDb.Password), []byte(user.Password))
-	if passwordIsValid == nil {
+	if passwordIsValid != nil {
 		statusCode := http.StatusUnauthorized
 		c.JSON(statusCode, gin.H{"error": "email or password is incorret", "statusCode": statusCode})
 		return
