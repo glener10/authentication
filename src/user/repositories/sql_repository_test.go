@@ -128,3 +128,46 @@ func TestChangeEmailWithoutSuccessBecauseUserDoenstExists(t *testing.T) {
 	assert.Error(t, err)
 	assert.Nil(t, userWithEmailChanged, "should not change email because the user with the find parameter doenst exists")
 }
+
+func TestDeleteUserByIdWithSuccess(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+	assert.NotNil(t, user, "the created object cannot be null")
+
+	err = repository.DeleteUser(strconv.Itoa(user.Id))
+	assert.NoError(t, err)
+
+	findUserAfterDeletion, err := repository.FindUser(strconv.Itoa(user.Id))
+	assert.Error(t, err)
+	assert.Nil(t, findUserAfterDeletion, "shouldn't find result because the user as deleted before")
+}
+
+func TestDeleteUserByEmailWithSuccess(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+	assert.NotNil(t, user, "the created object cannot be null")
+
+	err = repository.DeleteUser(user.Email)
+	assert.NoError(t, err)
+
+	findUserAfterDeletion, err := repository.FindUser("fulano@fulano.com")
+	assert.Error(t, err)
+	assert.Nil(t, findUserAfterDeletion, "shouldn't find result because the user as deleted before")
+}
+
+func TestDeleteUserWithoutSuccessBecauseUserDoenstExists(t *testing.T) {
+	tests.BeforeEach()
+
+	err := repository.DeleteUser(tests.ValidEmail)
+	assert.Equal(t, err.Error(), "doesnt exists user with 'fulano@fulano.com' atribute", "should return a error informing that user doesnt exists")
+}

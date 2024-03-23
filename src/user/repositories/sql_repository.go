@@ -78,3 +78,25 @@ func (r *SQLRepository) ChangeEmail(find string, newEmail string) (*user_dtos.Us
 	}
 	return &userWithoutSensitiveData, nil
 }
+
+func (r *SQLRepository) DeleteUser(find string) error {
+	var err error
+	var result sql.Result
+	if utils_validators.IsValidEmail(find) {
+		result, err = r.Db.Exec("DELETE FROM users WHERE email = $1", find)
+	} else {
+		result, err = r.Db.Exec("DELETE FROM users WHERE id = $1", find)
+	}
+	if err != nil {
+		return errors.New("error to delete user in repository with the parameter (id/email) '" + find + "': " + err.Error())
+	}
+
+	numRows, err := result.RowsAffected()
+	if err != nil {
+		return errors.New("error while checking affected rows: " + err.Error())
+	}
+	if numRows == 0 {
+		return errors.New("doesnt exists user with '" + find + "' atribute")
+	}
+	return nil
+}
