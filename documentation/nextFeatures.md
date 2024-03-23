@@ -1,12 +1,10 @@
-update Swagger
-Delete Account (Logged)
+Operation history: User, location, IP, success or not, date, time in all use cases
 E-mail verification
 Password Recovery: use a unique token sended to email
 Login with google
 2FA
-User Control: Log out, block, delete (Only users with permission can due)
+User Control: Log out, block, delete (Only users with permission can due), list all users, list all logs of a user, etc
 User notification when strange login ocurred
-Operation history: User, location, IP, success or not, date, time in all use cases
 
 Database backups, rules and administration
 Docker

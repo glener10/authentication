@@ -121,11 +121,12 @@
 
 🏗 **Use Cases**
 
-- create_user: Do not allow repeated emails and weak passwords
-- login: With JWT
+- delete_user (need to be logged in): delete by id or e-mail
 - find_user (need to be logged in): find by id or e-mail
 - change_password (need to be logged in)
 - change_email (need to be logged in)
+- login: With JWT
+- create_user: Do not allow repeated emails and weak passwords
 
 💡 **Technical Decisions**
 
