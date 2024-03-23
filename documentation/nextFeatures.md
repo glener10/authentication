@@ -1,5 +1,3 @@
-In dellg15, install go swagger
-why allways need permission to exec debug or server locally in dellg15
 check delete use case
 
 Operation history: User, location, IP, success or not, date, time in all use cases
