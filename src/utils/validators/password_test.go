@@ -11,7 +11,7 @@ type DataProviderWeakPasswordType struct {
 	ExpectedReturn string
 }
 
-func TestIsStrongPassword(t *testing.T) {
+func TestIsStrongPasswordWithWeaksPasswords(t *testing.T) {
 	dataProviderWeakPassword := []*DataProviderWeakPasswordType{
 		{
 			WeakPassword:   "a",
@@ -36,6 +36,10 @@ func TestIsStrongPassword(t *testing.T) {
 	}
 
 	for _, data := range dataProviderWeakPassword {
-		assert.Equal(t, IsStrongPassword(data.WeakPassword).Error(), data.ExpectedReturn, "should return a expecteded error")
+		assert.Equal(t, IsStrongPassword(data.WeakPassword).Error(), data.ExpectedReturn, "should return the error message '"+data.ExpectedReturn+"' to weak password '"+data.WeakPassword+"'")
 	}
+}
+
+func TestIsStrongPasswordWithStrongPassword(t *testing.T) {
+	assert.Equal(t, IsStrongPassword("aaaaaA#7"), nil, "should return nil to a strong password")
 }
