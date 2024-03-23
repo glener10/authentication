@@ -3,7 +3,7 @@ tests of utils/validators
 Change email (Logged)
 Delete Account (Logged)
 E-mail verification
-Password Recovery: use a unique token
+Password Recovery: use a unique token sended to email
 Login with google
 2FA
 User Control: Log out, block, delete (Only users with permission can due)
