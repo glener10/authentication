@@ -125,6 +125,7 @@
 - login: With JWT
 - find_user (need to be logged in): find by id or e-mail
 - change_password (need to be logged in)
+- change_email (need to be logged in)
 
 💡 **Technical Decisions**
 

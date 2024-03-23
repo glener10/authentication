@@ -1,7 +1,4 @@
-change_email usecase
-change_email e2e tests
-update README, Swag and nextFeatures
-
+update Swagger
 Delete Account (Logged)
 E-mail verification
 Password Recovery: use a unique token sended to email

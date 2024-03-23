@@ -1,5 +1,6 @@
 # [v0.0.1] - XX/XX/XXXX
 
+- change_email (need to be logged in) use case, all tests, bdd and route documentation
 - change_password (need to be logged in) use case, all tests, bdd and route documentation
 - jwt middleware to check if the token signature is valid
 - find_user (need to be logged in) use case, all tests, bdd and route documentation
