@@ -1,4 +1,4 @@
-check delete use case
+check bug in delete user usecase
 
 Operation history: User, location, IP, success or not, date, time in all use cases
 E-mail verification
