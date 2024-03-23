@@ -175,7 +175,7 @@ $ migrate -database postgres://myuser:mypassword@localhost:5432/mydatabase?sslmo
 
 ## 🧹 **Formatting the Code**
 
-To check the code format you can run the following command in the root folder:
+To check the code format you will need [instal golangci-lint](https://golangci-lint.run/welcome/install/) and run the following command in the root folder:
 
 ```
 $ golangci-lint run

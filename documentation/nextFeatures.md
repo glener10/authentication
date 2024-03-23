@@ -1,5 +1,3 @@
-tests of utils/validators
-
 Change email (Logged)
 Delete Account (Logged)
 E-mail verification
