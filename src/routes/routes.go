@@ -54,7 +54,13 @@ func HandlerRoutes() *gin.Engine {
 }
 
 func Listening(r *gin.Engine) {
-	err := r.Run()
+	var err error
+	if os.Getenv("ENV") != "development" {
+		err = r.Run()
+	} else {
+		addr := "127.0.0.1:8000"
+		err = r.Run(addr)
+	}
 	if err != nil {
 		log.Fatalf("error to up routes")
 	}
