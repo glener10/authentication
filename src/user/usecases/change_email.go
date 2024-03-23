@@ -45,11 +45,11 @@ func (u *ChangeEmail) Executar(c *gin.Context, find string, newEmail string) {
 		return
 	}
 
-	/* userWithNewPassword, err := u.Repository.ChangePassword(find, *newPasswordInHash)
+	userWithNewEmail, err := u.Repository.ChangeEmail(find, newEmail)
 	if err != nil {
 		statusCode := http.StatusInternalServerError
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
 		return
-	} */
-	c.JSON(http.StatusOK, "returning new email")
+	}
+	c.JSON(http.StatusOK, userWithNewEmail)
 }

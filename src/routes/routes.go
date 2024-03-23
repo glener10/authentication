@@ -29,9 +29,12 @@ func HandlerRoutes() *gin.Engine {
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
-	rateLimiter := middlewares.NewRateLimiter(11, time.Minute)
-	r.Use(middlewares.RequestLimitMiddleware(rateLimiter))
-	r.Use(middlewares.TimeoutMiddleware())
+
+	if os.Getenv("ENV") != "development" {
+		rateLimiter := middlewares.NewRateLimiter(11, time.Minute)
+		r.Use(middlewares.RequestLimitMiddleware(rateLimiter))
+		r.Use(middlewares.TimeoutMiddleware())
+	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	r.GET("/", middlewares.HelloWorld)

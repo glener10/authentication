@@ -9,4 +9,5 @@ type IUserRepository interface {
 	CreateUser(user user_dtos.CreateUserRequest) (*user_dtos.UserWithoutSensitiveData, error)
 	FindUser(find string) (*user_entity.User, error)
 	ChangePassword(find string, newPassword string) (*user_dtos.UserWithoutSensitiveData, error)
+	ChangeEmail(find string, newEmail string) (*user_dtos.UserWithoutSensitiveData, error)
 }
