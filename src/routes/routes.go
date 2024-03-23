@@ -13,6 +13,7 @@ import (
 	change_email_controller "github.com/glener10/authentication/src/user/controllers/change_email"
 	change_password_controller "github.com/glener10/authentication/src/user/controllers/change_password"
 	create_user_controller "github.com/glener10/authentication/src/user/controllers/create_user"
+	delete_user_controller "github.com/glener10/authentication/src/user/controllers/delete_user"
 	find_user_controller "github.com/glener10/authentication/src/user/controllers/find_user"
 	login_controller "github.com/glener10/authentication/src/user/controllers/login"
 	swaggerfiles "github.com/swaggo/files"
@@ -46,6 +47,7 @@ func HandlerRoutes() *gin.Engine {
 	//r.Use(middlewares.HTTPSOnlyMiddleware())
 
 	r.GET("/user/:find", find_user_controller.FindUser)
+	r.DELETE("/user/:find", delete_user_controller.DeleteUser)
 	r.PUT("/user/changePassword/:find", change_password_controller.ChangePassword)
 	r.PUT("/user/changeEmail/:find", change_email_controller.ChangeEmail)
 	return r

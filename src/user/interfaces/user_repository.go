@@ -10,4 +10,5 @@ type IUserRepository interface {
 	FindUser(find string) (*user_entity.User, error)
 	ChangePassword(find string, newPassword string) (*user_dtos.UserWithoutSensitiveData, error)
 	ChangeEmail(find string, newEmail string) (*user_dtos.UserWithoutSensitiveData, error)
+	DeleteUser(find string) error
 }
