@@ -58,7 +58,7 @@ func Listening(r *gin.Engine) {
 	if os.Getenv("ENV") != "development" {
 		err = r.Run()
 	} else {
-		addr := "127.0.0.1:8000"
+		addr := "localhost:8080"
 		err = r.Run(addr)
 	}
 	if err != nil {
