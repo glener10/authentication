@@ -1,9 +1,17 @@
-Operation history: User, location, IP, success or not, date, time in all use cases
+Create a migration to create table 'logs' with UserId, location, IP, success or not, date, dth, Operation in use cases:
+Create repository to 'logs' folder to operation in new table and your tests
+OBS: Use async go routine in the usecases
+- user creation
+- password changed with success and failure
+- email changed with success and failure
+- login  with success and failure
+- user deleted with success and failure
+
+User Control: Log out, block, delete (Only users with permission can due), list all users, list all logs of a user, etc
 E-mail verification
 Password Recovery: use a unique token sended to email
 Login with google
 2FA
-User Control: Log out, block, delete (Only users with permission can due), list all users, list all logs of a user, etc
 User notification when strange login ocurred
 
 Database backups, rules and administration
