@@ -31,6 +31,6 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 	repository := &user_repositories.SQLRepository{Db: db_postgres.GetDb()}
-	useCase := &user_usecases.FindUser{Repository: repository}
+	useCase := &user_usecases.DeleteUser{Repository: repository}
 	useCase.Executar(c, parameter)
 }

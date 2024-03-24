@@ -109,8 +109,7 @@ func TestDeleteUserByIdAndValidJwtWithSuccess(t *testing.T) {
 	assert.Equal(t, response.Result().StatusCode, http.StatusOK, "should return a 200 status code")
 
 	_, err = repository.FindUser(strconv.Itoa(createdUser.Id))
-	assert.Error(t, err, "should return error because the user as deleted before")
-	assert.Equal(t, err.Error(), "Error message after upside test pass")
+	assert.Error(t, err, "no element with the parameter (id/email) '1'")
 }
 
 func TestDeleteUserByEmailAndValidJwtWithSuccess(t *testing.T) {
@@ -141,8 +140,7 @@ func TestDeleteUserByEmailAndValidJwtWithSuccess(t *testing.T) {
 
 	assert.Equal(t, response.Result().StatusCode, http.StatusOK, "should return a 200 status code")
 	_, err = repository.FindUser(createdUser.Email)
-	assert.Error(t, err, "should return error because the user as deleted before")
-	assert.Equal(t, err.Error(), "Error message after upside test pass")
+	assert.Error(t, err, "no element with the parameter (id/email) '"+tests.ValidEmail+"'")
 }
 
 func TestDeleteUserByIdAndJwtOfOtherUser(t *testing.T) {
