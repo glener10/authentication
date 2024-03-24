@@ -1,5 +1,3 @@
-check bug in delete user usecase
-
 Operation history: User, location, IP, success or not, date, time in all use cases
 E-mail verification
 Password Recovery: use a unique token sended to email
