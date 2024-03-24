@@ -1,4 +1,3 @@
-Create a migration to create table 'logs' with UserId, location, IP, success or not, date, dth, Operation in use cases:
 Create repository to 'logs' folder to operation in new table and your tests
 OBS: Use async go routine in the usecases
 - user creation
