@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
@@ -85,7 +86,7 @@ func TestDeleteUserByIdAndValidJwtWithSuccess(t *testing.T) {
 		Email:    tests.ValidEmail,
 		Password: tests.ValidPassword,
 	}
-	_, err := repository.CreateUser(requestBody)
+	createdUser, err := repository.CreateUser(requestBody)
 	if err != nil {
 		t.Errorf("failed to create user in 'TestDeleteUserByIdAndValidJwtWithSuccess' test: %v", err)
 	}
@@ -106,6 +107,10 @@ func TestDeleteUserByIdAndValidJwtWithSuccess(t *testing.T) {
 	r.ServeHTTP(response, req)
 
 	assert.Equal(t, response.Result().StatusCode, http.StatusOK, "should return a 200 status code")
+
+	_, err = repository.FindUser(strconv.Itoa(createdUser.Id))
+	assert.Error(t, err, "should return error because the user as deleted before")
+	assert.Equal(t, err.Error(), "Error message after upside test pass")
 }
 
 func TestDeleteUserByEmailAndValidJwtWithSuccess(t *testing.T) {
@@ -114,7 +119,7 @@ func TestDeleteUserByEmailAndValidJwtWithSuccess(t *testing.T) {
 		Email:    tests.ValidEmail,
 		Password: tests.ValidPassword,
 	}
-	_, err := repository.CreateUser(requestBody)
+	createdUser, err := repository.CreateUser(requestBody)
 	if err != nil {
 		t.Errorf("failed to create user in 'TestDeleteUserByEmailAndValidJwtWithSuccess' test: %v", err)
 	}
@@ -135,6 +140,9 @@ func TestDeleteUserByEmailAndValidJwtWithSuccess(t *testing.T) {
 	r.ServeHTTP(response, req)
 
 	assert.Equal(t, response.Result().StatusCode, http.StatusOK, "should return a 200 status code")
+	_, err = repository.FindUser(createdUser.Email)
+	assert.Error(t, err, "should return error because the user as deleted before")
+	assert.Equal(t, err.Error(), "Error message after upside test pass")
 }
 
 func TestDeleteUserByIdAndJwtOfOtherUser(t *testing.T) {
