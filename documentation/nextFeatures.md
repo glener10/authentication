@@ -1,10 +1,10 @@
-Create repository to 'logs' folder to operation in new table and your tests
-OBS: Use async go routine in the usecases
+OBS: Use async go routine in the usecases to create logs
 - user creation
 - password changed with success and failure
 - email changed with success and failure
 - login  with success and failure
 - user deleted with success and failure
+E2E test to check if after all usecases an log is created
 
 User Control: Log out, block, delete (Only users with permission can due), list all users, list all logs of a user, etc
 E-mail verification
