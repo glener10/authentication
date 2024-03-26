@@ -1,4 +1,4 @@
-package log_dtos
+package logs_dtos
 
 import (
 	"testing"

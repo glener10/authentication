@@ -1,4 +1,4 @@
-package log_entities
+package logs_entities
 
 import "time"
 

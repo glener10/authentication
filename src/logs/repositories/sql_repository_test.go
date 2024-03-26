@@ -5,7 +5,7 @@ import (
 	"time"
 
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
-	log_dtos "github.com/glener10/authentication/src/logs/dtos"
+	logs_dtos "github.com/glener10/authentication/src/logs/dtos"
 	"github.com/glener10/authentication/tests"
 	"github.com/stretchr/testify/assert"
 )
@@ -24,7 +24,7 @@ func TestCreateLogWithSuccess(t *testing.T) {
 	if err != nil {
 		t.Error("error to convert timestamp:", err)
 	}
-	dto := &log_dtos.CreateLogRequest{
+	dto := &logs_dtos.CreateLogRequest{
 		UserID:        1,
 		Success:       true,
 		OperationCode: "LOGIN",
