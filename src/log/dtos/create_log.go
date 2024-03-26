@@ -1,4 +1,4 @@
-package logs_dtos
+package log_dtos
 
 import "time"
 
