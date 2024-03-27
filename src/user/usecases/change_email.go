@@ -23,6 +23,20 @@ func (u *ChangeEmail) Executar(c *gin.Context, find string, newEmail string) {
 	authorizationHeader := c.GetHeader("Authorization")
 	jwtFromHeader := strings.Split(authorizationHeader, " ")[1]
 	claims, statusCode, err := jwt_usecases.CheckSignatureAndReturnClaims(jwtFromHeader)
+	if err != nil {
+		c.JSON(*statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		log := &log_dtos.CreateLogRequest{
+			FindParam:     find,
+			Route:         "user/changeEmail",
+			Method:        "PATCH",
+			Success:       false,
+			OperationCode: log_messages.JWT_INVALID_SIGNATURE,
+			Ip:            c.ClientIP(),
+			Timestamp:     time.Now(),
+		}
+		go u.LogRepository.CreateLog(*log)
+		return
+	}
 
 	idInClaims := claims["Id"]
 	emailInClaims := claims["Email"]
@@ -33,24 +47,13 @@ func (u *ChangeEmail) Executar(c *gin.Context, find string, newEmail string) {
 	}
 
 	idFindInNumber, _ := strconv.ParseFloat(find, 64)
-	if err != nil {
-		c.JSON(*statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		log := &log_dtos.CreateLogRequest{
-			UserID:        int(idFindInNumber),
-			Success:       false,
-			OperationCode: log_messages.JWT_INVALID_SIGNATURE,
-			Ip:            c.ClientIP(),
-			Timestamp:     time.Now(),
-		}
-		go u.LogRepository.CreateLog(*log)
-		return
-	}
-
 	if idFindInNumber != idInClaims && find != emailInClaims {
 		statusCode := http.StatusUnauthorized
 		c.JSON(statusCode, gin.H{"error": "you do not have permission to perform this operation", "statusCode": statusCode})
 		log := &log_dtos.CreateLogRequest{
-			UserID:        int(idFindInNumber),
+			FindParam:     find,
+			Route:         "user/changeEmail",
+			Method:        "PATCH",
 			Success:       false,
 			OperationCode: log_messages.JWT_UNAUTHORIZED,
 			Ip:            c.ClientIP(),
