@@ -4,7 +4,7 @@ import "time"
 
 type Log struct {
 	Id            int
-	FindParam     string
+	UserId        int
 	Route         string
 	Method        string
 	Success       bool

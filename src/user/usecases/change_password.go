@@ -24,14 +24,16 @@ func (u *ChangePassword) Executar(c *gin.Context, find string, newPassword strin
 	authorizationHeader := c.GetHeader("Authorization")
 	jwtFromHeader := strings.Split(authorizationHeader, " ")[1]
 	claims, statusCode, err := jwt_usecases.CheckSignatureAndReturnClaims(jwtFromHeader)
+
 	if err != nil {
 		c.JSON(*statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go u.CreateChangePasswordLog(find, false, log_messages.JWT_INVALID_SIGNATURE, c.ClientIP())
+		go u.CreateChangePasswordLog(nil, false, log_messages.JWT_INVALID_SIGNATURE, c.ClientIP())
 		return
 	}
 
 	idInClaims := claims["Id"]
 	emailInClaims := claims["Email"]
+	idInClaimsConvertedToInt := int((idInClaims).(float64))
 	if idInClaims == nil || emailInClaims == nil {
 		statusCode := http.StatusBadRequest
 		c.JSON(statusCode, gin.H{"error": "error to map id or email in claims", "statusCode": statusCode})
@@ -42,7 +44,7 @@ func (u *ChangePassword) Executar(c *gin.Context, find string, newPassword strin
 	if idFindInNumber != idInClaims && find != emailInClaims {
 		statusCode := http.StatusUnauthorized
 		c.JSON(statusCode, gin.H{"error": "you do not have permission to perform this operation", "statusCode": statusCode})
-		go u.CreateChangePasswordLog(find, false, log_messages.JWT_UNAUTHORIZED, c.ClientIP())
+		go u.CreateChangePasswordLog(&idInClaimsConvertedToInt, false, log_messages.JWT_UNAUTHORIZED, c.ClientIP())
 		return
 	}
 
@@ -64,16 +66,16 @@ func (u *ChangePassword) Executar(c *gin.Context, find string, newPassword strin
 	if err != nil {
 		statusCode := http.StatusInternalServerError
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go u.CreateChangePasswordLog(find, false, log_messages.CHANGE_PASSWORD_WITHOUT_SUCCESS, c.ClientIP())
+		go u.CreateChangePasswordLog(&idInClaimsConvertedToInt, false, log_messages.CHANGE_PASSWORD_WITHOUT_SUCCESS, c.ClientIP())
 		return
 	}
-	go u.CreateChangePasswordLog(find, true, log_messages.CHANGE_PASSWORD_WITH_SUCCESS, c.ClientIP())
+	go u.CreateChangePasswordLog(&idInClaimsConvertedToInt, true, log_messages.CHANGE_PASSWORD_WITH_SUCCESS, c.ClientIP())
 	c.JSON(http.StatusOK, userWithNewPassword)
 }
 
-func (u *ChangePassword) CreateChangePasswordLog(find string, success bool, operationCode string, ip string) {
+func (u *ChangePassword) CreateChangePasswordLog(userId *int, success bool, operationCode string, ip string) {
 	log := &log_dtos.CreateLogRequest{
-		FindParam:     find,
+		UserId:        userId,
 		Route:         "user/changePassword/:find",
 		Method:        "PATCH",
 		Success:       success,

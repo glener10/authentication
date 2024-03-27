@@ -24,7 +24,7 @@ func (u *Login) Executar(c *gin.Context, user user_dtos.CreateUserRequest) {
 	if err != nil {
 		statusCode := http.StatusUnauthorized
 		c.JSON(statusCode, gin.H{"error": "email or password is incorret", "statusCode": statusCode})
-		go u.LoginLog(userInDb.Email, false, log_messages.FIND_USER_NOT_FOUND, c.ClientIP())
+		go u.LoginLog(&userInDb.Id, false, log_messages.FIND_USER_NOT_FOUND, c.ClientIP())
 		return
 	}
 
@@ -32,7 +32,7 @@ func (u *Login) Executar(c *gin.Context, user user_dtos.CreateUserRequest) {
 	if passwordIsValid != nil {
 		statusCode := http.StatusUnauthorized
 		c.JSON(statusCode, gin.H{"error": "email or password is incorret", "statusCode": statusCode})
-		go u.LoginLog(userInDb.Email, false, log_messages.LOGIN_WITHOUT_SUCCESS, c.ClientIP())
+		go u.LoginLog(&userInDb.Id, false, log_messages.LOGIN_WITHOUT_SUCCESS, c.ClientIP())
 		return
 	}
 
@@ -46,13 +46,13 @@ func (u *Login) Executar(c *gin.Context, user user_dtos.CreateUserRequest) {
 	response := user_dtos.LoginResponse{
 		Jwt: *signedToken,
 	}
-	go u.LoginLog(userInDb.Email, true, log_messages.LOGIN_WITH_SUCCESS, c.ClientIP())
+	go u.LoginLog(&userInDb.Id, true, log_messages.LOGIN_WITH_SUCCESS, c.ClientIP())
 	c.JSON(http.StatusOK, response)
 }
 
-func (u *Login) LoginLog(find string, success bool, operationCode string, ip string) {
+func (u *Login) LoginLog(userId *int, success bool, operationCode string, ip string) {
 	log := &log_dtos.CreateLogRequest{
-		FindParam:     find,
+		UserId:        userId,
 		Route:         "login",
 		Method:        "POST",
 		Success:       success,

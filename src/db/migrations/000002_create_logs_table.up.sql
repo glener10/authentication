@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS logs (
     id SERIAL PRIMARY KEY,
-    find_param VARCHAR(60) NOT NULL,
+    user_id INTEGER,
     route VARCHAR(50) NOT NULL,
     method VARCHAR(15) NOT NULL,
     success BOOLEAN NOT NULL,

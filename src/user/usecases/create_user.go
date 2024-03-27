@@ -22,7 +22,7 @@ func (u *CreateUser) Executar(c *gin.Context, user user_dtos.CreateUserRequest) 
 	if u.CheckIfEmailAlreadyExists(user.Email) {
 		statusCode := http.StatusUnprocessableEntity
 		c.JSON(statusCode, gin.H{"error": user.Email + " already exists", "statusCode": statusCode})
-		go u.CreateUserLog("", false, log_messages.EMAIL_ALREADY_EXISTS, c.ClientIP())
+		go u.CreateUserLog(nil, false, log_messages.EMAIL_ALREADY_EXISTS, c.ClientIP())
 		return
 	}
 
@@ -37,10 +37,10 @@ func (u *CreateUser) Executar(c *gin.Context, user user_dtos.CreateUserRequest) 
 	if err != nil {
 		statusCode := http.StatusUnprocessableEntity
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go u.CreateUserLog("", false, log_messages.CREATE_USER_WITHOUT_SUCCESS, c.ClientIP())
+		go u.CreateUserLog(nil, false, log_messages.CREATE_USER_WITHOUT_SUCCESS, c.ClientIP())
 		return
 	}
-	go u.CreateUserLog("", true, log_messages.CREATE_USER_WITH_SUCCESS, c.ClientIP())
+	go u.CreateUserLog(&userCreated.Id, true, log_messages.CREATE_USER_WITH_SUCCESS, c.ClientIP())
 	c.JSON(http.StatusCreated, userCreated)
 }
 
@@ -49,9 +49,9 @@ func (u *CreateUser) CheckIfEmailAlreadyExists(email string) bool {
 	return err == nil
 }
 
-func (u *CreateUser) CreateUserLog(find string, success bool, operationCode string, ip string) {
+func (u *CreateUser) CreateUserLog(userId *int, success bool, operationCode string, ip string) {
 	log := &log_dtos.CreateLogRequest{
-		FindParam:     find,
+		UserId:        userId,
 		Route:         "user",
 		Method:        "POST",
 		Success:       success,

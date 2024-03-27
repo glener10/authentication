@@ -26,12 +26,13 @@ func (u *FindUser) Executar(c *gin.Context, find string) {
 	claims, statusCode, err := jwt_usecases.CheckSignatureAndReturnClaims(jwtFromHeader)
 	if err != nil {
 		c.JSON(*statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go u.FindUserLog(find, false, log_messages.JWT_INVALID_SIGNATURE, c.ClientIP())
+		go u.FindUserLog(nil, false, log_messages.JWT_INVALID_SIGNATURE, c.ClientIP())
 		return
 	}
 
 	idInClaims := claims["Id"]
 	emailInClaims := claims["Email"]
+	idInClaimsConvertedToInt := int((idInClaims).(float64))
 	if idInClaims == nil || emailInClaims == nil {
 		statusCode := http.StatusBadRequest
 		c.JSON(statusCode, gin.H{"error": "error to map id or email in claims", "statusCode": statusCode})
@@ -42,7 +43,7 @@ func (u *FindUser) Executar(c *gin.Context, find string) {
 	if idFinInNumber != idInClaims && find != emailInClaims {
 		statusCode := http.StatusUnauthorized
 		c.JSON(statusCode, gin.H{"error": "you do not have permission to perform this operation", "statusCode": statusCode})
-		go u.FindUserLog(find, false, log_messages.JWT_UNAUTHORIZED, c.ClientIP())
+		go u.FindUserLog(&idInClaimsConvertedToInt, false, log_messages.JWT_UNAUTHORIZED, c.ClientIP())
 		return
 	}
 
@@ -50,7 +51,7 @@ func (u *FindUser) Executar(c *gin.Context, find string) {
 	if err != nil {
 		statusCode := http.StatusNotFound
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go u.FindUserLog(find, false, log_messages.FIND_USER_WITHOUT_SUCCESS, c.ClientIP())
+		go u.FindUserLog(&idInClaimsConvertedToInt, false, log_messages.FIND_USER_WITHOUT_SUCCESS, c.ClientIP())
 		return
 	}
 
@@ -61,9 +62,9 @@ func (u *FindUser) Executar(c *gin.Context, find string) {
 	c.JSON(http.StatusOK, userWithoutSensitiveData)
 }
 
-func (u *FindUser) FindUserLog(find string, success bool, operationCode string, ip string) {
+func (u *FindUser) FindUserLog(userId *int, success bool, operationCode string, ip string) {
 	log := &log_dtos.CreateLogRequest{
-		FindParam:     find,
+		UserId:        userId,
 		Route:         "user/:find",
 		Method:        "DELETE",
 		Success:       success,

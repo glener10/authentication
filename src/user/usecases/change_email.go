@@ -23,14 +23,16 @@ func (u *ChangeEmail) Executar(c *gin.Context, find string, newEmail string) {
 	authorizationHeader := c.GetHeader("Authorization")
 	jwtFromHeader := strings.Split(authorizationHeader, " ")[1]
 	claims, statusCode, err := jwt_usecases.CheckSignatureAndReturnClaims(jwtFromHeader)
+
 	if err != nil {
 		c.JSON(*statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go u.CreateChangeEmailLog(find, false, log_messages.JWT_INVALID_SIGNATURE, c.ClientIP())
+		go u.CreateChangeEmailLog(nil, false, log_messages.JWT_INVALID_SIGNATURE, c.ClientIP())
 		return
 	}
 
 	idInClaims := claims["Id"]
 	emailInClaims := claims["Email"]
+	idInClaimsConvertedToInt := int((idInClaims).(float64))
 	if idInClaims == nil || emailInClaims == nil {
 		statusCode := http.StatusBadRequest
 		c.JSON(statusCode, gin.H{"error": "error to map id or email in claims", "statusCode": statusCode})
@@ -41,7 +43,7 @@ func (u *ChangeEmail) Executar(c *gin.Context, find string, newEmail string) {
 	if idFindInNumber != idInClaims && find != emailInClaims {
 		statusCode := http.StatusUnauthorized
 		c.JSON(statusCode, gin.H{"error": "you do not have permission to perform this operation", "statusCode": statusCode})
-		go u.CreateChangeEmailLog(find, false, log_messages.JWT_UNAUTHORIZED, c.ClientIP())
+		go u.CreateChangeEmailLog(&idInClaimsConvertedToInt, false, log_messages.JWT_UNAUTHORIZED, c.ClientIP())
 		return
 	}
 
@@ -49,7 +51,7 @@ func (u *ChangeEmail) Executar(c *gin.Context, find string, newEmail string) {
 	if err != nil {
 		statusCode := http.StatusNotFound
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go u.CreateChangeEmailLog(find, false, log_messages.FIND_USER_NOT_FOUND, c.ClientIP())
+		go u.CreateChangeEmailLog(&idInClaimsConvertedToInt, false, log_messages.FIND_USER_NOT_FOUND, c.ClientIP())
 		return
 	}
 
@@ -57,16 +59,16 @@ func (u *ChangeEmail) Executar(c *gin.Context, find string, newEmail string) {
 	if err != nil {
 		statusCode := http.StatusInternalServerError
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go u.CreateChangeEmailLog(find, false, log_messages.CHANGE_EMAIL_WITHOUT_SUCCESS, c.ClientIP())
+		go u.CreateChangeEmailLog(&idInClaimsConvertedToInt, false, log_messages.CHANGE_EMAIL_WITHOUT_SUCCESS, c.ClientIP())
 		return
 	}
-	go u.CreateChangeEmailLog(find, true, log_messages.CHANGE_EMAIL_WITH_SUCCESS, c.ClientIP())
+	go u.CreateChangeEmailLog(&idInClaimsConvertedToInt, true, log_messages.CHANGE_EMAIL_WITH_SUCCESS, c.ClientIP())
 	c.JSON(http.StatusOK, userWithNewEmail)
 }
 
-func (u *ChangeEmail) CreateChangeEmailLog(find string, success bool, operationCode string, ip string) {
+func (u *ChangeEmail) CreateChangeEmailLog(userId *int, success bool, operationCode string, ip string) {
 	log := &log_dtos.CreateLogRequest{
-		FindParam:     find,
+		UserId:        userId,
 		Route:         "user/changeEmail/:find",
 		Method:        "PATCH",
 		Success:       success,
