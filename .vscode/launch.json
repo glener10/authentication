@@ -5,11 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Main",
+      "name": "Dell G15 - Debug Main",
       "type": "go",
       "request": "launch",
       "mode": "auto",
       "program": "${workspaceFolder}"
+    },
+    {
+      "name": "UNISC",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "main.go"
     }
   ]
 }
