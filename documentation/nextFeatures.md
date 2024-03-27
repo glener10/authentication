@@ -1,4 +1,3 @@
-- user creation
 - login  with success and failure
 - user deleted with success and failure
 Integration and E2E test to check if after all usecases an log is created
