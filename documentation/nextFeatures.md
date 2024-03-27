@@ -1,7 +1,7 @@
-OBS: Use async go routine in the usecases to create logs
+Fix tests if doenst pass
+Is there a way to clear the use case log code? (check in change_email use case)
 - user creation
 - password changed with success and failure
-- email changed with success and failure
 - login  with success and failure
 - user deleted with success and failure
 E2E test to check if after all usecases an log is created
