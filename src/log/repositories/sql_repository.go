@@ -12,7 +12,7 @@ type SQLRepository struct {
 }
 
 func (r *SQLRepository) CreateLog(logDto log_dtos.CreateLogRequest) {
-	query := "INSERT INTO logs (find_param, route, method, success, operation_code, ip, timestamp) VALUES ($1, $2, $3, $4, $5) RETURNING id"
+	query := "INSERT INTO logs (find_param, route, method, success, operation_code, ip, timestamp) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id"
 	var pk int
 	err := r.Db.QueryRow(query, logDto.FindParam, logDto.Route, logDto.Method, logDto.Success, logDto.OperationCode, logDto.Ip, logDto.Timestamp).Scan(&pk)
 	if err != nil {

@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
+	log_repositories "github.com/glener10/authentication/src/log/repositories"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_repositories "github.com/glener10/authentication/src/user/repositories"
 	user_usecases "github.com/glener10/authentication/src/user/usecases"
@@ -42,7 +43,9 @@ func ChangePassword(c *gin.Context) {
 		return
 	}
 
-	repository := &user_repositories.SQLRepository{Db: db_postgres.GetDb()}
-	useCase := &user_usecases.ChangePassword{Repository: repository}
+	dbConnection := db_postgres.GetDb()
+	userRepository := &user_repositories.SQLRepository{Db: dbConnection}
+	logRepository := &log_repositories.SQLRepository{Db: dbConnection}
+	useCase := &user_usecases.ChangePassword{UserRepository: userRepository, LogRepository: logRepository}
 	useCase.Executar(c, parameter, newPassword.Password)
 }
