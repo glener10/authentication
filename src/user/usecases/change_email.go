@@ -67,6 +67,16 @@ func (u *ChangeEmail) Executar(c *gin.Context, find string, newEmail string) {
 	if err != nil {
 		statusCode := http.StatusNotFound
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		log := &log_dtos.CreateLogRequest{
+			FindParam:     find,
+			Route:         "user/changeEmail",
+			Method:        "PATCH",
+			Success:       false,
+			OperationCode: log_messages.FIND_USER_NOT_FOUND,
+			Ip:            c.ClientIP(),
+			Timestamp:     time.Now(),
+		}
+		go u.LogRepository.CreateLog(*log)
 		return
 	}
 
@@ -74,7 +84,27 @@ func (u *ChangeEmail) Executar(c *gin.Context, find string, newEmail string) {
 	if err != nil {
 		statusCode := http.StatusInternalServerError
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		log := &log_dtos.CreateLogRequest{
+			FindParam:     find,
+			Route:         "user/changeEmail",
+			Method:        "PATCH",
+			Success:       true,
+			OperationCode: log_messages.CHANGE_EMAIL_WITHOUT_SUCCESS,
+			Ip:            c.ClientIP(),
+			Timestamp:     time.Now(),
+		}
+		go u.LogRepository.CreateLog(*log)
 		return
 	}
+	log := &log_dtos.CreateLogRequest{
+		FindParam:     find,
+		Route:         "user/changeEmail",
+		Method:        "PATCH",
+		Success:       true,
+		OperationCode: log_messages.CHANGE_EMAIL_WITH_SUCCESS,
+		Ip:            c.ClientIP(),
+		Timestamp:     time.Now(),
+	}
+	go u.LogRepository.CreateLog(*log)
 	c.JSON(http.StatusOK, userWithNewEmail)
 }
