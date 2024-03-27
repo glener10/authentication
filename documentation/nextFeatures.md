@@ -1,8 +1,9 @@
+- find user with success and failure
 - login  with success and failure
-- user deleted with success and failure
-Integration and E2E test to check if after all usecases an log is created
+FindParam just Id because the email can be changed
 
 User Control: Log out, block, delete (Only users with permission can due), list all users, list all logs of a user, etc
+After create list all logs and all logs of an user with middleware, implementing E2E tests after all use cases need to create a log and integration tests
 E-mail verification
 Password Recovery: use a unique token sended to email
 Login with google
