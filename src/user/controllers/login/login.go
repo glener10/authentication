@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
+	log_repositories "github.com/glener10/authentication/src/log/repositories"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_repositories "github.com/glener10/authentication/src/user/repositories"
 	user_usecases "github.com/glener10/authentication/src/user/usecases"
@@ -32,7 +33,9 @@ func Login(c *gin.Context) {
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
 		return
 	}
-	repository := &user_repositories.SQLRepository{Db: db_postgres.GetDb()}
-	useCase := &user_usecases.Login{Repository: repository}
+	dbConnection := db_postgres.GetDb()
+	userRepository := &user_repositories.SQLRepository{Db: dbConnection}
+	logRepository := &log_repositories.SQLRepository{Db: dbConnection}
+	useCase := &user_usecases.Login{UserRepository: userRepository, LogRepository: logRepository}
 	useCase.Executar(c, user)
 }
