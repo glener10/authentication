@@ -1,4 +1,3 @@
-- find user with success and failure
 - login  with success and failure
 FindParam just Id because the email can be changed
 

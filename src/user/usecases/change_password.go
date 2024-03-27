@@ -74,7 +74,7 @@ func (u *ChangePassword) Executar(c *gin.Context, find string, newPassword strin
 func (u *ChangePassword) CreateChangePasswordLog(find string, success bool, operationCode string, ip string) {
 	log := &log_dtos.CreateLogRequest{
 		FindParam:     find,
-		Route:         "user/changePassword",
+		Route:         "user/changePassword/:find",
 		Method:        "PATCH",
 		Success:       success,
 		OperationCode: operationCode,

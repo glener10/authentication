@@ -59,7 +59,7 @@ func (u *DeleteUser) Executar(c *gin.Context, find string) {
 func (u *DeleteUser) DeleteUserLog(find string, success bool, operationCode string, ip string) {
 	log := &log_dtos.CreateLogRequest{
 		FindParam:     find,
-		Route:         "user",
+		Route:         "user/:find",
 		Method:        "DELETE",
 		Success:       success,
 		OperationCode: operationCode,
