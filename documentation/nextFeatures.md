@@ -1,11 +1,10 @@
-Updating login route to consider the param 'is_admin'
-How promote a normal user to admin user (need to exec by a another admin user), update a success test in admin middleware test
-Route to inative a user (admin), implementing in repository to evite code duplication. Route to an inactive user (admin), deploy to repository to avoid code duplication, update test of use cases "change_email", "change_password", "delete_user", "find_user" and "login"
+How promote a normal user to admin user (need to exec by a another admin user), update a success test in admin middleware test, test manually a requisition with jwt with a admin user
 Route do delete user (admin)
 List all users information (admin)
 List user information (admin)
 List all logs (admin), implementing E2E tests after all use cases need to create a log and integration tests
 List logs of a user (admin)
+Route to inative a user (admin), implementing in repository to evite code duplication. Route to an inactive user (admin), deploy to repository to avoid code duplication, update test of use cases "change_email", "change_password", "delete_user", "find_user" and "login"
 
 E-mail verification
 Password Recovery: use a unique token sended to email
