@@ -160,3 +160,39 @@ func TestLimitTimeout(t *testing.T) {
 
 	assert.Equal(t, actual, expected, "Should return 'timeout' and 408 if the requisition dont return in 3 seconds")
 }
+
+func TestAdminRouteWithTokenOfANonAdminUser(t *testing.T) {
+	if err := utils.LoadEnvironmentVariables("../../../.env"); err != nil {
+		log.Fatalf("error to load environment variables: %s", err.Error())
+	}
+	userForJwt := user_entities.User{
+		Id:       1,
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
+	if err != nil {
+		log.Fatalf("error to generate jwt in 'TestAdminRouteWithTokenOfANonAdminUser' middlewares tests: " + err.Error())
+	}
+
+	r := SetupRoutes()
+	r.Use(AdminMiddleware())
+	r.GET("/", HelloWorld)
+	req, _ := http.NewRequest("GET", "/", nil)
+	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
+	response := httptest.NewRecorder()
+	r.ServeHTTP(response, req)
+
+	expected := utils_interfaces.ErrorResponse{
+		Error:      "this route is only allowed for admin users",
+		StatusCode: 401,
+	}
+
+	var actual utils_interfaces.ErrorResponse
+	err = json.NewDecoder(response.Body).Decode(&actual)
+	if err != nil {
+		t.Errorf("failed to decode response body: %v", err)
+	}
+
+	assert.Equal(t, actual, expected, "Should return a 401 because the token is not a admin user")
+}

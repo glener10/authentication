@@ -50,6 +50,9 @@ func HandlerRoutes() *gin.Engine {
 	r.DELETE("/user/:find", delete_user_controller.DeleteUser)
 	r.PUT("/user/changePassword/:find", change_password_controller.ChangePassword)
 	r.PUT("/user/changeEmail/:find", change_email_controller.ChangeEmail)
+
+	r.Use(middlewares.AdminMiddleware())
+
 	return r
 }
 
