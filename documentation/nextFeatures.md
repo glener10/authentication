@@ -1,11 +1,19 @@
-User Control: Log out, block, delete (Only users with permission can due), list all users, list all logs of a user, etc
-After create list all logs and all logs of an user with middleware, implementing E2E tests after all use cases need to create a log and integration tests
+Add 'is_admin' in database, updating migrations and entities/dtos (if needed)
+Create middleware to block routes privates only to administrators and your tests
+Updating login route to consider the param 'is_admin'
+How promote a normal user to admin user
+Route to inative a user (admin)
+Route do delete user (admin)
+List all users information (admin)
+List user information (admin)
+List all logs (admin), implementing E2E tests after all use cases need to create a log and integration tests
+List logs of a user (admin)
+
 E-mail verification
 Password Recovery: use a unique token sended to email
 Login with google
 2FA
 User notification when strange login ocurred
-
 Database backups, rules and administration
 Docker
 Create pre-commit triggers with actions, to check interesting things like code checking, formatting, security checks and commit message pattern
