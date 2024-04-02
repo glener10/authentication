@@ -1,8 +1,8 @@
 Add 'is_admin' in database, updating migrations and entities/dtos (if needed)
 Create middleware to block routes privates only to administrators and your tests
 Updating login route to consider the param 'is_admin'
-How promote a normal user to admin user
-Route to inative a user (admin)
+How promote a normal user to admin user (need to exec by a another admin user)
+Route to inative a user (admin), implementing in repository to evite code duplication. Route to an inactive user (admin), deploy to repository to avoid code duplication, update test of use cases "change_email", "change_password", "delete_user", "find_user" and "login"
 Route do delete user (admin)
 List all users information (admin)
 List user information (admin)
