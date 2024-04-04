@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	admin_interfaces "github.com/glener10/authentication/src/admin/interfaces"
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
 	log_dtos "github.com/glener10/authentication/src/log/dtos"
 	log_interfaces "github.com/glener10/authentication/src/log/interfaces"
@@ -14,8 +15,9 @@ import (
 )
 
 type PromoteUserAdmin struct {
-	UserRepository user_interfaces.IUserRepository
-	LogRepository  log_interfaces.ILogRepository
+	UserRepository  user_interfaces.IUserRepository
+	LogRepository   log_interfaces.ILogRepository
+	AdminRepository admin_interfaces.IAdminRepository
 }
 
 func (u *PromoteUserAdmin) Executar(c *gin.Context, find string) {
@@ -53,9 +55,16 @@ func (u *PromoteUserAdmin) Executar(c *gin.Context, find string) {
 		return
 	}
 
-	//TODO: Try update user to admin (new repository)
+	_, err = u.AdminRepository.PromoteUserAdmin(find)
+	if err != nil {
+		statusCode := http.StatusNotFound
+		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		go u.PromoteUserAdminLog(&idInClaimsConvertedToInt, false, log_messages.PROMOTE_USER_ADMIN_WITHOUT_SUCCESS, c.ClientIP())
+		return
+	}
+
 	go u.PromoteUserAdminLog(&idInClaimsConvertedToInt, true, log_messages.PROMOTE_USER_ADMIN_WITH_SUCCESS, c.ClientIP())
-	c.JSON(http.StatusOK, "hehe")
+	c.JSON(http.StatusOK, nil)
 }
 
 func (u *PromoteUserAdmin) PromoteUserAdminLog(userId *int, success bool, operationCode string, ip string) {
