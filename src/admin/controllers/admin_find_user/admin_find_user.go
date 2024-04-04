@@ -14,7 +14,7 @@ import (
 // AdminFindUser
 // @Summary Find User (You will need send a JWT token of a admin user, you can get it in the login route)
 // @Description Find user by e-mail or id
-// @Tags user
+// @Tags admin
 // @Produce json
 // @Security Bearer
 // @Param find path string true "Search parameter: e-mail or id"
