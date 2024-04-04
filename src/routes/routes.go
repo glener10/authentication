@@ -9,6 +9,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/glener10/authentication/docs"
+	admin_delete_user_controller "github.com/glener10/authentication/src/admin/controllers/admin_delete_user"
 	promote_user_admin_controller "github.com/glener10/authentication/src/admin/controllers/promote_user_admin"
 	middlewares "github.com/glener10/authentication/src/routes/middlewares"
 	change_email_controller "github.com/glener10/authentication/src/user/controllers/change_email"
@@ -54,6 +55,7 @@ func HandlerRoutes() *gin.Engine {
 
 	r.Use(middlewares.AdminMiddleware())
 	r.POST("/admin/promote/:find", promote_user_admin_controller.PromoteUserAdmin)
+	r.DELETE("/admin/:find", admin_delete_user_controller.AdminDeleteUser)
 	return r
 }
 
