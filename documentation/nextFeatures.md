@@ -1,5 +1,4 @@
 List all users information (admin)
-List user information (admin)
 List all logs (admin), implementing E2E tests after all use cases need to create a log and integration tests
 List logs of a user (admin)
 Route to inative a user (admin), implementing in repository to evite code duplication. Route to an inactive user (admin), deploy to repository to avoid code duplication, update test of use cases "change_email", "change_password", "delete_user", "find_user" and "login"
