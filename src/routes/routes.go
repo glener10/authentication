@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/glener10/authentication/docs"
 	admin_delete_user_controller "github.com/glener10/authentication/src/admin/controllers/admin_delete_user"
+	admin_find_all_logs_controller "github.com/glener10/authentication/src/admin/controllers/admin_find_all_logs"
 	admin_find_all_users_controller "github.com/glener10/authentication/src/admin/controllers/admin_find_all_users"
 	admin_find_user_controller "github.com/glener10/authentication/src/admin/controllers/admin_find_user"
 	promote_user_admin_controller "github.com/glener10/authentication/src/admin/controllers/promote_user_admin"
@@ -44,22 +45,23 @@ func HandlerRoutes() *gin.Engine {
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	r.GET("/", middlewares.HelloWorld)
-	r.POST("/user", create_user_controller.CreateUser)
+	r.POST("/users", create_user_controller.CreateUser)
 	r.POST("/login", login_controller.Login)
 
 	r.Use(middlewares.JwtMiddleware())
 	//r.Use(middlewares.HTTPSOnlyMiddleware())
 
-	r.GET("/user/:find", find_user_controller.FindUser)
-	r.DELETE("/user/:find", delete_user_controller.DeleteUser)
-	r.PUT("/user/changePassword/:find", change_password_controller.ChangePassword)
-	r.PUT("/user/changeEmail/:find", change_email_controller.ChangeEmail)
+	r.GET("/users/:find", find_user_controller.FindUser)
+	r.DELETE("/users/:find", delete_user_controller.DeleteUser)
+	r.PUT("/users/changePassword/:find", change_password_controller.ChangePassword)
+	r.PUT("/users/changeEmail/:find", change_email_controller.ChangeEmail)
 
 	r.Use(middlewares.AdminMiddleware())
-	r.POST("/admin/promote/:find", promote_user_admin_controller.PromoteUserAdmin)
-	r.DELETE("/admin/:find", admin_delete_user_controller.AdminDeleteUser)
-	r.GET("/admin/:find", admin_find_user_controller.AdminFindUser)
-	r.GET("/admin", admin_find_all_users_controller.AdminFindAllUsers)
+	r.POST("/admin/users/promote/:find", promote_user_admin_controller.PromoteUserAdmin)
+	r.DELETE("/admin/users/:find", admin_delete_user_controller.AdminDeleteUser)
+	r.GET("/admin/users/:find", admin_find_user_controller.AdminFindUser)
+	r.GET("/admin/users", admin_find_all_users_controller.AdminFindAllUsers)
+	r.GET("/admin/logs", admin_find_all_logs_controller.AdminFindAllLogs)
 	return r
 }
 
