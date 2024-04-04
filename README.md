@@ -121,6 +121,7 @@
 
 🏗 **Use Cases**
 
+- admin elevation: you can promote anothers users to admin, delete users
 - log: all operations have log persistence with information such as: user id, operation code, method, route, success (true/false), ip and timestamp
 - delete_user (need to be logged in): delete by id or e-mail
 - find_user (need to be logged in): find by id or e-mail
