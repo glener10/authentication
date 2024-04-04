@@ -31,9 +31,9 @@ func TestMain(m *testing.M) {
 func TestDeleteUserWithJwtOfNonAdminUser(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.DELETE("/admin/:find", AdminDeleteUser)
+	r.DELETE("/admin/users/:find", AdminDeleteUser)
 
-	req, _ := http.NewRequest("DELETE", "/admin/1", nil)
+	req, _ := http.NewRequest("DELETE", "/admin/users/1", nil)
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -63,8 +63,8 @@ func TestDeleteUserWithJwtOfNonAdminUser(t *testing.T) {
 func TestAdminDeleteUserWithSuccess(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.DELETE("/admin/:find", AdminDeleteUser)
-	req, _ := http.NewRequest("DELETE", "/admin/1", nil)
+	r.DELETE("/admin/users/:find", AdminDeleteUser)
+	req, _ := http.NewRequest("DELETE", "/admin/users/1", nil)
 
 	userToDelete := user_dtos.CreateUserRequest{
 		Email:    tests.ValidEmail,

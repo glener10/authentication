@@ -27,9 +27,9 @@ func TestMain(m *testing.M) {
 func TestAdminFindUserWithJwtOfNonAdminUser(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.GET("/admin/:find", AdminFindUser)
+	r.GET("/admin/users/:find", AdminFindUser)
 
-	req, _ := http.NewRequest("GET", "/admin/1", nil)
+	req, _ := http.NewRequest("GET", "/admin/users/1", nil)
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -59,8 +59,8 @@ func TestAdminFindUserWithJwtOfNonAdminUser(t *testing.T) {
 func TestAdminFindUserWithSuccess(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.GET("/admin/:find", AdminFindUser)
-	req, _ := http.NewRequest("GET", "/admin/1", nil)
+	r.GET("/admin/users/:find", AdminFindUser)
+	req, _ := http.NewRequest("GET", "/admin/users/1", nil)
 
 	userToFind := user_dtos.CreateUserRequest{
 		Email:    tests.ValidEmail,

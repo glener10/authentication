@@ -31,9 +31,9 @@ func TestMain(m *testing.M) {
 func TestPromoteUserAdminWithJwtOfNonAdminUser(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.POST("/admin/promote/:find", PromoteUserAdmin)
+	r.POST("/admin/users/promote/:find", PromoteUserAdmin)
 
-	req, _ := http.NewRequest("POST", "/admin/promote/1", nil)
+	req, _ := http.NewRequest("POST", "/admin/users/promote/1", nil)
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -63,9 +63,9 @@ func TestPromoteUserAdminWithJwtOfNonAdminUser(t *testing.T) {
 func TestPromoteUserAdminWithSuccess(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.POST("/admin/promote/:find", PromoteUserAdmin)
+	r.POST("/admin/users/promote/:find", PromoteUserAdmin)
 
-	req, _ := http.NewRequest("POST", "/admin/promote/1", nil)
+	req, _ := http.NewRequest("POST", "/admin/users/promote/1", nil)
 
 	userToPromote := user_dtos.CreateUserRequest{
 		Email:    tests.ValidEmail,
