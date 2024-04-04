@@ -1,11 +1,20 @@
 package admin_find_all_users_controller
 
 import (
+	"encoding/json"
+	"log"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
+	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
+	user_dtos "github.com/glener10/authentication/src/user/dtos"
+	user_entities "github.com/glener10/authentication/src/user/entities"
 	user_repositories "github.com/glener10/authentication/src/user/repositories"
+	utils_interfaces "github.com/glener10/authentication/src/utils/interfaces"
 	"github.com/glener10/authentication/tests"
+	"gotest.tools/v3/assert"
 )
 
 var repository user_repositories.SQLRepository
@@ -16,13 +25,12 @@ func TestMain(m *testing.M) {
 	tests.ExecuteAndFinish(m)
 }
 
-/*
 func TestAdminFindUserWithJwtOfNonAdminUser(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.GET("/admin/:find", AdminFindUser)
+	r.GET("/admin", AdminFindAllUsers)
 
-	req, _ := http.NewRequest("GET", "/admin/1", nil)
+	req, _ := http.NewRequest("GET", "/admin", nil)
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -49,20 +57,22 @@ func TestAdminFindUserWithJwtOfNonAdminUser(t *testing.T) {
 	assert.Equal(t, expected, actual, "should return 'wyou do not have permission to perform this operation' and 401 in the body")
 }
 
-func TestAdminFindUserWithSuccess(t *testing.T) {
+func TestAdminFindAllUsersWithSuccess(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.GET("/admin/:find", AdminFindUser)
-	req, _ := http.NewRequest("GET", "/admin/1", nil)
+	r.GET("/admin", AdminFindAllUsers)
+	req, _ := http.NewRequest("GET", "/admin", nil)
 
-	userToFind := user_dtos.CreateUserRequest{
-		Email:    tests.ValidEmail,
+	firstUser := user_dtos.CreateUserRequest{
+		Email:    "1@1.com",
 		Password: tests.ValidPassword,
 	}
-	_, err := repository.CreateUser(userToFind)
-	if err != nil {
-		t.Errorf("failed to create user in 'TestAdminFindUserWithSuccess' test: %v", err)
+	_, _ = repository.CreateUser(firstUser)
+	secondUser := user_dtos.CreateUserRequest{
+		Email:    "2@2.com",
+		Password: tests.ValidPassword,
 	}
+	_, _ = repository.CreateUser(secondUser)
 
 	isAdmin := true
 	userAdminForJwt := user_entities.User{
@@ -73,12 +83,16 @@ func TestAdminFindUserWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userAdminForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestAdminFindUserWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestAdminFindAllUsersWithSuccess' test: " + err.Error())
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
 	r.ServeHTTP(response, req)
 
 	assert.Equal(t, response.Result().StatusCode, http.StatusOK, "should return a 200 status code")
+	var arr []user_dtos.UserWithoutSensitiveData
+	if err := json.NewDecoder(response.Body).Decode(&arr); err != nil {
+		log.Fatalf("error decoding response body: %v", err)
+	}
+	assert.Equal(t, len(arr), 2, "should return an array with 2 elements")
 }
-*/
