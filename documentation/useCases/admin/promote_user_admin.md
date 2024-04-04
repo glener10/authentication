@@ -10,7 +10,7 @@ THEN: It must return the a error message "token not provided" and a 401 code
 
 SCENARIO: Promote user to admin without Success because find param is invalid (even if the token is valid)
 GIVEN: The server is running and connected to the database without errors
-WHEN: A POST request is made to /admin/users/promote/:find with a invalid search parameter (not is email or id) but with valid admin token
+WHEN: A POST request is made to /admin/users/promote/:find with a invalid search parameter (not is email or id) and a valid admin token
 THEN: It must return the a error message "wrong format, parameter need to be a id or a e-mail" and a 422 code
 
 SCENARIO: Promote user to admin without Success because token is not valid
@@ -20,5 +20,5 @@ THEN: It must return the a error message "invalid token" and a 401 code
 
 SCENARIO: Promote user to admin without Success because the token provided is not from admin user
 GIVEN: The server is running and connected to the database without errors
-WHEN: A POST request is made to /admin/users/promote/:find with a valid search parameter but the token is from a different user than the search parameter
+WHEN: A POST request is made to /admin/users/promote/:find with a valid search parameter but the token is from a non admin user
 THEN: It must return a error message and a 401 code
