@@ -52,7 +52,7 @@ func (u *CreateUser) CheckIfEmailAlreadyExists(email string) bool {
 func (u *CreateUser) CreateUserLog(userId *int, success bool, operationCode string, ip string) {
 	log := &log_dtos.CreateLogRequest{
 		UserId:        userId,
-		Route:         "user",
+		Route:         "users",
 		Method:        "POST",
 		Success:       success,
 		OperationCode: operationCode,

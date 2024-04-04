@@ -70,7 +70,7 @@ func (u *PromoteUserAdmin) Executar(c *gin.Context, find string) {
 func (u *PromoteUserAdmin) PromoteUserAdminLog(userId *int, success bool, operationCode string, ip string) {
 	log := &log_dtos.CreateLogRequest{
 		UserId:        userId,
-		Route:         "admin/promote/:find",
+		Route:         "admin/users/promote/:find",
 		Method:        "POST",
 		Success:       success,
 		OperationCode: operationCode,

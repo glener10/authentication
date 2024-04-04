@@ -54,7 +54,7 @@ func (u *AdminFindAllUsers) Executar(c *gin.Context) {
 func (u *AdminFindAllUsers) AdminFindAllUsersLog(userId *int, success bool, operationCode string, ip string) {
 	log := &log_dtos.CreateLogRequest{
 		UserId:        userId,
-		Route:         "admin",
+		Route:         "admin/users",
 		Method:        "GET",
 		Success:       success,
 		OperationCode: operationCode,

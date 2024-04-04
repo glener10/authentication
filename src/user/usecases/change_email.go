@@ -69,7 +69,7 @@ func (u *ChangeEmail) Executar(c *gin.Context, find string, newEmail string) {
 func (u *ChangeEmail) CreateChangeEmailLog(userId *int, success bool, operationCode string, ip string) {
 	log := &log_dtos.CreateLogRequest{
 		UserId:        userId,
-		Route:         "user/changeEmail/:find",
+		Route:         "users/changeEmail/:find",
 		Method:        "PATCH",
 		Success:       success,
 		OperationCode: operationCode,

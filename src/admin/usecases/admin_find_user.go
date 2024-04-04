@@ -64,7 +64,7 @@ func (u *AdminFindUser) Executar(c *gin.Context, find string) {
 func (u *AdminFindUser) AdminFindUserLog(userId *int, success bool, operationCode string, ip string) {
 	log := &log_dtos.CreateLogRequest{
 		UserId:        userId,
-		Route:         "admin/:find",
+		Route:         "admin/users/:find",
 		Method:        "GET",
 		Success:       success,
 		OperationCode: operationCode,
