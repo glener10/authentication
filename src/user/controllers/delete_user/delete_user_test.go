@@ -29,8 +29,8 @@ func TestMain(m *testing.M) {
 func TestDeleteUserWithInvalidParamAndValidJwt(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.DELETE("/user/:find", DeleteUser)
-	req, _ := http.NewRequest("DELETE", "/user/invalidParameter", nil)
+	r.DELETE("/users/:find", DeleteUser)
+	req, _ := http.NewRequest("DELETE", "/users/invalidParameter", nil)
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -60,8 +60,8 @@ func TestDeleteUserWithInvalidParamAndValidJwt(t *testing.T) {
 func TestDeleteUserWithInvalidJwt(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.DELETE("/user/:find", DeleteUser)
-	req, _ := http.NewRequest("DELETE", "/user/1", nil)
+	r.DELETE("/users/:find", DeleteUser)
+	req, _ := http.NewRequest("DELETE", "/users/1", nil)
 
 	req.Header.Set("Authorization", "Bearer invalidjwt")
 	response := httptest.NewRecorder()
@@ -91,8 +91,8 @@ func TestDeleteUserByIdAndValidJwtWithSuccess(t *testing.T) {
 		t.Errorf("failed to create user in 'TestDeleteUserByIdAndValidJwtWithSuccess' test: %v", err)
 	}
 	r := tests.SetupRoutes()
-	r.DELETE("/user/:find", DeleteUser)
-	req, _ := http.NewRequest("DELETE", "/user/1", nil)
+	r.DELETE("/users/:find", DeleteUser)
+	req, _ := http.NewRequest("DELETE", "/users/1", nil)
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -123,8 +123,8 @@ func TestDeleteUserByEmailAndValidJwtWithSuccess(t *testing.T) {
 		t.Errorf("failed to create user in 'TestDeleteUserByEmailAndValidJwtWithSuccess' test: %v", err)
 	}
 	r := tests.SetupRoutes()
-	r.DELETE("/user/:find", DeleteUser)
-	req, _ := http.NewRequest("DELETE", "/user/"+tests.ValidEmail, nil)
+	r.DELETE("/users/:find", DeleteUser)
+	req, _ := http.NewRequest("DELETE", "/users/"+tests.ValidEmail, nil)
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -154,8 +154,8 @@ func TestDeleteUserByIdAndJwtOfOtherUser(t *testing.T) {
 		t.Errorf("failed to create user in 'TestDeleteUserByIdAndJwtOfOtherUser' test: %v", err)
 	}
 	r := tests.SetupRoutes()
-	r.DELETE("/user/:find", DeleteUser)
-	req, _ := http.NewRequest("DELETE", "/user/1", nil)
+	r.DELETE("/users/:find", DeleteUser)
+	req, _ := http.NewRequest("DELETE", "/users/1", nil)
 	jwtOfOtherUser := user_entities.User{
 		Id:       10,
 		Email:    "another@email.com",
@@ -193,8 +193,8 @@ func TestDeleteUserByEmailAndJwtOfOtherUser(t *testing.T) {
 		t.Errorf("failed to create user in 'TestDeleteUserByEmailAndJwtOfOtherUser' test: %v", err)
 	}
 	r := tests.SetupRoutes()
-	r.DELETE("/user/:find", DeleteUser)
-	req, _ := http.NewRequest("DELETE", "/user/"+tests.ValidEmail, nil)
+	r.DELETE("/users/:find", DeleteUser)
+	req, _ := http.NewRequest("DELETE", "/users/"+tests.ValidEmail, nil)
 	jwtOfOtherUser := user_entities.User{
 		Id:       10,
 		Email:    "another@email.com",

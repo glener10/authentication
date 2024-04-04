@@ -28,8 +28,8 @@ func TestMain(m *testing.M) {
 func TestFindUserByIdWithoutResultWithValidJwt(t *testing.T) { //If you have a user's JWT but it has been removed and no longer exists
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.GET("/user/:find", FindUser)
-	req, _ := http.NewRequest("GET", "/user/1", nil)
+	r.GET("/users/:find", FindUser)
+	req, _ := http.NewRequest("GET", "/users/1", nil)
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -58,8 +58,8 @@ func TestFindUserByIdWithoutResultWithValidJwt(t *testing.T) { //If you have a u
 func TestFindUserWithInvalidParamAndValidJwt(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.GET("/user/:find", FindUser)
-	req, _ := http.NewRequest("GET", "/user/invalidParameter", nil)
+	r.GET("/users/:find", FindUser)
+	req, _ := http.NewRequest("GET", "/users/invalidParameter", nil)
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -89,8 +89,8 @@ func TestFindUserWithInvalidParamAndValidJwt(t *testing.T) {
 func TestFindUserWithInvalidJwt(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.GET("/user/:find", FindUser)
-	req, _ := http.NewRequest("GET", "/user/1", nil)
+	r.GET("/users/:find", FindUser)
+	req, _ := http.NewRequest("GET", "/users/1", nil)
 
 	req.Header.Set("Authorization", "Bearer invalidjwt")
 	response := httptest.NewRecorder()
@@ -120,8 +120,8 @@ func TestFindUserByIdAndValidJwtWithSuccess(t *testing.T) {
 		t.Errorf("failed to create user in 'TestFindUserByIdAndValidJwtWithSuccess' test: %v", err)
 	}
 	r := tests.SetupRoutes()
-	r.GET("/user/:find", FindUser)
-	req, _ := http.NewRequest("GET", "/user/1", nil)
+	r.GET("/users/:find", FindUser)
+	req, _ := http.NewRequest("GET", "/users/1", nil)
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -149,8 +149,8 @@ func TestFindUserByEmailAndValidJwtWithSuccess(t *testing.T) {
 		t.Errorf("failed to create user in 'TestFindUserByEmailAndValidJwtWithSuccess' test: %v", err)
 	}
 	r := tests.SetupRoutes()
-	r.GET("/user/:find", FindUser)
-	req, _ := http.NewRequest("GET", "/user/"+tests.ValidEmail, nil)
+	r.GET("/users/:find", FindUser)
+	req, _ := http.NewRequest("GET", "/users/"+tests.ValidEmail, nil)
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -178,8 +178,8 @@ func TestFindUserByIdAndJwtOfOtherUser(t *testing.T) {
 		t.Errorf("failed to create user in 'TestFindUserByIdAndJwtOfOtherUser' test: %v", err)
 	}
 	r := tests.SetupRoutes()
-	r.GET("/user/:find", FindUser)
-	req, _ := http.NewRequest("GET", "/user/1", nil)
+	r.GET("/users/:find", FindUser)
+	req, _ := http.NewRequest("GET", "/users/1", nil)
 	jwtOfOtherUser := user_entities.User{
 		Id:       10,
 		Email:    "another@email.com",
@@ -217,8 +217,8 @@ func TestFindUserByEmailAndJwtOfOtherUser(t *testing.T) {
 		t.Errorf("failed to create user in 'TestFindUserByEmailAndJwtOfOtherUser' test: %v", err)
 	}
 	r := tests.SetupRoutes()
-	r.GET("/user/:find", FindUser)
-	req, _ := http.NewRequest("GET", "/user/"+tests.ValidEmail, nil)
+	r.GET("/users/:find", FindUser)
+	req, _ := http.NewRequest("GET", "/users/"+tests.ValidEmail, nil)
 	jwtOfOtherUser := user_entities.User{
 		Id:       10,
 		Email:    "another@email.com",

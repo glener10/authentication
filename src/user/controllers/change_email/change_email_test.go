@@ -29,12 +29,12 @@ func TestMain(m *testing.M) {
 func TestChangeEmailByIdWithoutResultWithValidJwt(t *testing.T) { //If you have a user's JWT but it has been removed and no longer exists
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.PUT("/user/changeEmail/:find", ChangeEmail)
+	r.PUT("/users/changeEmail/:find", ChangeEmail)
 	requestBody := user_dtos.ChangeEmailRequest{
 		Email: "validNewEmail@fulano.com",
 	}
 	bodyConverted, _ := json.Marshal(requestBody)
-	req, _ := http.NewRequest("PUT", "/user/changeEmail/1", bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("PUT", "/users/changeEmail/1", bytes.NewBuffer(bodyConverted))
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -63,12 +63,12 @@ func TestChangeEmailByIdWithoutResultWithValidJwt(t *testing.T) { //If you have 
 func TestChangeEmailWithInvalidParamAndValidJwt(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.PUT("/user/changeEmail/:find", ChangeEmail)
+	r.PUT("/users/changeEmail/:find", ChangeEmail)
 	requestBody := user_dtos.ChangeEmailRequest{
 		Email: "validNewEmail@fulano.com",
 	}
 	bodyConverted, _ := json.Marshal(requestBody)
-	req, _ := http.NewRequest("PUT", "/user/changeEmail/invalidParam", bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("PUT", "/users/changeEmail/invalidParam", bytes.NewBuffer(bodyConverted))
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -98,12 +98,12 @@ func TestChangeEmailWithInvalidParamAndValidJwt(t *testing.T) {
 func TestChangeEmailWithInvalidJwt(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.PUT("/user/changeEmail/:find", ChangeEmail)
+	r.PUT("/users/changeEmail/:find", ChangeEmail)
 	requestBody := user_dtos.ChangeEmailRequest{
 		Email: "validNewEmail@fulano.com",
 	}
 	bodyConverted, _ := json.Marshal(requestBody)
-	req, _ := http.NewRequest("PUT", "/user/changeEmail/1", bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("PUT", "/users/changeEmail/1", bytes.NewBuffer(bodyConverted))
 	req.Header.Set("Authorization", "Bearer invalidjwt")
 	response := httptest.NewRecorder()
 	r.ServeHTTP(response, req)
@@ -132,12 +132,12 @@ func TestChangeEmailByIdAndValidJwtWithSuccess(t *testing.T) {
 		t.Errorf("failed to create user in 'TestChangeEmailByIdAndValidJwtWithSuccess' test: %v", err)
 	}
 	r := tests.SetupRoutes()
-	r.PUT("/user/changeEmail/:find", ChangeEmail)
+	r.PUT("/users/changeEmail/:find", ChangeEmail)
 	requestBody := user_dtos.ChangeEmailRequest{
 		Email: "validNewEmail@fulano.com",
 	}
 	bodyConverted, _ := json.Marshal(requestBody)
-	req, _ := http.NewRequest("PUT", "/user/changeEmail/1", bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("PUT", "/users/changeEmail/1", bytes.NewBuffer(bodyConverted))
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -165,12 +165,12 @@ func TestChangeEmailByEmailAndValidJwtWithSuccess(t *testing.T) {
 		t.Errorf("failed to create user in 'TestChangeEmailByEmailAndValidJwtWithSuccess' test: %v", err)
 	}
 	r := tests.SetupRoutes()
-	r.PUT("/user/changeEmail/:find", ChangeEmail)
+	r.PUT("/users/changeEmail/:find", ChangeEmail)
 	requestBody := user_dtos.ChangeEmailRequest{
 		Email: "validNewEmail@fulano.com",
 	}
 	bodyConverted, _ := json.Marshal(requestBody)
-	req, _ := http.NewRequest("PUT", "/user/changeEmail/"+tests.ValidEmail, bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("PUT", "/users/changeEmail/"+tests.ValidEmail, bytes.NewBuffer(bodyConverted))
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -198,12 +198,12 @@ func TestChangeEmailByIdAndJwtOfOtherUser(t *testing.T) {
 		t.Errorf("failed to create user in 'TestChangeEmailByIdAndJwtOfOtherUser' test: %v", err)
 	}
 	r := tests.SetupRoutes()
-	r.PUT("/user/changeEmail/:find", ChangeEmail)
+	r.PUT("/users/changeEmail/:find", ChangeEmail)
 	requestChangeEmailBody := user_dtos.ChangeEmailRequest{
 		Email: "validNewEmail@fulano.com",
 	}
 	bodyConverted, _ := json.Marshal(requestChangeEmailBody)
-	req, _ := http.NewRequest("PUT", "/user/changeEmail/1", bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("PUT", "/users/changeEmail/1", bytes.NewBuffer(bodyConverted))
 	jwtOfOtherUser := user_entities.User{
 		Id:       10,
 		Email:    "another@email.com",
@@ -241,12 +241,12 @@ func TestChangeEmailByEmailAndJwtOfOtherUser(t *testing.T) {
 		t.Errorf("failed to create user in 'TestChangeEmailByEmailAndJwtOfOtherUser' test: %v", err)
 	}
 	r := tests.SetupRoutes()
-	r.PUT("/user/changeEmail/:find", ChangeEmail)
+	r.PUT("/users/changeEmail/:find", ChangeEmail)
 	requestChangeEmailBody := user_dtos.ChangeEmailRequest{
 		Email: "validNewEmail@fulano.com",
 	}
 	bodyConverted, _ := json.Marshal(requestChangeEmailBody)
-	req, _ := http.NewRequest("PUT", "/user/changeEmail/"+tests.ValidEmail, bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("PUT", "/users/changeEmail/"+tests.ValidEmail, bytes.NewBuffer(bodyConverted))
 	jwtOfOtherUser := user_entities.User{
 		Id:       10,
 		Email:    "another@email.com",

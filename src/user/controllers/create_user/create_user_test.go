@@ -26,8 +26,8 @@ func TestMain(m *testing.M) {
 func TestCreateUserWithoutBody(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.POST("/user", CreateUser)
-	req, _ := http.NewRequest("POST", "/user", nil)
+	r.POST("/users", CreateUser)
+	req, _ := http.NewRequest("POST", "/users", nil)
 	response := httptest.NewRecorder()
 	r.ServeHTTP(response, req)
 	expected := utils_interfaces.ErrorResponse{
@@ -46,13 +46,13 @@ func TestCreateUserWithoutBody(t *testing.T) {
 func TestCreateUserWithoutEmail(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.POST("/user", CreateUser)
+	r.POST("/users", CreateUser)
 	requestBody := user_dtos.CreateUserRequest{
 		Email:    "",
 		Password: tests.ValidPassword,
 	}
 	bodyConverted, _ := json.Marshal(requestBody)
-	req, _ := http.NewRequest("POST", "/user", bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("POST", "/users", bytes.NewBuffer(bodyConverted))
 	response := httptest.NewRecorder()
 
 	r.ServeHTTP(response, req)
@@ -73,13 +73,13 @@ func TestCreateUserWithoutEmail(t *testing.T) {
 func TestCreateUserWithoutPassword(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.POST("/user", CreateUser)
+	r.POST("/users", CreateUser)
 	requestBody := user_dtos.CreateUserRequest{
 		Email:    tests.ValidEmail,
 		Password: "",
 	}
 	bodyConverted, _ := json.Marshal(requestBody)
-	req, _ := http.NewRequest("POST", "/user", bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("POST", "/users", bytes.NewBuffer(bodyConverted))
 	response := httptest.NewRecorder()
 
 	r.ServeHTTP(response, req)
@@ -100,13 +100,13 @@ func TestCreateUserWithoutPassword(t *testing.T) {
 func TestCreateUserWithInvalidEmail(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.POST("/user", CreateUser)
+	r.POST("/users", CreateUser)
 	requestBody := user_dtos.CreateUserRequest{
 		Email:    "invalidemail",
 		Password: tests.ValidPassword,
 	}
 	bodyConverted, _ := json.Marshal(requestBody)
-	req, _ := http.NewRequest("POST", "/user", bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("POST", "/users", bytes.NewBuffer(bodyConverted))
 	response := httptest.NewRecorder()
 
 	r.ServeHTTP(response, req)
@@ -127,13 +127,13 @@ func TestCreateUserWithInvalidEmail(t *testing.T) {
 func TestCreateUserWithTooLongEmail(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.POST("/user", CreateUser)
+	r.POST("/users", CreateUser)
 	requestBody := user_dtos.CreateUserRequest{
 		Email:    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@fulano.com",
 		Password: tests.ValidPassword,
 	}
 	bodyConverted, _ := json.Marshal(requestBody)
-	req, _ := http.NewRequest("POST", "/user", bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("POST", "/users", bytes.NewBuffer(bodyConverted))
 	response := httptest.NewRecorder()
 
 	r.ServeHTTP(response, req)
@@ -154,13 +154,13 @@ func TestCreateUserWithTooLongEmail(t *testing.T) {
 func TestCreateUserWithTooLongPassword(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.POST("/user", CreateUser)
+	r.POST("/users", CreateUser)
 	requestBody := user_dtos.CreateUserRequest{
 		Email:    tests.ValidEmail,
 		Password: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 	}
 	bodyConverted, _ := json.Marshal(requestBody)
-	req, _ := http.NewRequest("POST", "/user", bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("POST", "/users", bytes.NewBuffer(bodyConverted))
 	response := httptest.NewRecorder()
 
 	r.ServeHTTP(response, req)
@@ -186,7 +186,7 @@ type DataProviderWeakPasswordType struct {
 func TestCreateUserWithWeakPassword(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.POST("/user", CreateUser)
+	r.POST("/users", CreateUser)
 
 	dataProviderWeakPassword := []*DataProviderWeakPasswordType{
 		{
@@ -217,7 +217,7 @@ func TestCreateUserWithWeakPassword(t *testing.T) {
 			Password: data.WeakPassword,
 		}
 		bodyConverted, _ := json.Marshal(requestBody)
-		req, _ := http.NewRequest("POST", "/user", bytes.NewBuffer(bodyConverted))
+		req, _ := http.NewRequest("POST", "/users", bytes.NewBuffer(bodyConverted))
 		response := httptest.NewRecorder()
 
 		r.ServeHTTP(response, req)
@@ -239,7 +239,7 @@ func TestCreateUserWithWeakPassword(t *testing.T) {
 func TestCreateUserWithValidEmailButAlreadysExists(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.POST("/user", CreateUser)
+	r.POST("/users", CreateUser)
 	requestBody := user_dtos.CreateUserRequest{
 		Email:    tests.ValidEmail,
 		Password: tests.ValidPassword,
@@ -249,7 +249,7 @@ func TestCreateUserWithValidEmailButAlreadysExists(t *testing.T) {
 		t.Errorf("failed to create user in 'TestCreateUserWithValidEmailButAlreadysExists' test: %v", err)
 	}
 	bodyConverted, _ := json.Marshal(requestBody)
-	req, _ := http.NewRequest("POST", "/user", bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("POST", "/users", bytes.NewBuffer(bodyConverted))
 	response := httptest.NewRecorder()
 
 	r.ServeHTTP(response, req)
@@ -270,13 +270,13 @@ func TestCreateUserWithValidEmailButAlreadysExists(t *testing.T) {
 func TestCreateUserWithSuccess(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.POST("/user", CreateUser)
+	r.POST("/users", CreateUser)
 	requestBody := user_dtos.CreateUserRequest{
 		Email:    tests.ValidEmail,
 		Password: tests.ValidPassword,
 	}
 	bodyConverted, _ := json.Marshal(requestBody)
-	req, _ := http.NewRequest("POST", "/user", bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("POST", "/users", bytes.NewBuffer(bodyConverted))
 	response := httptest.NewRecorder()
 
 	r.ServeHTTP(response, req)

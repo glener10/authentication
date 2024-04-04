@@ -29,12 +29,12 @@ func TestMain(m *testing.M) {
 func TestChangePasswordByIdWithoutResultWithValidJwt(t *testing.T) { //If you have a user's JWT but it has been removed and no longer exists
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.PUT("/user/changePassword/:find", ChangePassword)
+	r.PUT("/users/changePassword/:find", ChangePassword)
 	requestBody := user_dtos.ChangePasswordRequest{
 		Password: tests.ValidPassword + "newPassword",
 	}
 	bodyConverted, _ := json.Marshal(requestBody)
-	req, _ := http.NewRequest("PUT", "/user/changePassword/1", bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("PUT", "/users/changePassword/1", bytes.NewBuffer(bodyConverted))
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -63,12 +63,12 @@ func TestChangePasswordByIdWithoutResultWithValidJwt(t *testing.T) { //If you ha
 func TestChangePasswordWithInvalidParamAndValidJwt(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.PUT("/user/changePassword/:find", ChangePassword)
+	r.PUT("/users/changePassword/:find", ChangePassword)
 	requestBody := user_dtos.ChangePasswordRequest{
 		Password: tests.ValidPassword + "newPassword",
 	}
 	bodyConverted, _ := json.Marshal(requestBody)
-	req, _ := http.NewRequest("PUT", "/user/changePassword/invalidParam", bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("PUT", "/users/changePassword/invalidParam", bytes.NewBuffer(bodyConverted))
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -98,12 +98,12 @@ func TestChangePasswordWithInvalidParamAndValidJwt(t *testing.T) {
 func TestChangePasswordWithInvalidJwt(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.PUT("/user/changePassword/:find", ChangePassword)
+	r.PUT("/users/changePassword/:find", ChangePassword)
 	requestBody := user_dtos.ChangePasswordRequest{
 		Password: tests.ValidPassword + "newPassword",
 	}
 	bodyConverted, _ := json.Marshal(requestBody)
-	req, _ := http.NewRequest("PUT", "/user/changePassword/1", bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("PUT", "/users/changePassword/1", bytes.NewBuffer(bodyConverted))
 	req.Header.Set("Authorization", "Bearer invalidjwt")
 	response := httptest.NewRecorder()
 	r.ServeHTTP(response, req)
@@ -132,12 +132,12 @@ func TestChangePassowrdByIdAndValidJwtWithSuccess(t *testing.T) {
 		t.Errorf("failed to create user in 'TestChangePassowrdByIdAndValidJwtWithSuccess' test: %v", err)
 	}
 	r := tests.SetupRoutes()
-	r.PUT("/user/changePassword/:find", ChangePassword)
+	r.PUT("/users/changePassword/:find", ChangePassword)
 	requestChangePasswordBody := user_dtos.ChangePasswordRequest{
 		Password: tests.ValidPassword + "newPassword",
 	}
 	bodyConverted, _ := json.Marshal(requestChangePasswordBody)
-	req, _ := http.NewRequest("PUT", "/user/changePassword/1", bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("PUT", "/users/changePassword/1", bytes.NewBuffer(bodyConverted))
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -165,12 +165,12 @@ func TestChangePassowrdByEmailAndValidJwtWithSuccess(t *testing.T) {
 		t.Errorf("failed to create user in 'TestChangePassowrdByEmailAndValidJwtWithSuccess' test: %v", err)
 	}
 	r := tests.SetupRoutes()
-	r.PUT("/user/changePassword/:find", ChangePassword)
+	r.PUT("/users/changePassword/:find", ChangePassword)
 	requestChangePasswordBody := user_dtos.ChangePasswordRequest{
 		Password: tests.ValidPassword + "newPassword",
 	}
 	bodyConverted, _ := json.Marshal(requestChangePasswordBody)
-	req, _ := http.NewRequest("PUT", "/user/changePassword/"+tests.ValidEmail, bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("PUT", "/users/changePassword/"+tests.ValidEmail, bytes.NewBuffer(bodyConverted))
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -198,12 +198,12 @@ func TestChangePasswordByIdAndJwtOfOtherUser(t *testing.T) {
 		t.Errorf("failed to create user in 'TestChangePasswordByIdAndJwtOfOtherUser' test: %v", err)
 	}
 	r := tests.SetupRoutes()
-	r.PUT("/user/changePassword/:find", ChangePassword)
+	r.PUT("/users/changePassword/:find", ChangePassword)
 	requestChangePasswordBody := user_dtos.ChangePasswordRequest{
 		Password: tests.ValidPassword + "newPassword",
 	}
 	bodyConverted, _ := json.Marshal(requestChangePasswordBody)
-	req, _ := http.NewRequest("PUT", "/user/changePassword/1", bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("PUT", "/users/changePassword/1", bytes.NewBuffer(bodyConverted))
 	jwtOfOtherUser := user_entities.User{
 		Id:       10,
 		Email:    "another@email.com",
@@ -241,12 +241,12 @@ func TestChangePasswordByEmailAndJwtOfOtherUser(t *testing.T) {
 		t.Errorf("failed to create user in 'TestChangePasswordByIdAndJwtOfOtherUser' test: %v", err)
 	}
 	r := tests.SetupRoutes()
-	r.PUT("/user/changePassword/:find", ChangePassword)
+	r.PUT("/users/changePassword/:find", ChangePassword)
 	requestChangePasswordBody := user_dtos.ChangePasswordRequest{
 		Password: tests.ValidPassword + "newPassword",
 	}
 	bodyConverted, _ := json.Marshal(requestChangePasswordBody)
-	req, _ := http.NewRequest("PUT", "/user/changePassword/"+tests.ValidEmail, bytes.NewBuffer(bodyConverted))
+	req, _ := http.NewRequest("PUT", "/users/changePassword/"+tests.ValidEmail, bytes.NewBuffer(bodyConverted))
 	jwtOfOtherUser := user_entities.User{
 		Id:       10,
 		Email:    "another@email.com",
