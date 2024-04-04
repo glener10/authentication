@@ -1,4 +1,3 @@
-Route do delete user (admin)
 List all users information (admin)
 List user information (admin)
 List all logs (admin), implementing E2E tests after all use cases need to create a log and integration tests
@@ -7,13 +6,12 @@ Route to inative a user (admin), implementing in repository to evite code duplic
 
 E-mail verification
 Password Recovery: use a unique token sended to email
-Login with google
-2FA
 User notification when strange login ocurred
-Database backups, rules and administration
-Docker
+2FA
+Login with google
+
 Create pre-commit triggers with actions, to check interesting things like code checking, formatting, security checks and commit message pattern
-How to monitor and have observability
 CI/CD securely (_snyk_, _app.codacy_)
+How to monitor and have observability
 Security tests
 Load Tests
