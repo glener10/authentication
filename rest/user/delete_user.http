@@ -2,6 +2,6 @@
 
 ###delete_user: delete user per id or email
 # @prompt idOrEmail
-DELETE http://localhost:8080/user/{{idOrEmail}}
+DELETE http://localhost:8080/users/{{idOrEmail}}
 content-type: application/json
 Authorization: Bearer {{validToken}}

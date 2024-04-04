@@ -1,6 +1,6 @@
 @validToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6ImZ1bGFub0BmdWxhbm8uY29tIiwiSWQiOjMsIklzQWRtaW4iOnRydWUsImV4cCI6MTcxMjMyNzY1NX0.NLjR4-XNKE5Fq0LJgtp5RG-YWSF13BppdSVmNKyYk2M
 
 ###admin_find_all_users
-GET http://localhost:8080/admin
+GET http://localhost:8080/admin/users
 content-type: application/json
 Authorization: Bearer {{validToken}}

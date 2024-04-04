@@ -2,7 +2,7 @@
 
 ###change_password: change password of user per id or email
 # @prompt idOrEmail
-PUT http://localhost:8080/user/changeEmail/{{idOrEmail}}
+PUT http://localhost:8080/users/changeEmail/{{idOrEmail}}
 content-type: application/json
 Authorization: Bearer {{validToken}}
 

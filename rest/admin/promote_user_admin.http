@@ -2,6 +2,6 @@
 
 ###promote_user_admin: promote user to admin per id or email
 # @prompt idOrEmail
-POST http://localhost:8080/admin/promote/{{idOrEmail}}
+POST http://localhost:8080/admin/users/promote/{{idOrEmail}}
 content-type: application/json
 Authorization: Bearer {{validToken}}
