@@ -55,3 +55,24 @@ func TestChangePasswordWithoutSuccessBecauseUserDoenstExists(t *testing.T) {
 	assert.Error(t, err)
 	assert.Nil(t, userAdmin, "should not change password because the user with the find parameter doenst exists")
 }
+
+func TestFindAllUsersWithSuccess(t *testing.T) {
+	tests.BeforeEach()
+	firstUser := user_dtos.CreateUserRequest{
+		Email:    "1@1.com",
+		Password: tests.ValidPassword,
+	}
+	_, err := userRepository.CreateUser(firstUser)
+	assert.NoError(t, err)
+
+	secondUser := user_dtos.CreateUserRequest{
+		Email:    "2@2.com",
+		Password: tests.ValidPassword,
+	}
+	_, err = userRepository.CreateUser(secondUser)
+	assert.NoError(t, err)
+
+	findAllUsers, err := repository.FindAllUsers()
+	assert.NoError(t, err)
+	assert.NotNil(t, findAllUsers, "should return all users in database")
+}

@@ -31,3 +31,23 @@ func (r *SQLRepository) PromoteUserAdmin(find string) (*user_dtos.UserWithoutSen
 	}
 	return &userWithoutSensitiveData, nil
 }
+
+func (r *SQLRepository) FindAllUsers() ([]*user_dtos.UserWithoutSensitiveData, error) {
+	rows, err := r.Db.Query("SELECT id, email, is_admin FROM users")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var users []*user_dtos.UserWithoutSensitiveData
+	for rows.Next() {
+		var user user_dtos.UserWithoutSensitiveData
+		if err := rows.Scan(&user.Id, &user.Email, &user.IsAdmin); err != nil {
+			return nil, err
+		}
+		users = append(users, &user)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return users, nil
+}
