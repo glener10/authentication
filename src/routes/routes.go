@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/glener10/authentication/docs"
 	admin_delete_user_controller "github.com/glener10/authentication/src/admin/controllers/admin_delete_user"
+	admin_find_all_users_controller "github.com/glener10/authentication/src/admin/controllers/admin_find_all_users"
 	admin_find_user_controller "github.com/glener10/authentication/src/admin/controllers/admin_find_user"
 	promote_user_admin_controller "github.com/glener10/authentication/src/admin/controllers/promote_user_admin"
 	middlewares "github.com/glener10/authentication/src/routes/middlewares"
@@ -58,6 +59,7 @@ func HandlerRoutes() *gin.Engine {
 	r.POST("/admin/promote/:find", promote_user_admin_controller.PromoteUserAdmin)
 	r.DELETE("/admin/:find", admin_delete_user_controller.AdminDeleteUser)
 	r.GET("/admin/:find", admin_find_user_controller.AdminFindUser)
+	r.GET("/admin", admin_find_all_users_controller.AdminFindAllUsers)
 	return r
 }
 

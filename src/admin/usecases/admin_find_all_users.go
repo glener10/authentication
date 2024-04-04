@@ -20,7 +20,7 @@ type AdminFindAllUsers struct {
 	AdminRepository admin_interfaces.IAdminRepository
 }
 
-func (u *AdminFindAllUsers) Executar(c *gin.Context, find string) {
+func (u *AdminFindAllUsers) Executar(c *gin.Context) {
 	authorizationHeader := c.GetHeader("Authorization")
 	jwtFromHeader := strings.Split(authorizationHeader, " ")[1]
 	claims, statusCode, err := jwt_usecases.CheckSignatureAndReturnClaims(jwtFromHeader)
