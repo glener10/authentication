@@ -41,7 +41,7 @@ func (u *PromoteUserAdmin) Executar(c *gin.Context, find string) {
 
 	isAdminInClaims := claims["IsAdmin"]
 	if isAdminInClaims != true {
-		statusCode := http.StatusBadRequest
+		statusCode := http.StatusUnauthorized
 		c.JSON(statusCode, gin.H{"error": "you do not have permission to perform this operation", "statusCode": statusCode})
 		go u.PromoteUserAdminLog(&idInClaimsConvertedToInt, false, log_messages.JWT_ADMIN_ELEVATION_REQUIRED, c.ClientIP())
 		return
