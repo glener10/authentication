@@ -1,4 +1,3 @@
-How promote a normal user to admin user (need to exec by a another admin user), update a success test in admin middleware test
 Route do delete user (admin)
 List all users information (admin)
 List user information (admin)
