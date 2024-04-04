@@ -25,6 +25,9 @@ definitions:
       id:
         example: 1
         type: integer
+      isAdmin:
+        example: true
+        type: boolean
     type: object
   utils_interfaces.ErrorResponse:
     properties:
@@ -61,8 +64,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/user_dtos.UserWithoutSensitiveData'
         "401":
           description: Unauthorized
           schema:
@@ -107,6 +108,40 @@ paths:
       tags:
       - user
   /user:
+    get:
+      description: Find all users
+      parameters:
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: "null"
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Find All Users (You will need send a JWT token of a admin user, you
+        can get it in the login route)
+      tags:
+      - user
     post:
       consumes:
       - application/json
