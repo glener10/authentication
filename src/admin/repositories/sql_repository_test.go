@@ -76,3 +76,10 @@ func TestFindAllUsersWithSuccess(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, findAllUsers, "should return all users in database")
 }
+
+func TestFindAllUsersWhenNoExistsAnyUser(t *testing.T) {
+	tests.BeforeEach()
+	findAllUsers, err := repository.FindAllUsers()
+	assert.NoError(t, err)
+	assert.Nil(t, findAllUsers, "should not return a error but return nil because doesnt exists any users in database")
+}
