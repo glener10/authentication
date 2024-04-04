@@ -54,7 +54,7 @@ func TestAdminFindUserWithJwtOfNonAdminUser(t *testing.T) {
 		t.Errorf("failed to decode response body: %v", err)
 	}
 	assert.Equal(t, response.Result().StatusCode, http.StatusUnauthorized, "should return a 401 status code")
-	assert.Equal(t, expected, actual, "should return 'wyou do not have permission to perform this operation' and 401 in the body")
+	assert.Equal(t, expected, actual, "should return 'you do not have permission to perform this operation' and 401 in the body")
 }
 
 func TestAdminFindAllUsersWithSuccess(t *testing.T) {
