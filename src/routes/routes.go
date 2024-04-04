@@ -37,19 +37,20 @@ func HandlerRoutes() *gin.Engine {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	if os.Getenv("ENV") != "development" {
+	if os.Getenv("ENV") != "production" {
+		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+		r.GET("/", middlewares.HelloWorld)
+	} else {
 		rateLimiter := middlewares.NewRateLimiter(11, time.Minute)
 		r.Use(middlewares.RequestLimitMiddleware(rateLimiter))
 		r.Use(middlewares.TimeoutMiddleware())
+		r.Use(middlewares.HTTPSOnlyMiddleware())
 	}
 
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-	r.GET("/", middlewares.HelloWorld)
 	r.POST("/users", create_user_controller.CreateUser)
 	r.POST("/login", login_controller.Login)
 
 	r.Use(middlewares.JwtMiddleware())
-	//r.Use(middlewares.HTTPSOnlyMiddleware())
 
 	r.GET("/users/:find", find_user_controller.FindUser)
 	r.DELETE("/users/:find", delete_user_controller.DeleteUser)
@@ -57,6 +58,7 @@ func HandlerRoutes() *gin.Engine {
 	r.PUT("/users/changeEmail/:find", change_email_controller.ChangeEmail)
 
 	r.Use(middlewares.AdminMiddleware())
+
 	r.POST("/admin/users/promote/:find", promote_user_admin_controller.PromoteUserAdmin)
 	r.DELETE("/admin/users/:find", admin_delete_user_controller.AdminDeleteUser)
 	r.GET("/admin/users/:find", admin_find_user_controller.AdminFindUser)
