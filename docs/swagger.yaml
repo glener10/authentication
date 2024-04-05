@@ -98,6 +98,46 @@ paths:
         can get it in the login route)
       tags:
       - admin
+  /admin/logs/{find}:
+    get:
+      description: Find all logs of a user by id
+      parameters:
+      - description: 'Search parameter: id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: "null"
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Find All Logs of a User (You will need send a JWT token of a admin
+        user, you can get it in the login route)
+      tags:
+      - admin
   /admin/promote/{find}:
     post:
       description: Promote user admin by id or email
