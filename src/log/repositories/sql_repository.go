@@ -40,3 +40,23 @@ func (r *SQLRepository) FindAllLogs() ([]*log_entities.Log, error) {
 	}
 	return logs, nil
 }
+
+func (r *SQLRepository) FindLogsOfAUser(find string) ([]*log_entities.Log, error) {
+	rows, err := r.Db.Query("SELECT id, user_id, route, method, success, operation_code, ip, timestamp FROM logs WHERE user_id = $1", find)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var logs []*log_entities.Log
+	for rows.Next() {
+		var log log_entities.Log
+		if err := rows.Scan(&log.Id, &log.UserId, &log.Route, &log.Method, &log.Success, &log.OperationCode, &log.Ip, &log.Timestamp); err != nil {
+			return nil, err
+		}
+		logs = append(logs, &log)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return logs, nil
+}

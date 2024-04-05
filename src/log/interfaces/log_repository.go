@@ -8,4 +8,5 @@ import (
 type ILogRepository interface {
 	CreateLog(log log_dtos.CreateLogRequest)
 	FindAllLogs() ([]*log_entities.Log, error)
+	FindLogsOfAUser(find string) ([]*log_entities.Log, error)
 }

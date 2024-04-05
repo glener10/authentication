@@ -44,3 +44,30 @@ func TestFindAllLogsWithSuccessButDoesntExistsAnyLog(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Nil(t, logs, "should not return a error but return nil because doesnt exists any log")
 }
+
+func TestFindLogsOfUser(t *testing.T) {
+	tests.BeforeEach()
+	id := 1
+	logDto := log_dtos.CreateLogRequest{
+		UserId:        &id,
+		Route:         "admin",
+		Method:        "GET",
+		Success:       false,
+		OperationCode: log_messages.JWT_UNAUTHORIZED,
+		Ip:            "192.168.0.1",
+		Timestamp:     time.Now(),
+	}
+	repository.CreateLog(logDto)
+	repository.CreateLog(logDto)
+	repository.CreateLog(logDto)
+
+	idForAnotherUser := 2
+	logDto.UserId = &idForAnotherUser
+
+	repository.CreateLog(logDto)
+	repository.CreateLog(logDto)
+
+	logs, err := repository.FindLogsOfAUser("1")
+	assert.NoError(t, err)
+	assert.Equal(t, len(logs), 3, "should return only 3 logs of the user and not all logs")
+}
