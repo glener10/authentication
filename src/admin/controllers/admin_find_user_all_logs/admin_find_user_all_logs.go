@@ -36,6 +36,6 @@ func AdminFindUserAllLogs(c *gin.Context) {
 	dbConnection := db_postgres.GetDb()
 	userRepository := &user_repositories.SQLRepository{Db: dbConnection}
 	logRepository := &log_repositories.SQLRepository{Db: dbConnection}
-	useCase := &admin_usecases.AdminFindUser{UserRepository: userRepository, LogRepository: logRepository}
+	useCase := &admin_usecases.AdminFindUserAllLogs{UserRepository: userRepository, LogRepository: logRepository}
 	useCase.Executar(c, parameter)
 }
