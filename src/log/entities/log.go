@@ -4,7 +4,7 @@ import "time"
 
 type Log struct {
 	Id            int
-	UserId        int
+	UserId        *int
 	Route         string
 	Method        string
 	Success       bool

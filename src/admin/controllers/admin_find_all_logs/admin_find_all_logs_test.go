@@ -81,6 +81,8 @@ func TestAdminFindAllLogsWithSuccess(t *testing.T) {
 	}
 	logRepository.CreateLog(logDto)
 	logRepository.CreateLog(logDto)
+	logDto.UserId = nil
+	logRepository.CreateLog(logDto)
 
 	isAdmin := true
 	userAdminForJwt := user_entities.User{
@@ -102,5 +104,5 @@ func TestAdminFindAllLogsWithSuccess(t *testing.T) {
 	if err := json.NewDecoder(response.Body).Decode(&arr); err != nil {
 		log.Fatalf("error decoding response body: %v", err)
 	}
-	assert.Equal(t, len(arr), 2, "should return an array with 2 elements")
+	assert.Equal(t, len(arr), 3, "should return an array with 3 elements")
 }
