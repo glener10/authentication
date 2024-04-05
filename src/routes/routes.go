@@ -13,6 +13,7 @@ import (
 	admin_find_all_logs_controller "github.com/glener10/authentication/src/admin/controllers/admin_find_all_logs"
 	admin_find_all_users_controller "github.com/glener10/authentication/src/admin/controllers/admin_find_all_users"
 	admin_find_user_controller "github.com/glener10/authentication/src/admin/controllers/admin_find_user"
+	admin_find_user_all_logs_controller "github.com/glener10/authentication/src/admin/controllers/admin_find_user_all_logs"
 	promote_user_admin_controller "github.com/glener10/authentication/src/admin/controllers/promote_user_admin"
 	middlewares "github.com/glener10/authentication/src/routes/middlewares"
 	change_email_controller "github.com/glener10/authentication/src/user/controllers/change_email"
@@ -64,6 +65,7 @@ func HandlerRoutes() *gin.Engine {
 	r.GET("/admin/users/:find", admin_find_user_controller.AdminFindUser)
 	r.GET("/admin/users", admin_find_all_users_controller.AdminFindAllUsers)
 	r.GET("/admin/logs", admin_find_all_logs_controller.AdminFindAllLogs)
+	r.GET("/admin/logs/:find", admin_find_user_all_logs_controller.AdminFindUserAllLogs)
 	return r
 }
 
