@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -33,18 +34,14 @@ func InactiveUserMiddlware() gin.HandlerFunc {
 		}
 
 		idInClaims := claims["Id"]
-		idInClaimsString := idInClaims.(string)
-		if idInClaims == nil {
-			statusCode := http.StatusBadRequest
-			c.JSON(statusCode, gin.H{"error": "error to map id or email in claims", "statusCode": statusCode})
-			return
-		}
+		idString := fmt.Sprintf("%v", idInClaims)
+		idInt := int((idInClaims).(float64))
 
 		dbConnection := db_postgres.GetDb()
 		userRepository := &user_repositories.SQLRepository{Db: dbConnection}
 		logRepository := &log_repositories.SQLRepository{Db: dbConnection}
 
-		userInDb, err := userRepository.FindUser(idInClaimsString)
+		userInDb, err := userRepository.FindUser(idString)
 		if err != nil {
 			statusCode := http.StatusNotFound
 			c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
@@ -52,12 +49,11 @@ func InactiveUserMiddlware() gin.HandlerFunc {
 		}
 
 		isInactive := true
-		if userInDb.Inactive == &isInactive {
+		if *userInDb.Inactive == isInactive {
 			statusCode := http.StatusUnauthorized
 			c.JSON(statusCode, gin.H{"error": "your user is inactive, please enter in contact with our support", "statusCode": statusCode})
-			idInClaimsConvertedToInt := int((idInClaims).(float64))
 			log := &log_dtos.CreateLogRequest{
-				UserId:        &idInClaimsConvertedToInt,
+				UserId:        &idInt,
 				Route:         "INACTIVE_MIDDLEWARE",
 				Method:        "",
 				Success:       false,
