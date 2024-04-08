@@ -1,9 +1,7 @@
-Test middleware to block inactive users
 Common middleware to block operation from another user if doesnt admin: BlockOperationFromAnotherUserIfNotAdmin
-
-Route to inative a user (admin), implementing in repository to evite code duplication. update test of use cases "change_email", "change_password", "delete_user", "find_user" and "login"
-Route to active a user (admin), implementing in repository to evite code duplication. update test of use cases "change_email", "change_password", "delete_user", "find_user" and "login"
-
+Route to inative a user (admin)
+Test middleware to block inactive users
+Route to active a user (admin)
 
 Create pre-commit triggers with actions, to check interesting things like code checking, formatting, security checks and commit message pattern
 CI/CD securely (_snyk_, _app.codacy_)
