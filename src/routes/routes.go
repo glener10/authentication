@@ -53,7 +53,6 @@ func HandlerRoutes() *gin.Engine {
 
 	r.Use(middlewares.JwtMiddleware())
 	r.Use(middlewares.InactiveUserMiddlware())
-	r.Use(middlewares.BlockOperationFromAnotherUserIfNotAdminMiddleware())
 
 	r.GET("/users/:find", find_user_controller.FindUser)
 	r.DELETE("/users/:find", delete_user_controller.DeleteUser)

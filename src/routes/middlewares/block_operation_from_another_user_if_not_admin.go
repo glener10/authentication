@@ -15,13 +15,16 @@ import (
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 )
 
-func BlockOperationFromAnotherUserIfNotAdminMiddleware() gin.HandlerFunc {
+func BlockOperationFromAnotherUserIfNotAdminMiddleware() gin.HandlerFunc { //Middleware to avoid code repetition, it's an improvement feature
 	return func(c *gin.Context) {
 		parameter := c.Param("find")
-		if err := user_dtos.ValidateFindUser(parameter); err != nil {
-			statusCode := http.StatusUnprocessableEntity
-			c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-			return
+		if parameter != "" {
+			if err := user_dtos.ValidateFindUser(parameter); err != nil {
+				statusCode := http.StatusUnprocessableEntity
+				c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+				c.Abort()
+				return
+			}
 		}
 
 		authHeader := c.GetHeader("Authorization")
@@ -32,10 +35,23 @@ func BlockOperationFromAnotherUserIfNotAdminMiddleware() gin.HandlerFunc {
 			return
 		}
 
+		dbConnection := db_postgres.GetDb()
+		logRepository := &log_repositories.SQLRepository{Db: dbConnection}
+
 		jwtHeader := strings.Split(authHeader, " ")[1]
 		claims, statusCode, err := jwt_usecases.CheckSignatureAndReturnClaims(jwtHeader)
 		if err != nil {
 			c.JSON(*statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+			log := &log_dtos.CreateLogRequest{
+				UserId:        nil,
+				Route:         "BLOCK_OPERATION_FROM_ANOTHER_USER_IF_NOT_ADMIN",
+				Method:        "",
+				Success:       false,
+				OperationCode: log_messages.JWT_INVALID_SIGNATURE,
+				Ip:            c.ClientIP(),
+				Timestamp:     time.Now(),
+			}
+			go logRepository.CreateLog(*log)
 			c.Abort()
 			return
 		}
@@ -49,8 +65,6 @@ func BlockOperationFromAnotherUserIfNotAdminMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		dbConnection := db_postgres.GetDb()
-		logRepository := &log_repositories.SQLRepository{Db: dbConnection}
 		idFindInNumber, _ := strconv.ParseFloat(parameter, 64)
 
 		if idFindInNumber != idInClaims && parameter != emailInClaims && isAdminInClaims != true {
