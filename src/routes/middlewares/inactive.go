@@ -14,7 +14,7 @@ import (
 	user_repositories "github.com/glener10/authentication/src/user/repositories"
 )
 
-func InactiveMiddlware() gin.HandlerFunc {
+func InactiveUserMiddlware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {

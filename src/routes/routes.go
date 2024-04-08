@@ -52,7 +52,7 @@ func HandlerRoutes() *gin.Engine {
 	r.POST("/login", login_controller.Login)
 
 	r.Use(middlewares.JwtMiddleware())
-	r.Use(middlewares.InactiveMiddlware())
+	r.Use(middlewares.InactiveUserMiddlware())
 
 	r.GET("/users/:find", find_user_controller.FindUser)
 	r.DELETE("/users/:find", delete_user_controller.DeleteUser)
