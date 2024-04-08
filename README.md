@@ -117,7 +117,7 @@
 
   4- After executing the switch, the container is terminated
 
-- Common middlewares to routes: rate limiter, timeout, only https, jwt signature checker for some routes, admin only for some routes
+- Common middlewares to routes: block inactives users, rate limiter, timeout, only https, jwt signature checker for some routes, admin only for some routes
 
 🏗 **Use Cases**
 

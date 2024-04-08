@@ -1,5 +1,4 @@
 Test middleware to block inactive users
-Documentation middleware to block inactive users
 Common middleware to block operation from another user if doesnt admin: BlockOperationFromAnotherUserIfNotAdmin
 
 Route to inative a user (admin), implementing in repository to evite code duplication. update test of use cases "change_email", "change_password", "delete_user", "find_user" and "login"
