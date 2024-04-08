@@ -28,6 +28,14 @@ func (u *Login) Executar(c *gin.Context, user user_dtos.CreateUserRequest) {
 		return
 	}
 
+	userInactive := true
+	if userInDb.Inactive == &userInactive {
+		statusCode := http.StatusUnauthorized
+		c.JSON(statusCode, gin.H{"error": "your user is inactive, please enter in contact with our support", "statusCode": statusCode})
+		go u.LoginLog(&userInDb.Id, false, log_messages.USER_INACTIVE, c.ClientIP())
+		return
+	}
+
 	passwordIsValid := bcrypt.CompareHashAndPassword([]byte(userInDb.Password), []byte(user.Password))
 	if passwordIsValid != nil {
 		statusCode := http.StatusUnauthorized

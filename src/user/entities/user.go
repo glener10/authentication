@@ -5,4 +5,5 @@ type User struct {
 	Email    string
 	Password string
 	IsAdmin  *bool
+	Inactive *bool
 }
