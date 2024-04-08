@@ -30,11 +30,10 @@ func CheckSignatureAndReturnClaims(tokenFromHeader string) (jwt.MapClaims, *int,
 
 func GenerateJwt(user *user_entities.User) (*string, error) {
 	claims := jwt.MapClaims{
-		"Id":       user.Id,
-		"Email":    user.Email,
-		"IsAdmin":  user.IsAdmin,
-		"Inactive": user.Inactive,
-		"exp":      time.Now().Add(time.Hour * 24).Unix(),
+		"Id":      user.Id,
+		"Email":   user.Email,
+		"IsAdmin": user.IsAdmin,
+		"exp":     time.Now().Add(time.Hour * 24).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
