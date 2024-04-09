@@ -50,5 +50,6 @@ func (u *AdminActiveUser) Executar(c *gin.Context, find string) {
 		return
 	}
 
+	go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "admin/users/active/:find", "POST", true, log_messages.ADMIN_ACTIVE_USER_WITH_SUCCESS, c.ClientIP())
 	c.JSON(http.StatusOK, nil)
 }

@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
-	log_repositories "github.com/glener10/authentication/src/log/repositories"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_repositories "github.com/glener10/authentication/src/user/repositories"
 	user_usecases "github.com/glener10/authentication/src/user/usecases"
@@ -33,7 +32,6 @@ func FindUser(c *gin.Context) {
 	}
 	dbConnection := db_postgres.GetDb()
 	userRepository := &user_repositories.SQLRepository{Db: dbConnection}
-	logRepository := &log_repositories.SQLRepository{Db: dbConnection}
-	useCase := &user_usecases.FindUser{UserRepository: userRepository, LogRepository: logRepository}
+	useCase := &user_usecases.FindUser{UserRepository: userRepository}
 	useCase.Executar(c, parameter)
 }

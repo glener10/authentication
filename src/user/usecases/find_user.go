@@ -4,20 +4,17 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
-	log_dtos "github.com/glener10/authentication/src/log/dtos"
-	log_interfaces "github.com/glener10/authentication/src/log/interfaces"
 	log_messages "github.com/glener10/authentication/src/log/messages"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_interfaces "github.com/glener10/authentication/src/user/interfaces"
+	utils_usecases "github.com/glener10/authentication/src/utils/usecases"
 )
 
 type FindUser struct {
 	UserRepository user_interfaces.IUserRepository
-	LogRepository  log_interfaces.ILogRepository
 }
 
 func (u *FindUser) Executar(c *gin.Context, find string) {
@@ -26,7 +23,7 @@ func (u *FindUser) Executar(c *gin.Context, find string) {
 	claims, statusCode, err := jwt_usecases.CheckSignatureAndReturnClaims(jwtFromHeader)
 	if err != nil {
 		c.JSON(*statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go u.FindUserLog(nil, false, log_messages.JWT_INVALID_SIGNATURE, c.ClientIP())
+		go utils_usecases.CreateLog(nil, "users/:find", "GET", false, log_messages.JWT_INVALID_SIGNATURE, c.ClientIP())
 		return
 	}
 
@@ -43,7 +40,7 @@ func (u *FindUser) Executar(c *gin.Context, find string) {
 	if idFinInNumber != idInClaims && find != emailInClaims {
 		statusCode := http.StatusUnauthorized
 		c.JSON(statusCode, gin.H{"error": "you do not have permission to perform this operation", "statusCode": statusCode})
-		go u.FindUserLog(&idInClaimsConvertedToInt, false, log_messages.JWT_UNAUTHORIZED, c.ClientIP())
+		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/:find", "GET", false, log_messages.JWT_UNAUTHORIZED, c.ClientIP())
 		return
 	}
 
@@ -51,7 +48,7 @@ func (u *FindUser) Executar(c *gin.Context, find string) {
 	if err != nil {
 		statusCode := http.StatusNotFound
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go u.FindUserLog(&idInClaimsConvertedToInt, false, log_messages.FIND_USER_WITHOUT_SUCCESS, c.ClientIP())
+		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/:find", "GET", false, log_messages.FIND_USER_WITHOUT_SUCCESS, c.ClientIP())
 		return
 	}
 
@@ -60,17 +57,4 @@ func (u *FindUser) Executar(c *gin.Context, find string) {
 		Email: user.Email,
 	}
 	c.JSON(http.StatusOK, userWithoutSensitiveData)
-}
-
-func (u *FindUser) FindUserLog(userId *int, success bool, operationCode string, ip string) {
-	log := &log_dtos.CreateLogRequest{
-		UserId:        userId,
-		Route:         "users/:find",
-		Method:        "DELETE",
-		Success:       success,
-		OperationCode: operationCode,
-		Ip:            ip,
-		Timestamp:     time.Now(),
-	}
-	u.LogRepository.CreateLog(*log)
 }

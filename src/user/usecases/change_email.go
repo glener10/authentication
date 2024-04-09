@@ -4,19 +4,16 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
-	log_dtos "github.com/glener10/authentication/src/log/dtos"
-	log_interfaces "github.com/glener10/authentication/src/log/interfaces"
 	log_messages "github.com/glener10/authentication/src/log/messages"
 	user_interfaces "github.com/glener10/authentication/src/user/interfaces"
+	utils_usecases "github.com/glener10/authentication/src/utils/usecases"
 )
 
 type ChangeEmail struct {
 	UserRepository user_interfaces.IUserRepository
-	LogRepository  log_interfaces.ILogRepository
 }
 
 func (u *ChangeEmail) Executar(c *gin.Context, find string, newEmail string) {
@@ -26,7 +23,7 @@ func (u *ChangeEmail) Executar(c *gin.Context, find string, newEmail string) {
 
 	if err != nil {
 		c.JSON(*statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go u.CreateChangeEmailLog(nil, false, log_messages.JWT_INVALID_SIGNATURE, c.ClientIP())
+		go utils_usecases.CreateLog(nil, "users/changeEmail/:find", "PATCH", false, log_messages.JWT_INVALID_SIGNATURE, c.ClientIP())
 		return
 	}
 
@@ -43,7 +40,7 @@ func (u *ChangeEmail) Executar(c *gin.Context, find string, newEmail string) {
 	if idFindInNumber != idInClaims && find != emailInClaims {
 		statusCode := http.StatusUnauthorized
 		c.JSON(statusCode, gin.H{"error": "you do not have permission to perform this operation", "statusCode": statusCode})
-		go u.CreateChangeEmailLog(&idInClaimsConvertedToInt, false, log_messages.JWT_UNAUTHORIZED, c.ClientIP())
+		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/changeEmail/:find", "PATCH", false, log_messages.JWT_UNAUTHORIZED, c.ClientIP())
 		return
 	}
 
@@ -51,7 +48,7 @@ func (u *ChangeEmail) Executar(c *gin.Context, find string, newEmail string) {
 	if err != nil {
 		statusCode := http.StatusNotFound
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go u.CreateChangeEmailLog(&idInClaimsConvertedToInt, false, log_messages.FIND_USER_NOT_FOUND, c.ClientIP())
+		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/changeEmail/:find", "PATCH", false, log_messages.FIND_USER_NOT_FOUND, c.ClientIP())
 		return
 	}
 
@@ -59,22 +56,9 @@ func (u *ChangeEmail) Executar(c *gin.Context, find string, newEmail string) {
 	if err != nil {
 		statusCode := http.StatusInternalServerError
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go u.CreateChangeEmailLog(&idInClaimsConvertedToInt, false, log_messages.CHANGE_EMAIL_WITHOUT_SUCCESS, c.ClientIP())
+		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/changeEmail/:find", "PATCH", false, log_messages.CHANGE_EMAIL_WITHOUT_SUCCESS, c.ClientIP())
 		return
 	}
-	go u.CreateChangeEmailLog(&idInClaimsConvertedToInt, true, log_messages.CHANGE_EMAIL_WITH_SUCCESS, c.ClientIP())
+	go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/changeEmail/:find", "PATCH", true, log_messages.CHANGE_EMAIL_WITH_SUCCESS, c.ClientIP())
 	c.JSON(http.StatusOK, userWithNewEmail)
-}
-
-func (u *ChangeEmail) CreateChangeEmailLog(userId *int, success bool, operationCode string, ip string) {
-	log := &log_dtos.CreateLogRequest{
-		UserId:        userId,
-		Route:         "users/changeEmail/:find",
-		Method:        "PATCH",
-		Success:       success,
-		OperationCode: operationCode,
-		Ip:            ip,
-		Timestamp:     time.Now(),
-	}
-	u.LogRepository.CreateLog(*log)
 }

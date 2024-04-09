@@ -4,12 +4,9 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
-	log_dtos "github.com/glener10/authentication/src/log/dtos"
-	log_interfaces "github.com/glener10/authentication/src/log/interfaces"
 	log_messages "github.com/glener10/authentication/src/log/messages"
 	user_interfaces "github.com/glener10/authentication/src/user/interfaces"
 	utils_usecases "github.com/glener10/authentication/src/utils/usecases"
@@ -17,7 +14,6 @@ import (
 
 type ChangePassword struct {
 	UserRepository user_interfaces.IUserRepository
-	LogRepository  log_interfaces.ILogRepository
 }
 
 func (u *ChangePassword) Executar(c *gin.Context, find string, newPassword string) {
@@ -27,7 +23,7 @@ func (u *ChangePassword) Executar(c *gin.Context, find string, newPassword strin
 
 	if err != nil {
 		c.JSON(*statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go u.CreateChangePasswordLog(nil, false, log_messages.JWT_INVALID_SIGNATURE, c.ClientIP())
+		go utils_usecases.CreateLog(nil, "users/changePassword/:find", "PATCH", false, log_messages.JWT_INVALID_SIGNATURE, c.ClientIP())
 		return
 	}
 
@@ -44,7 +40,7 @@ func (u *ChangePassword) Executar(c *gin.Context, find string, newPassword strin
 	if idFindInNumber != idInClaims && find != emailInClaims {
 		statusCode := http.StatusUnauthorized
 		c.JSON(statusCode, gin.H{"error": "you do not have permission to perform this operation", "statusCode": statusCode})
-		go u.CreateChangePasswordLog(&idInClaimsConvertedToInt, false, log_messages.JWT_UNAUTHORIZED, c.ClientIP())
+		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/changePassword/:find", "PATCH", false, log_messages.JWT_UNAUTHORIZED, c.ClientIP())
 		return
 	}
 
@@ -66,22 +62,9 @@ func (u *ChangePassword) Executar(c *gin.Context, find string, newPassword strin
 	if err != nil {
 		statusCode := http.StatusInternalServerError
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go u.CreateChangePasswordLog(&idInClaimsConvertedToInt, false, log_messages.CHANGE_PASSWORD_WITHOUT_SUCCESS, c.ClientIP())
+		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/changePassword/:find", "PATCH", false, log_messages.CHANGE_PASSWORD_WITHOUT_SUCCESS, c.ClientIP())
 		return
 	}
-	go u.CreateChangePasswordLog(&idInClaimsConvertedToInt, true, log_messages.CHANGE_PASSWORD_WITH_SUCCESS, c.ClientIP())
+	go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/changePassword/:find", "PATCH", true, log_messages.CHANGE_PASSWORD_WITH_SUCCESS, c.ClientIP())
 	c.JSON(http.StatusOK, userWithNewPassword)
-}
-
-func (u *ChangePassword) CreateChangePasswordLog(userId *int, success bool, operationCode string, ip string) {
-	log := &log_dtos.CreateLogRequest{
-		UserId:        userId,
-		Route:         "users/changePassword/:find",
-		Method:        "PATCH",
-		Success:       success,
-		OperationCode: operationCode,
-		Ip:            ip,
-		Timestamp:     time.Now(),
-	}
-	u.LogRepository.CreateLog(*log)
 }
