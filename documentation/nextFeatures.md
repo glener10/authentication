@@ -1,5 +1,4 @@
 Test middleware to block inactive users
-Create Common create_log
 Log middlewares
 
 Create pre-commit triggers with actions, to check interesting things like code checking, formatting, security checks and commit message pattern
