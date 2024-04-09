@@ -75,20 +75,6 @@ func TestInativeUserWithSuccess(t *testing.T) {
 		t.Errorf("failed to create user in 'TestInativeUserWithSuccess' test: %v", err)
 	}
 
-	userAdmin := user_dtos.CreateUserRequest{
-		Email:    "admin@admin.com",
-		Password: tests.ValidPassword,
-	}
-	_, err = repository.CreateUser(userAdmin)
-	if err != nil {
-		t.Errorf("failed to create user in 'TestInativeUserWithSuccess' test: %v", err)
-	}
-
-	_, err = adminRepository.PromoteUserAdmin("admin@admin.com")
-	if err != nil {
-		t.Errorf("failed to promote user admin user in 'TestInativeUserWithSuccess' test: %v", err)
-	}
-
 	isAdmin := true
 	userAdminForJwt := user_entities.User{
 		Id:       2,

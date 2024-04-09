@@ -4,11 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	admin_repositories "github.com/glener10/authentication/src/admin/repositories"
 	admin_usecases "github.com/glener10/authentication/src/admin/usecases"
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	log_repositories "github.com/glener10/authentication/src/log/repositories"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
-	user_repositories "github.com/glener10/authentication/src/user/repositories"
 )
 
 // AdminInativeUser
@@ -32,8 +32,8 @@ func AdminInativeUser(c *gin.Context) {
 		return
 	}
 	dbConnection := db_postgres.GetDb()
-	userRepository := &user_repositories.SQLRepository{Db: dbConnection}
+	adminRepository := &admin_repositories.SQLRepository{Db: dbConnection}
 	logRepository := &log_repositories.SQLRepository{Db: dbConnection}
-	useCase := &admin_usecases.AdminDeleteUser{UserRepository: userRepository, LogRepository: logRepository}
+	useCase := &admin_usecases.AdminInativeUser{AdminRepository: adminRepository, LogRepository: logRepository}
 	useCase.Executar(c, parameter)
 }
