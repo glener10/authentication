@@ -4,15 +4,13 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
-	log_dtos "github.com/glener10/authentication/src/log/dtos"
 	log_messages "github.com/glener10/authentication/src/log/messages"
-	log_repositories "github.com/glener10/authentication/src/log/repositories"
 	user_repositories "github.com/glener10/authentication/src/user/repositories"
+	utils_usecases "github.com/glener10/authentication/src/utils/usecases"
 )
 
 func InactiveUserMiddlware() gin.HandlerFunc {
@@ -21,6 +19,7 @@ func InactiveUserMiddlware() gin.HandlerFunc {
 		if authHeader == "" {
 			statusCode := http.StatusUnauthorized
 			c.JSON(statusCode, gin.H{"error": "token not provided", "statusCode": statusCode})
+			go utils_usecases.CreateLog(nil, "INACTIVE_USER_MIDDLEWARE", "", false, log_messages.TOKEN_NOT_PROVIDED, c.ClientIP())
 			c.Abort()
 			return
 		}
@@ -29,6 +28,7 @@ func InactiveUserMiddlware() gin.HandlerFunc {
 		claims, statusCode, err := jwt_usecases.CheckSignatureAndReturnClaims(jwtHeader)
 		if err != nil {
 			c.JSON(*statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+			go utils_usecases.CreateLog(nil, "INACTIVE_USER_MIDDLEWARE", "", false, log_messages.JWT_INVALID_SIGNATURE, c.ClientIP())
 			c.Abort()
 			return
 		}
@@ -39,12 +39,12 @@ func InactiveUserMiddlware() gin.HandlerFunc {
 
 		dbConnection := db_postgres.GetDb()
 		userRepository := &user_repositories.SQLRepository{Db: dbConnection}
-		logRepository := &log_repositories.SQLRepository{Db: dbConnection}
 
 		userInDb, err := userRepository.FindUser(idString)
 		if err != nil {
 			statusCode := http.StatusNotFound
 			c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+			go utils_usecases.CreateLog(&idInt, "INACTIVE_USER_MIDDLEWARE", "", false, log_messages.FIND_USER_NOT_FOUND, c.ClientIP())
 			return
 		}
 
@@ -52,16 +52,7 @@ func InactiveUserMiddlware() gin.HandlerFunc {
 		if userInDb.Inactive != nil && *userInDb.Inactive == isInactive {
 			statusCode := http.StatusUnauthorized
 			c.JSON(statusCode, gin.H{"error": "your user is inactive, please enter in contact with our support", "statusCode": statusCode})
-			log := &log_dtos.CreateLogRequest{
-				UserId:        &idInt,
-				Route:         "INACTIVE_MIDDLEWARE",
-				Method:        "",
-				Success:       false,
-				OperationCode: log_messages.USER_INACTIVE,
-				Ip:            c.ClientIP(),
-				Timestamp:     time.Now(),
-			}
-			go logRepository.CreateLog(*log)
+			go utils_usecases.CreateLog(&idInt, "INACTIVE_USER_MIDDLEWARE", "", false, log_messages.USER_INACTIVE, c.ClientIP())
 			c.Abort()
 			return
 		}

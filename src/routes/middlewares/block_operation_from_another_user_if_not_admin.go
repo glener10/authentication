@@ -4,15 +4,12 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
-	log_dtos "github.com/glener10/authentication/src/log/dtos"
 	log_messages "github.com/glener10/authentication/src/log/messages"
-	log_repositories "github.com/glener10/authentication/src/log/repositories"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
+	utils_usecases "github.com/glener10/authentication/src/utils/usecases"
 )
 
 func BlockOperationFromAnotherUserIfNotAdminMiddleware() gin.HandlerFunc { //Middleware to avoid code repetition, it's an improvement feature
@@ -35,23 +32,11 @@ func BlockOperationFromAnotherUserIfNotAdminMiddleware() gin.HandlerFunc { //Mid
 			return
 		}
 
-		dbConnection := db_postgres.GetDb()
-		logRepository := &log_repositories.SQLRepository{Db: dbConnection}
-
 		jwtHeader := strings.Split(authHeader, " ")[1]
 		claims, statusCode, err := jwt_usecases.CheckSignatureAndReturnClaims(jwtHeader)
 		if err != nil {
 			c.JSON(*statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-			log := &log_dtos.CreateLogRequest{
-				UserId:        nil,
-				Route:         "BLOCK_OPERATION_FROM_ANOTHER_USER_IF_NOT_ADMIN",
-				Method:        "",
-				Success:       false,
-				OperationCode: log_messages.JWT_INVALID_SIGNATURE,
-				Ip:            c.ClientIP(),
-				Timestamp:     time.Now(),
-			}
-			go logRepository.CreateLog(*log)
+			go utils_usecases.CreateLog(nil, "BLOCK_OPERATION_FROM_ANOTHER_USER_IF_NOT_ADMIN", "", false, log_messages.JWT_INVALID_SIGNATURE, c.ClientIP())
 			c.Abort()
 			return
 		}
@@ -71,16 +56,7 @@ func BlockOperationFromAnotherUserIfNotAdminMiddleware() gin.HandlerFunc { //Mid
 			statusCode := http.StatusUnauthorized
 			c.JSON(statusCode, gin.H{"error": "you do not have permission to perform this operation", "statusCode": statusCode})
 			idInClaimsConvertedToInt := int((idInClaims).(float64))
-			log := &log_dtos.CreateLogRequest{
-				UserId:        &idInClaimsConvertedToInt,
-				Route:         "BLOCK_OPERATION_FROM_ANOTHER_USER_IF_NOT_ADMIN",
-				Method:        "",
-				Success:       false,
-				OperationCode: log_messages.JWT_UNAUTHORIZED,
-				Ip:            c.ClientIP(),
-				Timestamp:     time.Now(),
-			}
-			go logRepository.CreateLog(*log)
+			go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "BLOCK_OPERATION_FROM_ANOTHER_USER_IF_NOT_ADMIN", "", false, log_messages.JWT_UNAUTHORIZED, c.ClientIP())
 			return
 		}
 		c.Next()
