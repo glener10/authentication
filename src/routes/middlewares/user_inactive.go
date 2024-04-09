@@ -49,7 +49,7 @@ func InactiveUserMiddlware() gin.HandlerFunc {
 		}
 
 		isInactive := true
-		if *userInDb.Inactive == isInactive {
+		if userInDb.Inactive != nil && *userInDb.Inactive == isInactive {
 			statusCode := http.StatusUnauthorized
 			c.JSON(statusCode, gin.H{"error": "your user is inactive, please enter in contact with our support", "statusCode": statusCode})
 			log := &log_dtos.CreateLogRequest{
