@@ -1,12 +1,21 @@
 package admin_inative_user_controller
 
 import (
+	"encoding/json"
+	"log"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	admin_repositories "github.com/glener10/authentication/src/admin/repositories"
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
+	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
+	user_dtos "github.com/glener10/authentication/src/user/dtos"
+	user_entities "github.com/glener10/authentication/src/user/entities"
 	user_repositories "github.com/glener10/authentication/src/user/repositories"
+	utils_interfaces "github.com/glener10/authentication/src/utils/interfaces"
 	"github.com/glener10/authentication/tests"
+	"gotest.tools/v3/assert"
 )
 
 var repository user_repositories.SQLRepository
@@ -19,13 +28,12 @@ func TestMain(m *testing.M) {
 	tests.ExecuteAndFinish(m)
 }
 
-/*
-func TestDeleteUserWithJwtOfNonAdminUser(t *testing.T) {
+func TestInativeUserWithJwtOfNonAdminUser(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.DELETE("/admin/users/:find", AdminDeleteUser)
+	r.POST("/admin/users/inative/:find", AdminInativeUser)
 
-	req, _ := http.NewRequest("DELETE", "/admin/users/1", nil)
+	req, _ := http.NewRequest("POST", "/admin/users/inative/1", nil)
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -33,7 +41,7 @@ func TestDeleteUserWithJwtOfNonAdminUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestDeleteUserWithJwtOfNonAdminUser' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestInativeUserWithJwtOfNonAdminUser' test: " + err.Error())
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -52,19 +60,19 @@ func TestDeleteUserWithJwtOfNonAdminUser(t *testing.T) {
 	assert.Equal(t, expected, actual, "should return 'you do not have permission to perform this operation' and 401 in the body")
 }
 
-func TestAdminDeleteUserWithSuccess(t *testing.T) {
+func TestInativeUserWithSuccess(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.DELETE("/admin/users/:find", AdminDeleteUser)
-	req, _ := http.NewRequest("DELETE", "/admin/users/1", nil)
+	r.POST("/admin/users/inative/:find", AdminInativeUser)
+	req, _ := http.NewRequest("POST", "/admin/users/inative/1", nil)
 
-	userToDelete := user_dtos.CreateUserRequest{
+	userToInative := user_dtos.CreateUserRequest{
 		Email:    tests.ValidEmail,
 		Password: tests.ValidPassword,
 	}
-	_, err := repository.CreateUser(userToDelete)
+	_, err := repository.CreateUser(userToInative)
 	if err != nil {
-		t.Errorf("failed to create user in 'TestAdminDeleteUserWithSuccess' test: %v", err)
+		t.Errorf("failed to create user in 'TestInativeUserWithSuccess' test: %v", err)
 	}
 
 	userAdmin := user_dtos.CreateUserRequest{
@@ -73,12 +81,12 @@ func TestAdminDeleteUserWithSuccess(t *testing.T) {
 	}
 	_, err = repository.CreateUser(userAdmin)
 	if err != nil {
-		t.Errorf("failed to create user in 'TestAdminDeleteUserWithSuccess' test: %v", err)
+		t.Errorf("failed to create user in 'TestInativeUserWithSuccess' test: %v", err)
 	}
 
 	_, err = adminRepository.PromoteUserAdmin("admin@admin.com")
 	if err != nil {
-		t.Errorf("failed to promote user admin user in 'TestAdminDeleteUserWithSuccess' test: %v", err)
+		t.Errorf("failed to promote user admin user in 'TestInativeUserWithSuccess' test: %v", err)
 	}
 
 	isAdmin := true
@@ -90,7 +98,7 @@ func TestAdminDeleteUserWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userAdminForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestAdminDeleteUserWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestInativeUserWithSuccess' test: " + err.Error())
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -98,4 +106,3 @@ func TestAdminDeleteUserWithSuccess(t *testing.T) {
 
 	assert.Equal(t, response.Result().StatusCode, http.StatusOK, "should return a 200 status code")
 }
-*/
