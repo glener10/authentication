@@ -44,6 +44,9 @@ definitions:
       id:
         example: 1
         type: integer
+      inactive:
+        example: false
+        type: boolean
       isAdmin:
         example: true
         type: boolean
@@ -176,32 +179,7 @@ paths:
         user in authorization header, you can get it in the login route)
       tags:
       - admin
-  /login:
-    post:
-      description: JWT Login
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/user_dtos.LoginResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/utils_interfaces.ErrorResponse'
-        "422":
-          description: Unprocessable Entity
-          schema:
-            $ref: '#/definitions/utils_interfaces.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/utils_interfaces.ErrorResponse'
-      summary: Login
-      tags:
-      - user
-  /user:
+  /admin/user:
     get:
       description: Find all users
       parameters:
@@ -236,6 +214,147 @@ paths:
         can get it in the login route)
       tags:
       - admin
+  /admin/user/{find}:
+    delete:
+      description: Delete user by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Delete User (You will need send a JWT token of a admin user, you can
+        get it in the login route)
+      tags:
+      - admin
+    get:
+      description: Find user by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dtos.UserWithoutSensitiveData'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Find User (You will need send a JWT token of a admin user, you can
+        get it in the login route)
+      tags:
+      - admin
+  /admin/user/inative/{find}:
+    post:
+      description: Inative user by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Inative User (You will need send a JWT token of a admin user, you can
+        get it in the login route)
+      tags:
+      - admin
+  /login:
+    post:
+      description: JWT Login
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dtos.LoginResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      summary: Login
+      tags:
+      - user
+  /user:
     post:
       consumes:
       - application/json
