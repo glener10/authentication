@@ -1,5 +1,5 @@
 Test middleware to block inactive users
-Route to active a user (admin)
+Create Common create_log
 Log middlewares
 
 Create pre-commit triggers with actions, to check interesting things like code checking, formatting, security checks and commit message pattern
