@@ -7,7 +7,6 @@ import (
 	admin_repositories "github.com/glener10/authentication/src/admin/repositories"
 	admin_usecases "github.com/glener10/authentication/src/admin/usecases"
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
-	log_repositories "github.com/glener10/authentication/src/log/repositories"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 )
 
@@ -33,7 +32,6 @@ func AdminInativeUser(c *gin.Context) {
 	}
 	dbConnection := db_postgres.GetDb()
 	adminRepository := &admin_repositories.SQLRepository{Db: dbConnection}
-	logRepository := &log_repositories.SQLRepository{Db: dbConnection}
-	useCase := &admin_usecases.AdminInativeUser{AdminRepository: adminRepository, LogRepository: logRepository}
+	useCase := &admin_usecases.AdminInativeUser{AdminRepository: adminRepository}
 	useCase.Executar(c, parameter)
 }

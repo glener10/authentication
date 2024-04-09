@@ -7,7 +7,6 @@ import (
 	admin_repositories "github.com/glener10/authentication/src/admin/repositories"
 	admin_usecases "github.com/glener10/authentication/src/admin/usecases"
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
-	log_repositories "github.com/glener10/authentication/src/log/repositories"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_repositories "github.com/glener10/authentication/src/user/repositories"
 )
@@ -34,8 +33,7 @@ func PromoteUserAdmin(c *gin.Context) {
 	}
 	dbConnection := db_postgres.GetDb()
 	userRepository := &user_repositories.SQLRepository{Db: dbConnection}
-	logRepository := &log_repositories.SQLRepository{Db: dbConnection}
 	adminRepository := &admin_repositories.SQLRepository{Db: dbConnection}
-	useCase := &admin_usecases.PromoteUserAdmin{UserRepository: userRepository, LogRepository: logRepository, AdminRepository: adminRepository}
+	useCase := &admin_usecases.PromoteUserAdmin{UserRepository: userRepository, AdminRepository: adminRepository}
 	useCase.Executar(c, parameter)
 }
