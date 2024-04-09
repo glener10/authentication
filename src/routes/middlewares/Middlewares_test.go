@@ -253,3 +253,74 @@ func TestAdminRouteWithTokenOfAdminUser(t *testing.T) {
 
 	assert.Equal(t, response.Result().StatusCode, http.StatusOK, "Should return a 200 status code")
 }
+
+func TestBlockInactiveUser(t *testing.T) {
+	tests.BeforeEach()
+	if err := utils.LoadEnvironmentVariables("../../../.env"); err != nil {
+		log.Fatalf("error to load environment variables: %s", err.Error())
+	}
+
+	inactiveUser := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	_, _ = userRepository.CreateUser(inactiveUser)
+	_, _ = adminRepository.InativeUserAdmin(inactiveUser.Email)
+
+	isAdmin := true
+	userForJwt := user_entities.User{
+		IsAdmin:  &isAdmin,
+		Id:       3,
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
+	if err != nil {
+		log.Fatalf("error to generate jwt in 'TestBlockInactiveUser' middlewares tests: " + err.Error())
+	}
+
+	r := SetupRoutes()
+	r.Use(InactiveUserMiddlware())
+	r.GET("/", HelloWorld)
+	req, _ := http.NewRequest("GET", "/", nil)
+	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
+	response := httptest.NewRecorder()
+	r.ServeHTTP(response, req)
+
+	assert.Equal(t, response.Result().StatusCode, http.StatusUnauthorized, "Should return a 401 status code")
+}
+
+func TestShouldNotBlockActiveUser(t *testing.T) {
+	tests.BeforeEach()
+	if err := utils.LoadEnvironmentVariables("../../../.env"); err != nil {
+		log.Fatalf("error to load environment variables: %s", err.Error())
+	}
+
+	inactiveUser := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	_, _ = userRepository.CreateUser(inactiveUser)
+
+	isAdmin := true
+	userForJwt := user_entities.User{
+		IsAdmin:  &isAdmin,
+		Id:       4,
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
+	if err != nil {
+		log.Fatalf("error to generate jwt in 'TestShouldNotBlockActiveUser' middlewares tests: " + err.Error())
+	}
+
+	r := SetupRoutes()
+	r.Use(InactiveUserMiddlware())
+	r.GET("/", HelloWorld)
+	req, _ := http.NewRequest("GET", "/", nil)
+	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
+	response := httptest.NewRecorder()
+	r.ServeHTTP(response, req)
+
+	assert.Equal(t, response.Result().StatusCode, http.StatusOK, "Should return a 200 status code")
+}
