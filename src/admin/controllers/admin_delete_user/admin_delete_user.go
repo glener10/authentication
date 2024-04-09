@@ -23,7 +23,7 @@ import (
 // @Failure      422 {object} utils_interfaces.ErrorResponse
 // @Failure      404 {object} utils_interfaces.ErrorResponse
 // @Failure      401 {object} utils_interfaces.ErrorResponse
-// @Router /user/{find} [delete]
+// @Router /admin/user/{find} [delete]
 func AdminDeleteUser(c *gin.Context) {
 	parameter := c.Param("find")
 	if err := user_dtos.ValidateFindUser(parameter); err != nil {
