@@ -85,7 +85,7 @@ func TestRateLimiter(t *testing.T) {
 
 func TestJwtWithNoToken(t *testing.T) {
 	r := SetupRoutes()
-	r.Use(JwtMiddleware())
+	r.Use(JwtSignatureMiddleware())
 	r.GET("/", HelloWorld)
 	req, _ := http.NewRequest("GET", "/", nil)
 	response := httptest.NewRecorder()
@@ -107,7 +107,7 @@ func TestJwtWithNoToken(t *testing.T) {
 
 func TestJwtWithInvalidToken(t *testing.T) {
 	r := SetupRoutes()
-	r.Use(JwtMiddleware())
+	r.Use(JwtSignatureMiddleware())
 	r.GET("/", HelloWorld)
 	req, _ := http.NewRequest("GET", "/", nil)
 	req.Header.Set("Authorization", "Bearer TOKEN_INVALIDO")
@@ -142,7 +142,7 @@ func TestJwtWithSuccess(t *testing.T) {
 		log.Fatalf("error to generate jwt in 'TestJwtWithSuccess' middlewares tests: " + err.Error())
 	}
 	r := SetupRoutes()
-	r.Use(JwtMiddleware())
+	r.Use(JwtSignatureMiddleware())
 	r.GET("/", HelloWorld)
 	req, _ := http.NewRequest("GET", "/", nil)
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
@@ -197,7 +197,7 @@ func TestAdminRouteWithTokenOfANonAdminUser(t *testing.T) {
 	}
 
 	r := SetupRoutes()
-	r.Use(AdminMiddleware())
+	r.Use(OnlyAdminMiddleware())
 	r.GET("/", HelloWorld)
 	req, _ := http.NewRequest("GET", "/", nil)
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
@@ -244,7 +244,7 @@ func TestAdminRouteWithTokenOfAdminUser(t *testing.T) {
 	}
 
 	r := SetupRoutes()
-	r.Use(AdminMiddleware())
+	r.Use(OnlyAdminMiddleware())
 	r.GET("/", HelloWorld)
 	req, _ := http.NewRequest("GET", "/", nil)
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)

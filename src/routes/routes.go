@@ -52,7 +52,7 @@ func HandlerRoutes() *gin.Engine {
 	r.POST("/users", create_user_controller.CreateUser)
 	r.POST("/login", login_controller.Login)
 
-	r.Use(middlewares.JwtMiddleware())
+	r.Use(middlewares.JwtSignatureMiddleware())
 	r.Use(middlewares.InactiveUserMiddlware())
 
 	r.GET("/users/:find", find_user_controller.FindUser)
@@ -60,7 +60,7 @@ func HandlerRoutes() *gin.Engine {
 	r.PUT("/users/changePassword/:find", change_password_controller.ChangePassword)
 	r.PUT("/users/changeEmail/:find", change_email_controller.ChangeEmail)
 
-	r.Use(middlewares.AdminMiddleware())
+	r.Use(middlewares.OnlyAdminMiddleware())
 
 	r.POST("/admin/users/promote/:find", promote_user_admin_controller.PromoteUserAdmin)
 	r.POST("/admin/users/inative/:find", admin_inative_user_controller.AdminInativeUser)

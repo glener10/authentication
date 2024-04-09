@@ -8,7 +8,7 @@ import (
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
 )
 
-func JwtMiddleware() gin.HandlerFunc {
+func JwtSignatureMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
