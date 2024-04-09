@@ -1,6 +1,6 @@
 Test middleware to block inactive users
 Route to active a user (admin)
-Log middlewares and delete JwtSignature?
+Log middlewares
 
 Create pre-commit triggers with actions, to check interesting things like code checking, formatting, security checks and commit message pattern
 CI/CD securely (_snyk_, _app.codacy_)
