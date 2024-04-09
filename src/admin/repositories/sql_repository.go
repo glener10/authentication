@@ -51,3 +51,43 @@ func (r *SQLRepository) FindAllUsers() ([]*user_dtos.UserWithoutSensitiveData, e
 	}
 	return users, nil
 }
+
+func (r *SQLRepository) InativeUserAdmin(find string) (*user_dtos.UserWithoutSensitiveData, error) {
+	var user user_entity.User
+	var err error
+	if utils_validators.IsValidEmail(find) {
+		err = r.Db.QueryRow("UPDATE users SET inactive = true WHERE email = $1 RETURNING id, email, inactive", find).Scan(&user.Id, &user.Email, &user.Inactive)
+	} else {
+		err = r.Db.QueryRow("UPDATE users SET inactive = true WHERE id = $1 RETURNING id, email, inactive", find).Scan(&user.Id, &user.Email, &user.Inactive)
+	}
+	if err != nil {
+		return nil, errors.New("error to change password in repository with the parameter (id/email) '" + find + "'")
+	}
+
+	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
+		Id:       user.Id,
+		Email:    user.Email,
+		Inactive: user.Inactive,
+	}
+	return &userWithoutSensitiveData, nil
+}
+
+func (r *SQLRepository) ActiveUserAdmin(find string) (*user_dtos.UserWithoutSensitiveData, error) {
+	var user user_entity.User
+	var err error
+	if utils_validators.IsValidEmail(find) {
+		err = r.Db.QueryRow("UPDATE users SET inactive = false WHERE email = $1 RETURNING id, email, inactive", find).Scan(&user.Id, &user.Email, &user.Inactive)
+	} else {
+		err = r.Db.QueryRow("UPDATE users SET inactive = false WHERE id = $1 RETURNING id, email, inactive", find).Scan(&user.Id, &user.Email, &user.Inactive)
+	}
+	if err != nil {
+		return nil, errors.New("error to change password in repository with the parameter (id/email) '" + find + "'")
+	}
+
+	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
+		Id:       user.Id,
+		Email:    user.Email,
+		Inactive: user.Inactive,
+	}
+	return &userWithoutSensitiveData, nil
+}

@@ -83,3 +83,51 @@ func TestFindAllUsersWhenNoExistsAnyUser(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Nil(t, findAllUsers, "should not return a error but return nil because doesnt exists any users in database")
 }
+
+func TestInativeUserWithSuccess(t *testing.T) {
+	tests.BeforeEach()
+	firstUser := user_dtos.CreateUserRequest{
+		Email:    "1@1.com",
+		Password: tests.ValidPassword,
+	}
+	_, err := userRepository.CreateUser(firstUser)
+	assert.NoError(t, err)
+
+	inativeUser, err := repository.InativeUserAdmin(firstUser.Email)
+	assert.NoError(t, err)
+	assert.Equal(t, *inativeUser.Inactive, true, "should return a user with param 'inactive' true")
+}
+
+func TestInativeUserWithSuccessIfTheUserIsInactiveAlready(t *testing.T) {
+	tests.BeforeEach()
+	firstUser := user_dtos.CreateUserRequest{
+		Email:    "1@1.com",
+		Password: tests.ValidPassword,
+	}
+	_, err := userRepository.CreateUser(firstUser)
+	assert.NoError(t, err)
+
+	_, err = repository.InativeUserAdmin(firstUser.Email)
+	assert.NoError(t, err)
+
+	inativeUser, err := repository.InativeUserAdmin(firstUser.Email)
+	assert.NoError(t, err)
+	assert.Equal(t, *inativeUser.Inactive, true, "should return a user with param 'inactive' true")
+}
+
+func TestActiveInactiveUserWithSuccess(t *testing.T) {
+	tests.BeforeEach()
+	firstUser := user_dtos.CreateUserRequest{
+		Email:    "1@1.com",
+		Password: tests.ValidPassword,
+	}
+	_, err := userRepository.CreateUser(firstUser)
+	assert.NoError(t, err)
+
+	_, err = repository.InativeUserAdmin(firstUser.Email)
+	assert.NoError(t, err)
+
+	inativeUser, err := repository.ActiveUserAdmin(firstUser.Email)
+	assert.NoError(t, err)
+	assert.Equal(t, *inativeUser.Inactive, false, "should return a user with param 'inactive' false")
+}
