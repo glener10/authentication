@@ -1,0 +1,7 @@
+@validToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6ImZ1bGFub0BmdWxhbm8uY29tIiwiSWQiOjEsIklzQWRtaW4iOnRydWUsImV4cCI6MTcxMjc1MDU1MH0.JcXSmH45vEkeig8kskjeaF1CodPw9w6F_ZTYaH38Bm4
+
+###admin_inative_user: find user per id or email
+# @prompt idOrEmail
+POST http://localhost:8080/admin/users/inative/{{idOrEmail}}
+content-type: application/json
+Authorization: Bearer {{validToken}}
