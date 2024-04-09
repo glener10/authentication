@@ -7,4 +7,6 @@ import (
 type IAdminRepository interface {
 	PromoteUserAdmin(find string) (*user_dtos.UserWithoutSensitiveData, error)
 	FindAllUsers() ([]*user_dtos.UserWithoutSensitiveData, error)
+	InativeUserAdmin(find string) (*user_dtos.UserWithoutSensitiveData, error)
+	ActiveUserAdmin(find string) (*user_dtos.UserWithoutSensitiveData, error)
 }
