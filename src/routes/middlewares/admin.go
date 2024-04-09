@@ -1,11 +1,14 @@
 package middlewares
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
+	user_repositories "github.com/glener10/authentication/src/user/repositories"
 )
 
 func AdminMiddleware() gin.HandlerFunc {
@@ -26,8 +29,24 @@ func AdminMiddleware() gin.HandlerFunc {
 			return
 		}
 
+		idInClaims := claims["Id"]
+		idString := fmt.Sprintf("%v", idInClaims)
+		//idInt := int((idInClaims).(float64))
+
+		dbConnection := db_postgres.GetDb()
+		userRepository := &user_repositories.SQLRepository{Db: dbConnection}
+		//logRepository := &log_repositories.SQLRepository{Db: dbConnection}
+
+		userInDb, err := userRepository.FindUser(idString)
+		if err != nil {
+			statusCode := http.StatusNotFound
+			c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+			return
+		}
+
+		isAdmin := true
 		isAdminInClaims := claims["IsAdmin"]
-		if isAdminInClaims != true {
+		if userInDb.IsAdmin == nil || *userInDb.IsAdmin != isAdmin || isAdminInClaims != isAdmin {
 			statusCode := http.StatusUnauthorized
 			c.JSON(statusCode, gin.H{"error": "this route is only allowed for admin users", "statusCode": statusCode})
 			c.Abort()

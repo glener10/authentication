@@ -9,13 +9,28 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	admin_repositories "github.com/glener10/authentication/src/admin/repositories"
+	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
+	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_entities "github.com/glener10/authentication/src/user/entities"
+	user_repositories "github.com/glener10/authentication/src/user/repositories"
 	"github.com/glener10/authentication/src/utils"
 	utils_interfaces "github.com/glener10/authentication/src/utils/interfaces"
 	"github.com/glener10/authentication/tests"
 	"github.com/stretchr/testify/assert"
 )
+
+var adminRepository admin_repositories.SQLRepository
+var userRepository user_repositories.SQLRepository
+
+func TestMain(m *testing.M) {
+	tests.SetupDb(m, "file://../../db/migrations")
+	dbConnection := db_postgres.GetDb()
+	adminRepository = admin_repositories.SQLRepository{Db: dbConnection}
+	userRepository = user_repositories.SQLRepository{Db: dbConnection}
+	tests.ExecuteAndFinish(m)
+}
 
 func SetupRoutes() *gin.Engine {
 	r := gin.Default()
@@ -162,9 +177,15 @@ func TestLimitTimeout(t *testing.T) {
 }
 
 func TestAdminRouteWithTokenOfANonAdminUser(t *testing.T) {
+	tests.BeforeEach()
 	if err := utils.LoadEnvironmentVariables("../../../.env"); err != nil {
 		log.Fatalf("error to load environment variables: %s", err.Error())
 	}
+	userToPromote := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	_, _ = userRepository.CreateUser(userToPromote)
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -198,13 +219,22 @@ func TestAdminRouteWithTokenOfANonAdminUser(t *testing.T) {
 }
 
 func TestAdminRouteWithTokenOfAdminUser(t *testing.T) {
+	tests.BeforeEach()
 	if err := utils.LoadEnvironmentVariables("../../../.env"); err != nil {
 		log.Fatalf("error to load environment variables: %s", err.Error())
 	}
+
+	userToPromote := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	_, _ = userRepository.CreateUser(userToPromote)
+	_, _ = adminRepository.PromoteUserAdmin(userToPromote.Email)
+
 	isAdmin := true
 	userForJwt := user_entities.User{
 		IsAdmin:  &isAdmin,
-		Id:       1,
+		Id:       2,
 		Email:    tests.ValidEmail,
 		Password: tests.ValidPassword,
 	}
