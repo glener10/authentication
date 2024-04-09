@@ -28,12 +28,12 @@ func TestMain(m *testing.M) {
 	tests.ExecuteAndFinish(m)
 }
 
-func TestInativeUserWithJwtOfNonAdminUser(t *testing.T) {
+func TestActiveUserWithJwtOfNonAdminUser(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.POST("/admin/users/inative/:find", AdminInativeUser)
+	r.POST("/admin/users/active/:find", AdminActiveUser)
 
-	req, _ := http.NewRequest("POST", "/admin/users/inative/1", nil)
+	req, _ := http.NewRequest("POST", "/admin/users/active/1", nil)
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -41,7 +41,7 @@ func TestInativeUserWithJwtOfNonAdminUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestInativeUserWithJwtOfNonAdminUser' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestActiveUserWithJwtOfNonAdminUser' test: " + err.Error())
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -60,20 +60,18 @@ func TestInativeUserWithJwtOfNonAdminUser(t *testing.T) {
 	assert.Equal(t, expected, actual, "should return 'you do not have permission to perform this operation' and 401 in the body")
 }
 
-func TestInativeUserWithSuccess(t *testing.T) {
+func TestActiveUserWithSuccess(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.POST("/admin/users/inative/:find", AdminInativeUser)
-	req, _ := http.NewRequest("POST", "/admin/users/inative/1", nil)
+	r.POST("/admin/users/active/:find", AdminActiveUser)
+	req, _ := http.NewRequest("POST", "/admin/users/active/1", nil)
 
 	userToInative := user_dtos.CreateUserRequest{
 		Email:    tests.ValidEmail,
 		Password: tests.ValidPassword,
 	}
-	_, err := repository.CreateUser(userToInative)
-	if err != nil {
-		t.Errorf("failed to create user in 'TestInativeUserWithSuccess' test: %v", err)
-	}
+	_, _ = repository.CreateUser(userToInative)
+	_, _ = adminRepository.InativeUserAdmin(userToInative.Email)
 
 	isAdmin := true
 	userAdminForJwt := user_entities.User{
@@ -84,7 +82,7 @@ func TestInativeUserWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userAdminForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestInativeUserWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestActiveUserWithSuccess' test: " + err.Error())
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
