@@ -1,4 +1,3 @@
-Route to inative a user (admin)
 Test middleware to block inactive users
 Route to active a user (admin)
 Log middlewares and delete JwtSignature?
