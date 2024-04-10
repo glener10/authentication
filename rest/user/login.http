@@ -1,0 +1,8 @@
+###login: with JWT
+POST http://localhost:8080/login
+content-type: application/json
+
+{
+	"Email": "fulano@fulano.com",
+	"Password": "aaaaaA#7"
+}

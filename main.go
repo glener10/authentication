@@ -1,22 +1,26 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"os"
 
-	"github.com/glener10/rotating-pairs-back/src/db"
-	"github.com/glener10/rotating-pairs-back/src/routes"
-	utils "github.com/glener10/rotating-pairs-back/src/utils"
+	db_postgres "github.com/glener10/authentication/src/db/postgres"
+	"github.com/glener10/authentication/src/routes"
+	utils "github.com/glener10/authentication/src/utils"
 )
 
+// @title API
+// @version 1.0
+// @description Authentication API
 func main() {
 	if err := utils.LoadEnvironmentVariables(".env"); err != nil {
-		fmt.Println("Error to load environment variables: ", err)
-		return
+		log.Fatalf("error to load environment variables: " + err.Error())
 	}
 
 	r := routes.HandlerRoutes()
-	db.ConnectDb()
-	defer db.DisconnectDb()
+	postgres := &db_postgres.Postgres{ConnectionString: os.Getenv("DB_URL"), MigrationUrl: "file://src/db/migrations"}
+	postgres.Connect()
+	defer postgres.Disconnect()
 
 	routes.Listening(r)
 }

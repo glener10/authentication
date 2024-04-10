@@ -1,0 +1,7 @@
+@validToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6ImZ1bGFub0BmdWxhbm8uY29tIiwiSWQiOjEsImV4cCI6MTcxMTAzMDE0OH0.mpB4jBU7z5F23rrIi1Pg8Nw0XmELD2_ruVY_Fxm6R7k
+
+###promote_user_admin: promote user to admin per id or email
+# @prompt idOrEmail
+POST http://localhost:8080/admin/users/promote/{{idOrEmail}}
+content-type: application/json
+Authorization: Bearer {{validToken}}

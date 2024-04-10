@@ -1,65 +1,14 @@
-- Setup tests (integration) see the https://www.youtube.com/watch?v=x2C-n5ybyqQ&t=973s&ab_channel=ErickWendel
-- Security documentation
+Create pre-commit triggers with actions, to check interesting things like code checking, formatting, security checks and commit message pattern
+CI/CD securely (_snyk_, _app.codacy_)
 
-# UseCases
+E-mail verification
+Password Recovery: use a unique token sended to email
+2FA
+Login with google
 
-_All useCases: Documentation BDD, Route Documentation, Tests, Security Documentation_
+How to monitor and have observability
+Security tests
+Load Tests
 
-**Account Creation**
-
-- Do not allow invalid email
-- Do not allow weak password
-- Do not allow repeated email
-
--> Create pre-commit triggers with actions, to check interesting things like code checking, formatting, security checks and commit message pattern
--> Security Documentation of CreateUser
--> Route documentation
--> Response Format Standard
--> Exception/Error Format Standard
--> Good logging of application (Success/Error)
--> How to monitor and have observability
--> CI/CD securely (_snyk_, _app.codacy_)
--> Security tests
--> Load Tests
-
-**Login**
-
-- Use JWT
-
-**Interceptor/Guard of request for private routes to check JWT**
-
-**Account Update (Logged)**
-
-- Do not allow invalid email
-- Do not allow weak password
-- Do not allow repeated email
-
-**Delete Account (Logged)**
-
-**Private Route (Logged)**
-
-- Return use information
-
-**Password Recovery**
-
-- Use a unique token
-
-**Login with google**
-
-**E-mail verification**
-
-**2FA**
-
-**Control with use**
-
-- Log out, block, delete (Only users with permission can due)
-
-**Database backups, rules and administration**
-
-**Use notification when strange login ocurred**
-
-**Operation history**
-
-- User, location, IP, success or not, date, time
-
-- Docker Ambient
+Improvement feature: Notify user when a strange login occurs, necessary to save information such as IP address, geographic location and device used. When this happens, it is necessary to save the information from the new login device and send an email asking the user. If it wasn't, it should reset all known devices and inactivate the user
+Improvement feature: Common middleware to block operation from another user if doesnt admin: BlockOperationFromAnotherUserIfNotAdmin, removing Jwt Middleware because just check signature and another middlewares already due this

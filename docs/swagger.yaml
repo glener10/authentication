@@ -1,0 +1,587 @@
+definitions:
+  log_entities.Log:
+    properties:
+      id:
+        type: integer
+      ip:
+        type: string
+      method:
+        type: string
+      operationCode:
+        type: string
+      route:
+        type: string
+      success:
+        type: boolean
+      timestamp:
+        type: string
+      userId:
+        type: integer
+    type: object
+  user_dtos.CreateUserRequest:
+    properties:
+      email:
+        example: fulano@fulano.com
+        type: string
+      password:
+        example: aaaaaaaA#1
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  user_dtos.LoginResponse:
+    properties:
+      jwt:
+        example: randomJwt
+        type: string
+    type: object
+  user_dtos.UserWithoutSensitiveData:
+    properties:
+      email:
+        example: fulano@fulano.com
+        type: string
+      id:
+        example: 1
+        type: integer
+      inactive:
+        example: false
+        type: boolean
+      isAdmin:
+        example: true
+        type: boolean
+    type: object
+  utils_interfaces.ErrorResponse:
+    properties:
+      error:
+        example: variable error message
+        type: string
+      statusCode:
+        example: -1
+        type: integer
+    type: object
+info:
+  contact: {}
+  description: Authentication API
+  title: API
+  version: "1.0"
+paths:
+  /admin/logs:
+    get:
+      description: Find all logs
+      parameters:
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: "null"
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Find All Logs (You will need send a JWT token of a admin user, you
+        can get it in the login route)
+      tags:
+      - admin
+  /admin/logs/{find}:
+    get:
+      description: Find all logs of a user by id
+      parameters:
+      - description: 'Search parameter: id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: "null"
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Find All Logs of a User (You will need send a JWT token of a admin
+        user, you can get it in the login route)
+      tags:
+      - admin
+  /admin/promote/{find}:
+    post:
+      description: Promote user admin by id or email
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Promote user admin (You will need send a JWT token of an administration
+        user in authorization header, you can get it in the login route)
+      tags:
+      - admin
+  /admin/user:
+    get:
+      description: Find all users
+      parameters:
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: "null"
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Find All Users (You will need send a JWT token of a admin user, you
+        can get it in the login route)
+      tags:
+      - admin
+  /admin/user/{find}:
+    delete:
+      description: Delete user by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Delete User (You will need send a JWT token of a admin user, you can
+        get it in the login route)
+      tags:
+      - admin
+    get:
+      description: Find user by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dtos.UserWithoutSensitiveData'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Find User (You will need send a JWT token of a admin user, you can
+        get it in the login route)
+      tags:
+      - admin
+  /admin/user/active/{find}:
+    post:
+      description: Active user by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Active User (You will need send a JWT token of a admin user, you can
+        get it in the login route)
+      tags:
+      - admin
+  /admin/user/inative/{find}:
+    post:
+      description: Inative user by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Inative User (You will need send a JWT token of a admin user, you can
+        get it in the login route)
+      tags:
+      - admin
+  /login:
+    post:
+      description: JWT Login
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dtos.LoginResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      summary: Login
+      tags:
+      - user
+  /user:
+    post:
+      consumes:
+      - application/json
+      description: create user with e-mail and password if the e-mail doesnt already
+        exists and the password is strong
+      parameters:
+      - description: Create user
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/user_dtos.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/user_dtos.UserWithoutSensitiveData'
+        "408":
+          description: Request Timeout
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      summary: Create User
+      tags:
+      - user
+  /user/{find}:
+    delete:
+      description: Delete user by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Delete User (You will need send a JWT token in authorization header,
+        you can get it in the login route)
+      tags:
+      - user
+    get:
+      description: Find user by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dtos.UserWithoutSensitiveData'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Find User (You will need send a JWT token in authorization header,
+        you can get it in the login route)
+      tags:
+      - user
+  /user/changeEmail/{find}:
+    patch:
+      description: Change Email by id or email
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dtos.UserWithoutSensitiveData'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Change Email (You will need send a JWT token in authorization header,
+        you can get it in the login route)
+      tags:
+      - user
+  /user/changePassword/{find}:
+    patch:
+      description: Change Password by id or email
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dtos.UserWithoutSensitiveData'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Change Password (You will need send a JWT token in authorization header,
+        you can get it in the login route)
+      tags:
+      - user
+swagger: "2.0"

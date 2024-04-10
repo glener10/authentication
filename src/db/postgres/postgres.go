@@ -2,37 +2,81 @@ package db_postgres
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
+	"log"
 
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 )
 
+var GlobalDb *sql.DB
+
 type Postgres struct {
-	db *sql.DB
+	ConnectionString string
+	MigrationUrl     string
 }
 
-func (p *Postgres) Connect() (*sql.DB, error) {
+func (p *Postgres) Connect() {
 	var err error
-	p.db, err = sql.Open("postgres", "host=localhost port=5432 user=myuser password=mypassword dbname=mydatabase sslmode=disable")
+	GlobalDb, err = sql.Open("postgres", p.ConnectionString)
 	if err != nil {
-		return nil, errors.New(err.Error())
+		log.Fatalf(err.Error())
 	}
-	err = p.db.Ping()
+	err = GlobalDb.Ping()
 	if err != nil {
-		return nil, errors.New("Error to test Postgres database connection")
+		log.Fatalf("error to test Postgres database connection")
 	}
-	fmt.Println("Postgres database connection established successfully!")
-	return p.db, nil
+	RunMigrations(p.ConnectionString, p.MigrationUrl)
+	log.Println("postgres database connection established successfully!")
 }
 
-func (p *Postgres) Disconnect() error {
-	if p.db != nil {
-		err := p.db.Close()
+func (p *Postgres) Disconnect() {
+	if GlobalDb != nil {
+		err := GlobalDb.Close()
 		if err != nil {
-			return errors.New("Error to disconnect Postgres database: " + err.Error())
+			log.Fatalf("error to disconnect Postgres database: " + err.Error())
 		}
-		fmt.Println("Disconnecting from Postgres database successfully!")
+		log.Println("disconnecting from Postgres database successfully!")
 	}
-	return nil
+}
+
+func RunMigrations(connectionString string, migrationUrl string) {
+	migration, err := migrate.New(migrationUrl, connectionString)
+	if err != nil {
+		log.Fatalf("error to create migration config: " + err.Error())
+	}
+	if err = migration.Up(); err != nil {
+		if err.Error() != "no change" {
+			log.Fatalf("error to run migrate up: " + err.Error())
+		} else {
+			log.Println("no change in migrations")
+		}
+	} else {
+		log.Println("db migrated successfully")
+	}
+}
+
+func ClearDatabaseTables() {
+	rows, err := GlobalDb.Query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' and table_name <> 'schema_migrations'")
+	if err != nil {
+		log.Fatalf("error to get all tables name in clear database method")
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var tableName string
+		if err := rows.Scan(&tableName); err != nil {
+			log.Fatalf("error to scan all tables name in clear database method")
+		}
+		if _, err := GlobalDb.Exec(fmt.Sprintf("DELETE FROM %s", tableName)); err != nil {
+			log.Fatalf("error to delete all elements of the " + tableName)
+		}
+	}
+	log.Println("all data base cleaned")
+}
+
+func GetDb() *sql.DB {
+	return GlobalDb
 }
