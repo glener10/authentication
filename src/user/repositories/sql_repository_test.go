@@ -3,6 +3,7 @@ package user_repositories
 import (
 	"strconv"
 	"testing"
+	"time"
 
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
@@ -187,4 +188,23 @@ func TestVerifyEmailWithSuccess(t *testing.T) {
 	userAfterVerifyEmail, _ := repository.FindUser(user.Email)
 	isVerified := true
 	assert.Equal(t, userAfterVerifyEmail.VerifiedEmail, &isVerified)
+}
+
+func TestUpdateEmailVerificationCodeWithSuccess(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+	userBeforeVerifyEmail, _ := repository.FindUser(user.Email)
+	assert.Nil(t, userBeforeVerifyEmail.CodeVerifyEmail)
+	assert.Nil(t, userBeforeVerifyEmail.CodeVerifyEmailExpiry)
+
+	_, err = repository.UpdateEmailVerificationCode(user.Email, "123456", time.Now())
+	assert.NoError(t, err, "should update code verify email and expiration")
+	userAfterVerifyEmail, _ := repository.FindUser(user.Email)
+	assert.NotNil(t, userAfterVerifyEmail.CodeVerifyEmail)
+	assert.NotNil(t, userAfterVerifyEmail.CodeVerifyEmailExpiry)
 }
