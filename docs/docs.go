@@ -505,7 +505,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user": {
+        "/users": {
             "post": {
                 "description": "create user with e-mail and password if the e-mail doesnt already exists and the password is strong",
                 "consumes": [
@@ -557,7 +557,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/changeEmail/{find}": {
+        "/users/changeEmail/{find}": {
             "patch": {
                 "security": [
                     {
@@ -617,7 +617,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/changePassword/{find}": {
+        "/users/changePassword/{find}": {
             "patch": {
                 "security": [
                     {
@@ -677,7 +677,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/send-email_verification-code/{find}": {
+        "/users/sendEmailVerificationCode/{find}": {
             "post": {
                 "security": [
                     {
@@ -737,7 +737,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/{find}": {
+        "/users/{find}": {
             "get": {
                 "security": [
                     {

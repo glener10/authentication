@@ -22,7 +22,7 @@ import (
 // @Failure      422 {object} utils_interfaces.ErrorResponse
 // @Failure      404 {object} utils_interfaces.ErrorResponse
 // @Failure      401 {object} utils_interfaces.ErrorResponse
-// @Router /user/changePassword/{find} [patch]
+// @Router /users/changePassword/{find} [patch]
 func ChangePassword(c *gin.Context) {
 	var newPassword user_dtos.ChangePasswordRequest
 	if err := c.ShouldBindJSON(&newPassword); err != nil {

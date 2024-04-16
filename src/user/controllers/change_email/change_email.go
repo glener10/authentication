@@ -22,7 +22,7 @@ import (
 // @Failure      422 {object} utils_interfaces.ErrorResponse
 // @Failure      404 {object} utils_interfaces.ErrorResponse
 // @Failure      401 {object} utils_interfaces.ErrorResponse
-// @Router /user/changeEmail/{find} [patch]
+// @Router /users/changeEmail/{find} [patch]
 func ChangeEmail(c *gin.Context) {
 	var newEmail user_dtos.ChangeEmailRequest
 	if err := c.ShouldBindJSON(&newEmail); err != nil {

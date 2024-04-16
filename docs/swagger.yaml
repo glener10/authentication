@@ -392,7 +392,7 @@ paths:
       summary: Login
       tags:
       - user
-  /user:
+  /users:
     post:
       consumes:
       - application/json
@@ -427,7 +427,7 @@ paths:
       summary: Create User
       tags:
       - user
-  /user/{find}:
+  /users/{find}:
     delete:
       description: Delete user by e-mail or id
       parameters:
@@ -504,7 +504,7 @@ paths:
         you can get it in the login route)
       tags:
       - user
-  /user/changeEmail/{find}:
+  /users/changeEmail/{find}:
     patch:
       description: Change Email by id or email
       parameters:
@@ -544,7 +544,7 @@ paths:
         you can get it in the login route)
       tags:
       - user
-  /user/changePassword/{find}:
+  /users/changePassword/{find}:
     patch:
       description: Change Password by id or email
       parameters:
@@ -584,7 +584,7 @@ paths:
         you can get it in the login route)
       tags:
       - user
-  /user/send-email_verification-code/{find}:
+  /users/sendEmailVerificationCode/{find}:
     post:
       description: Send Email Verification Code by e-mail or id
       parameters:
