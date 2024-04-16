@@ -32,6 +32,6 @@ func SendEmailVerificationCode(c *gin.Context) {
 	}
 	dbConnection := db_postgres.GetDb()
 	userRepository := &user_repositories.SQLRepository{Db: dbConnection}
-	useCase := &user_usecases.FindUser{UserRepository: userRepository}
+	useCase := &user_usecases.SendEmailVerificationCode{UserRepository: userRepository}
 	useCase.Executar(c, parameter)
 }
