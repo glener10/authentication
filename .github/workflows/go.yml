@@ -43,3 +43,23 @@ jobs:
 
       - name: Run Tests
         run: go test -p 1 ./src/...
+
+  load_testing:
+    name: load testing
+    needs: test
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v4.1.1
+
+      - name: Setup Go environment
+        uses: actions/setup-go@v5.0.0
+
+      - name: Set Environment Variable
+        run: echo "ENV=test" >> $GITHUB_ENV
+
+      - name: Install Vegeta
+        run: go get -u github.com/tsenart/vegeta
+
+      - name: Exec load test with Vegeta
+        run: |
+          echo "GET http://localhost:8080/" | vegeta attack -duration=30s | tee results.bin | vegeta report
