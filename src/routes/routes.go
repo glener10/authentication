@@ -23,6 +23,7 @@ import (
 	delete_user_controller "github.com/glener10/authentication/src/user/controllers/delete_user"
 	find_user_controller "github.com/glener10/authentication/src/user/controllers/find_user"
 	login_controller "github.com/glener10/authentication/src/user/controllers/login"
+	send_email_verification_code_controller "github.com/glener10/authentication/src/user/controllers/send_email_verification_code"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -59,6 +60,7 @@ func HandlerRoutes() *gin.Engine {
 	r.DELETE("/users/:find", delete_user_controller.DeleteUser)
 	r.PUT("/users/changePassword/:find", change_password_controller.ChangePassword)
 	r.PUT("/users/changeEmail/:find", change_email_controller.ChangeEmail)
+	r.POST("/users/sendEmailVerificationCode/:find", send_email_verification_code_controller.SendEmailVerificationCode)
 
 	r.Use(middlewares.OnlyAdminMiddleware())
 
