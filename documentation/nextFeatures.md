@@ -1,4 +1,5 @@
 Route to send a code by email and save in database in code_verify_email
+Removing  jwt tokens for REST routes
 Route to verify email, checking the code with code_verify_email in database
 
 Password Recovery: use a unique token sended to email
