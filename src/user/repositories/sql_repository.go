@@ -3,6 +3,7 @@ package user_repositories
 import (
 	"database/sql"
 	"errors"
+	"time"
 
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_entity "github.com/glener10/authentication/src/user/entities"
@@ -108,6 +109,25 @@ func (r *SQLRepository) VerifyEmail(find string) (*user_dtos.UserWithoutSensitiv
 		err = r.Db.QueryRow("UPDATE users SET verified_email = true WHERE email = $1 RETURNING id, email", find).Scan(&user.Id, &user.Email)
 	} else {
 		err = r.Db.QueryRow("UPDATE users SET verified_email = true WHERE id = $1 RETURNING id, email", find).Scan(&user.Id, &user.Email)
+	}
+	if err != nil {
+		return nil, errors.New("error to verify email in repository with the parameter (id/email) '" + find + "'")
+	}
+
+	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
+		Id:    user.Id,
+		Email: user.Email,
+	}
+	return &userWithoutSensitiveData, nil
+}
+
+func (r *SQLRepository) UpdateEmailVerificationCode(find string, code string, expiration time.Time) (*user_dtos.UserWithoutSensitiveData, error) {
+	var user user_entity.User
+	var err error
+	if utils_validators.IsValidEmail(find) {
+		err = r.Db.QueryRow("UPDATE users SET code_verify_email = $1, code_verify_email_expiry = $2 WHERE email = $1 RETURNING id, email", find, code, expiration).Scan(&user.Id, &user.Email)
+	} else {
+		err = r.Db.QueryRow("UPDATE users SET code_verify_email = $1, code_verify_email_expiry = $2 WHERE id = $1 RETURNING id, email", find, code, expiration).Scan(&user.Id, &user.Email)
 	}
 	if err != nil {
 		return nil, errors.New("error to verify email in repository with the parameter (id/email) '" + find + "'")
