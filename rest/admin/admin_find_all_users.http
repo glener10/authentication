@@ -1,4 +1,4 @@
-@validToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6IlRFU1RAVEVTVC5jb20iLCJJZCI6MSwiSXNBZG1pbiI6dHJ1ZSwiZXhwIjoxNzEyMzQwMTQ0fQ.GTv6h9rVwoyPz1jLTHJFapMbsvGATnXukhmnrUIaT_0
+@validToken = ""
 
 ###admin_find_all_users
 GET http://localhost:8080/admin/users
