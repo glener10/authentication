@@ -1,4 +1,8 @@
-# [v0.0.1] - XX/XX/XXXX
+# [v0.0.2] - XX/XX/XXXX
+
+- 
+
+# [v0.0.1] - 12/04/2024
 
 - change_email (need to be logged in) use case, all tests, bdd and route documentation
 - change_password (need to be logged in) use case, all tests, bdd and route documentation
