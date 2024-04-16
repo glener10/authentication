@@ -1,9 +1,10 @@
-CI/CD Securely (Snyk, SonarQube)
 E-mail verification
 Update change password to receive a unique code sended for email
 Update change email to receive a unique code sended for email
 Password Recovery: use a unique token sended to email
+
 Gateway and method do send email and put in update change password, update change email, password recovery and email verification usecases
+CI/CD Securely (Snyk, SonarQube)
 2FA
 Login with google
 
