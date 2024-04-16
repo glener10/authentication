@@ -31,9 +31,9 @@ func (r *SQLRepository) FindUser(find string) (*user_entity.User, error) {
 	var user user_entity.User
 	var err error
 	if utils_validators.IsValidEmail(find) {
-		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive FROM users WHERE email = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive)
+		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive, verified_email FROM users WHERE email = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive, &user.VerifiedEmail)
 	} else {
-		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive FROM users WHERE id = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive)
+		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive, verified_email FROM users WHERE id = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive, &user.VerifiedEmail)
 	}
 	if err != nil {
 		return nil, errors.New("no element with the parameter (id/email) '" + find + "'")
@@ -99,4 +99,23 @@ func (r *SQLRepository) DeleteUser(find string) error {
 		return errors.New("doesnt exists user with '" + find + "' atribute")
 	}
 	return nil
+}
+
+func (r *SQLRepository) VerifyEmail(find string) (*user_dtos.UserWithoutSensitiveData, error) {
+	var user user_entity.User
+	var err error
+	if utils_validators.IsValidEmail(find) {
+		err = r.Db.QueryRow("UPDATE users SET verified_email = true WHERE email = $1 RETURNING id, email", find).Scan(&user.Id, &user.Email)
+	} else {
+		err = r.Db.QueryRow("UPDATE users SET verified_email = true WHERE id = $1 RETURNING id, email", find).Scan(&user.Id, &user.Email)
+	}
+	if err != nil {
+		return nil, errors.New("error to verify email in repository with the parameter (id/email) '" + find + "'")
+	}
+
+	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
+		Id:    user.Id,
+		Email: user.Email,
+	}
+	return &userWithoutSensitiveData, nil
 }

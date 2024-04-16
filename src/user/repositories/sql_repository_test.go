@@ -171,3 +171,20 @@ func TestDeleteUserWithoutSuccessBecauseUserDoenstExists(t *testing.T) {
 	err := repository.DeleteUser(tests.ValidEmail)
 	assert.Equal(t, err.Error(), "doesnt exists user with 'fulano@fulano.com' atribute", "should return a error informing that user doesnt exists")
 }
+
+func TestVerifyEmailWithSuccess(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+	userBeforeVerifyEmail, _ := repository.FindUser(user.Email)
+	assert.Nil(t, userBeforeVerifyEmail.VerifiedEmail)
+	_, err = repository.VerifyEmail(user.Email)
+	assert.NoError(t, err, "should verify email with success")
+	userAfterVerifyEmail, _ := repository.FindUser(user.Email)
+	isVerified := true
+	assert.Equal(t, userAfterVerifyEmail.VerifiedEmail, &isVerified)
+}
