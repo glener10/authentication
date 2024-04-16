@@ -2,10 +2,12 @@ Create pre-commit triggers with actions, to check interesting things like code c
 CI/CD securely (_snyk_, _app.codacy_)
 
 E-mail verification
+Update change password to receive a unique code sended for email
+Update change email to receive a unique code sended for email
 Password Recovery: use a unique token sended to email
+
 2FA
 Login with google
-
 How to monitor and have observability
 Security tests
 Load Tests
