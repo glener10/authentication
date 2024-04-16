@@ -4,5 +4,9 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     is_admin BOOLEAN,
     inactive BOOLEAN,
-    verified_email BOOLEAN
+    verified_email BOOLEAN,
+
+    code_verify_email VARCHAR(12),
+    code_change_email VARCHAR(12),
+    code_change_password VARCHAR(12)
 );
