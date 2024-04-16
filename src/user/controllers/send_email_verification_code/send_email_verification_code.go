@@ -10,7 +10,7 @@ import (
 	user_usecases "github.com/glener10/authentication/src/user/usecases"
 )
 
-// FindUser
+// SendEmailVerificationCode
 // @Summary Send Email Verification Code (You will need send a JWT token in authorization header, you can get it in the login route)
 // @Description Send Email Verification Code by e-mail or id
 // @Tags user
