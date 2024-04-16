@@ -7,6 +7,11 @@ CREATE TABLE IF NOT EXISTS users (
     verified_email BOOLEAN,
 
     code_verify_email VARCHAR(12),
+    code_verify_email_expiry TIMESTAMP WITH TIME ZONE,
+
     code_change_email VARCHAR(12),
-    code_change_password VARCHAR(12)
+    code_change_email_expiry TIMESTAMP WITH TIME ZONE,
+
+    code_change_password VARCHAR(12),
+    code_change_password_expiry TIMESTAMP WITH TIME ZONE
 );

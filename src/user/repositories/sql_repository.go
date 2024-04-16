@@ -31,7 +31,7 @@ func (r *SQLRepository) FindUser(find string) (*user_entity.User, error) {
 	var user user_entity.User
 	var err error
 	if utils_validators.IsValidEmail(find) {
-		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive, verified_email, code_verify_email, code_change_email, code_change_password FROM users WHERE email = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive, &user.VerifiedEmail, &user.CodeVerifyEmail, &user.CodeChangeEmail, &user.CodeChangePassword)
+		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive, verified_email, code_verify_email, code_verify_email_expiry, code_change_email, code_change_email_expiry, code_change_password, code_change_password_expiry FROM users WHERE email = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive, &user.VerifiedEmail, &user.CodeVerifyEmail, &user.CodeVerifyEmailExpiry, &user.CodeChangeEmail, &user.CodeChangeEmailExpiry, &user.CodeChangePassword, &user.CodeChangePasswordExpiry)
 	} else {
 		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive, verified_email, code_verify_email, code_change_email, code_change_password FROM users WHERE id = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive, &user.VerifiedEmail, &user.CodeVerifyEmail, &user.CodeChangeEmail, &user.CodeChangePassword)
 	}

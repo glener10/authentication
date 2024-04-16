@@ -1,5 +1,7 @@
 package user_entities
 
+import "time"
+
 type User struct {
 	Id       int
 	Email    string
@@ -10,7 +12,12 @@ type User struct {
 	IsAdmin  *bool
 	Inactive *bool
 
-	CodeVerifyEmail    *bool
-	CodeChangeEmail    *bool
-	CodeChangePassword *bool
+	CodeVerifyEmail       *string
+	CodeVerifyEmailExpiry *time.Time
+
+	CodeChangeEmail       *string
+	CodeChangeEmailExpiry *time.Time
+
+	CodeChangePassword       *string
+	CodeChangePasswordExpiry *time.Time
 }

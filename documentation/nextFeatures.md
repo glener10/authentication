@@ -1,4 +1,6 @@
-E-mail verification
+Route to send a code by email and save in database in code_verify_email
+Route to verify email, checking the code with code_verify_email in database
+
 Update change password to receive a unique code sended for email
 Update change email to receive a unique code sended for email
 Password Recovery: use a unique token sended to email
