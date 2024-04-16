@@ -1,6 +1,4 @@
 CI/CD Securely (Snyk, SonarQube)
-How to monitor and have observability
-
 E-mail verification
 Update change password to receive a unique code sended for email
 Update change email to receive a unique code sended for email
