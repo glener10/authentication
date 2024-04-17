@@ -147,7 +147,7 @@ func (r *SQLRepository) CheckCodeVerifyEmail(find string, code string) (*bool, e
 	if utils_validators.IsValidEmail(find) {
 		err = r.Db.QueryRow("SELECT code_verify_email, code_verify_email_expiry FROM users WHERE email = $1", find).Scan(&codeInDb, &expire)
 	} else {
-		err = r.Db.QueryRow("SELECT code_verify_email, code_verify_email_expiry FROM users WHERE id = $1", find).Scan()
+		err = r.Db.QueryRow("SELECT code_verify_email, code_verify_email_expiry FROM users WHERE id = $1", find).Scan(&codeInDb, &expire)
 	}
 	if err != nil {
 		return nil, errors.New("no element with the parameter (id/email) '" + find + "'")
