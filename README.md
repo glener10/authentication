@@ -114,6 +114,8 @@
 
 🏗 **Use Cases**
 
+- verify_email: Verifies that the code is correct and not expired and updates the email as verified
+- send_email_verification_code: Saves a code and an expiration time (5 minutes) in the database and sends an email with the code
 - admin elevation: you can promote anothers users to admin, delete users, inative user, find user information, list all users, list all logs, list all logs of a user
 - log: all operations have log persistence with information such as: user id, operation code, method, route, success (true/false), ip and timestamp
 - delete_user (need to be logged in): delete by id or e-mail

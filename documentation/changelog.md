@@ -1,6 +1,7 @@
 # [v0.0.2] - XX/XX/XXXX
 
-- 
+- verify_email (need to be logged in): use case, all tests, bdd and route documentation
+- send_email_verification_code (need to be logged in): use case, all tests, bdd and route documentation
 
 # [v0.0.1] - 12/04/2024
 

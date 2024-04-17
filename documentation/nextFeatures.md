@@ -1,5 +1,3 @@
-Route to verify email, checking the code with code_verify_email in database
-
 Password Recovery: use a unique token sended to email
 Update change email to receive a unique code sended for email
 
