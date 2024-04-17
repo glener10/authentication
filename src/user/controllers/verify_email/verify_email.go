@@ -31,8 +31,15 @@ func VerifyEmail(c *gin.Context) {
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
 		return
 	}
+	var code user_dtos.Code
+	if err := c.ShouldBindJSON(&code); err != nil {
+		statusCode := http.StatusUnprocessableEntity
+		c.JSON(statusCode, gin.H{"error": "invalid request body", "statusCode": statusCode})
+		return
+	}
+
 	dbConnection := db_postgres.GetDb()
 	userRepository := &user_repositories.SQLRepository{Db: dbConnection}
-	useCase := &user_usecases.SendEmailVerificationCode{UserRepository: userRepository}
-	useCase.Executar(c, parameter)
+	useCase := &user_usecases.VerifyEmail{UserRepository: userRepository}
+	useCase.Executar(c, parameter, code)
 }
