@@ -139,3 +139,28 @@ func (r *SQLRepository) UpdateEmailVerificationCode(find string, code string, ex
 	}
 	return &userWithoutSensitiveData, nil
 }
+
+func (r *SQLRepository) CheckCodeVerifyEmail(find string, code string) (*bool, error) {
+	var codeInDb string
+	var expire time.Time
+	var err error
+	if utils_validators.IsValidEmail(find) {
+		err = r.Db.QueryRow("SELECT code_verify_email, code_verify_email_expiry FROM users WHERE email = $1", find).Scan(&codeInDb, &expire)
+	} else {
+		err = r.Db.QueryRow("SELECT code_verify_email, code_verify_email_expiry FROM users WHERE id = $1", find).Scan()
+	}
+	if err != nil {
+		return nil, errors.New("no element with the parameter (id/email) '" + find + "'")
+	}
+
+	if code != codeInDb {
+		return nil, errors.New("your code is invalid")
+	}
+
+	if expire.Before(time.Now()) {
+		return nil, errors.New("your code has expired")
+	}
+
+	successBool := true
+	return &successBool, nil
+}

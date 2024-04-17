@@ -14,4 +14,5 @@ type IUserRepository interface {
 	ChangeEmail(find string, newEmail string) (*user_dtos.UserWithoutSensitiveData, error)
 	DeleteUser(find string) error
 	UpdateEmailVerificationCode(find string, code string, expiration time.Time) (*user_dtos.UserWithoutSensitiveData, error)
+	CheckCodeVerifyEmail(find string, code string) (*bool, error)
 }
