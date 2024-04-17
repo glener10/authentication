@@ -208,3 +208,54 @@ func TestUpdateEmailVerificationCodeWithSuccess(t *testing.T) {
 	assert.NotNil(t, userAfterVerifyEmail.CodeVerifyEmail)
 	assert.NotNil(t, userAfterVerifyEmail.CodeVerifyEmailExpiry)
 }
+
+func TestCheckCodeVerifyEmailWithSuccess(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+
+	threeMinutesAfter := time.Now().Add(3 * time.Minute)
+	_, err = repository.UpdateEmailVerificationCode(user.Email, "123456", threeMinutesAfter)
+	assert.NoError(t, err, "should update code verify email and expiration")
+
+	_, err = repository.CheckCodeVerifyEmail(user.Email, "123456")
+	assert.NoError(t, err, "should verify with success because the code is correct and not expired")
+}
+
+func TestCheckCodeVerifyEmailWithoutSuccessBecauseTheCodeIsInvalid(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+
+	threeMinutesAfter := time.Now().Add(3 * time.Minute)
+	_, err = repository.UpdateEmailVerificationCode(user.Email, "123456", threeMinutesAfter)
+	assert.NoError(t, err, "should update code verify email and expiration")
+
+	_, err = repository.CheckCodeVerifyEmail(user.Email, "654321")
+	assert.Equal(t, err.Error(), "your code is invalid", "should send a error because the code is invalid")
+}
+
+func TestCheckCodeVerifyEmailWithoutSuccessBecauseTheCodeIsExpired(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+
+	threeMinutesBefore := time.Now().Add(-3 * time.Minute)
+	_, err = repository.UpdateEmailVerificationCode(user.Email, "123456", threeMinutesBefore)
+	assert.NoError(t, err, "should update code verify email and expiration")
+
+	_, err = repository.CheckCodeVerifyEmail(user.Email, "123456")
+	assert.Equal(t, err.Error(), "your code has expired", "should send a error because the code is expired")
+}
