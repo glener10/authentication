@@ -737,6 +737,75 @@ const docTemplate = `{
                 }
             }
         },
+        "/users/verifyEmail/{find}": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Verify Email by e-mail or id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Verify Email (You will need send a JWT token in authorization header, you can get it in the login route)",
+                "parameters": [
+                    {
+                        "description": "Verify Email",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_dtos.Code"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search parameter: e-mail or id",
+                        "name": "find",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003ctoken\u003e",
+                        "description": "JWT Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/user_dtos.UserWithoutSensitiveData"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/users/{find}": {
             "get": {
                 "security": [
@@ -880,6 +949,18 @@ const docTemplate = `{
                 },
                 "userId": {
                     "type": "integer"
+                }
+            }
+        },
+        "user_dtos.Code": {
+            "type": "object",
+            "required": [
+                "code"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "example": "123456"
                 }
             }
         },
