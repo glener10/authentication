@@ -1,12 +1,23 @@
 package verify_email_controller
 
 import (
+	"bytes"
+	"encoding/json"
+	"log"
+	"net/http"
+	"net/http/httptest"
 	"testing"
+	"time"
 
 	admin_repositories "github.com/glener10/authentication/src/admin/repositories"
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
+	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
+	user_dtos "github.com/glener10/authentication/src/user/dtos"
+	user_entities "github.com/glener10/authentication/src/user/entities"
 	user_repositories "github.com/glener10/authentication/src/user/repositories"
+	utils_interfaces "github.com/glener10/authentication/src/utils/interfaces"
 	"github.com/glener10/authentication/tests"
+	"gotest.tools/v3/assert"
 )
 
 var repository user_repositories.SQLRepository
@@ -19,13 +30,17 @@ func TestMain(m *testing.M) {
 	tests.ExecuteAndFinish(m)
 }
 
-/*
-func TestSendEmailVerificationCodeWithJwtOfNonAdminUser(t *testing.T) {
+func TestVerifyEmailWithJwtOfNonAdminUser(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.POST("/users/sendEmailVerificationCode/:find", SendEmailVerificationCode)
+	r.POST("/users/verifyEmail/:find", VerifyEmail)
 
-	req, _ := http.NewRequest("POST", "/users/sendEmailVerificationCode/5", nil)
+	requestBody := user_dtos.Code{
+		Code: "1234",
+	}
+	bodyConverted, _ := json.Marshal(requestBody)
+
+	req, _ := http.NewRequest("POST", "/users/verifyEmail/5", bytes.NewBuffer(bodyConverted))
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -33,7 +48,7 @@ func TestSendEmailVerificationCodeWithJwtOfNonAdminUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestSendEmailVerificationCodeWithJwtOfNonAdminUser' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestVerifyEmailWithJwtOfNonAdminUser' test: " + err.Error())
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -52,20 +67,29 @@ func TestSendEmailVerificationCodeWithJwtOfNonAdminUser(t *testing.T) {
 	assert.Equal(t, expected, actual, "should return 'you do not have permission to perform this operation' and 401 in the body")
 }
 
-func TestSendEmailVerificationCodeWithSuccess(t *testing.T) {
+func TestVerifyEmailWithSuccess(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.POST("/users/sendEmailVerificationCode/:find", SendEmailVerificationCode)
+	r.POST("/users/verifyEmail/:find", VerifyEmail)
 
-	req, _ := http.NewRequest("POST", "/users/sendEmailVerificationCode/1", nil)
+	requestBody := user_dtos.Code{
+		Code: "123456",
+	}
+	bodyConverted, _ := json.Marshal(requestBody)
+	req, _ := http.NewRequest("POST", "/users/verifyEmail/1", bytes.NewBuffer(bodyConverted))
 
-	userToInative := user_dtos.CreateUserRequest{
+	user := user_dtos.CreateUserRequest{
 		Email:    tests.ValidEmail,
 		Password: tests.ValidPassword,
 	}
-	_, err := repository.CreateUser(userToInative)
+	_, err := repository.CreateUser(user)
 	if err != nil {
-		t.Errorf("failed to create user in 'TestSendEmailVerificationCodeWithSuccess' test: %v", err)
+		t.Errorf("failed to create user in 'TestVerifyEmailWithSuccess' test: %v", err)
+	}
+	threeMinutesAfter := time.Now().Add(3 * time.Minute)
+	_, err = repository.UpdateEmailVerificationCode(user.Email, "123456", threeMinutesAfter)
+	if err != nil {
+		t.Errorf("failed to update email verification code and expiration 'TestVerifyEmailWithSuccess' test: %v", err)
 	}
 
 	userForJwt := user_entities.User{
@@ -75,7 +99,7 @@ func TestSendEmailVerificationCodeWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestSendEmailVerificationCodeWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestVerifyEmailWithSuccess' test: " + err.Error())
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -83,4 +107,3 @@ func TestSendEmailVerificationCodeWithSuccess(t *testing.T) {
 
 	assert.Equal(t, response.Result().StatusCode, http.StatusOK, "should return a 200 status code")
 }
-*/

@@ -1,4 +1,4 @@
-# [v0.0.2] - XX/XX/XXXX
+# [v0.1.0] - XX/XX/XXXX
 
 - verify_email (need to be logged in): use case, all tests, bdd and route documentation
 - send_email_verification_code (need to be logged in): use case, all tests, bdd and route documentation
