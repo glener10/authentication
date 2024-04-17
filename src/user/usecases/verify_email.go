@@ -44,17 +44,14 @@ func (u *VerifyEmail) Executar(c *gin.Context, find string, code user_dtos.Code)
 		return
 	}
 
-	/* _, err = u.UserRepository.UpdateEmailVerificationCode(find, randomCode, codeExpiration)
+	_, err = u.UserRepository.CheckCodeVerifyEmail(find, code.Code)
 	if err != nil {
 		statusCode := http.StatusNotFound
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/verifyEmail/:find", "POST", false, log_messages.SEND_EMAIL_VERIFICATION_WITHOUT_SUCCESS, c.ClientIP())
+		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/verifyEmail/:find", "POST", false, log_messages.VERIFY_EMAIL_WITHOUT_SUCCESS, c.ClientIP())
 		return
-	} */
-	//TODO: Check if the code is correct and not expired
+	}
 
-	//TODO: Send email with de code
-	go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/verifyEmail/:find", "POST", false, log_messages.SEND_EMAIL_VERIFICATION_WITH_SUCCESS, c.ClientIP())
-
+	go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/verifyEmail/:find", "POST", false, log_messages.VERIFY_EMAIL_WITH_SUCCESS, c.ClientIP())
 	c.JSON(http.StatusOK, nil)
 }
