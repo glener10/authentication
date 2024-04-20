@@ -18,6 +18,6 @@ type User struct {
 	CodeChangeEmail       *string
 	CodeChangeEmailExpiry *time.Time
 
-	CodeChangePassword       *string
-	CodeChangePasswordExpiry *time.Time
+	PasswordRecoveryCode       *string
+	PasswordRecoveryCodeExpiry *time.Time
 }

@@ -32,9 +32,9 @@ func (r *SQLRepository) FindUser(find string) (*user_entity.User, error) {
 	var user user_entity.User
 	var err error
 	if utils_validators.IsValidEmail(find) {
-		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive, verified_email, code_verify_email, code_verify_email_expiry, code_change_email, code_change_email_expiry, code_change_password, code_change_password_expiry FROM users WHERE email = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive, &user.VerifiedEmail, &user.CodeVerifyEmail, &user.CodeVerifyEmailExpiry, &user.CodeChangeEmail, &user.CodeChangeEmailExpiry, &user.CodeChangePassword, &user.CodeChangePasswordExpiry)
+		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive, verified_email, code_verify_email, code_verify_email_expiry, code_change_email, code_change_email_expiry, code_change_password, code_change_password_expiry FROM users WHERE email = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive, &user.VerifiedEmail, &user.CodeVerifyEmail, &user.CodeVerifyEmailExpiry, &user.CodeChangeEmail, &user.CodeChangeEmailExpiry, &user.PasswordRecoveryCode, &user.PasswordRecoveryCodeExpiry)
 	} else {
-		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive, verified_email, code_verify_email, code_change_email, code_change_password FROM users WHERE id = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive, &user.VerifiedEmail, &user.CodeVerifyEmail, &user.CodeChangeEmail, &user.CodeChangePassword)
+		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive, verified_email, code_verify_email, code_change_email, code_change_password FROM users WHERE id = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive, &user.VerifiedEmail, &user.CodeVerifyEmail, &user.CodeChangeEmail, &user.PasswordRecoveryCode)
 	}
 	if err != nil {
 		return nil, errors.New("no element with the parameter (id/email) '" + find + "'")
@@ -163,4 +163,23 @@ func (r *SQLRepository) CheckCodeVerifyEmail(find string, code string) (*bool, e
 
 	successBool := true
 	return &successBool, nil
+}
+
+func (r *SQLRepository) UpdatePasswordRecoveryCode(find string, code string, expiration time.Time) (*user_dtos.UserWithoutSensitiveData, error) {
+	var user user_entity.User
+	var err error
+	if utils_validators.IsValidEmail(find) {
+		err = r.Db.QueryRow("UPDATE users SET code_password_recovery = $1, code_verify_email_expiry = $2 WHERE email = $3 RETURNING id, email", code, expiration, find).Scan(&user.Id, &user.Email)
+	} else {
+		err = r.Db.QueryRow("UPDATE users SET code_verify_email = $1, code_verify_email_expiry = $2 WHERE id = $3 RETURNING id, email", code, expiration, find).Scan(&user.Id, &user.Email)
+	}
+	if err != nil {
+		return nil, errors.New("error to verify email in repository with the parameter (id/email) '" + find + "'")
+	}
+
+	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
+		Id:    user.Id,
+		Email: user.Email,
+	}
+	return &userWithoutSensitiveData, nil
 }
