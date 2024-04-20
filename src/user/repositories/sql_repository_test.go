@@ -259,3 +259,22 @@ func TestCheckCodeVerifyEmailWithoutSuccessBecauseTheCodeIsExpired(t *testing.T)
 	_, err = repository.CheckCodeVerifyEmail(user.Email, "123456")
 	assert.Equal(t, err.Error(), "your code has expired", "should send a error because the code is expired")
 }
+
+func TestUpdatePasswordRecoveryCodeWithSuccess(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+	userBeforeVerifyEmail, _ := repository.FindUser(user.Email)
+	assert.Nil(t, userBeforeVerifyEmail.PasswordRecoveryCode)
+	assert.Nil(t, userBeforeVerifyEmail.PasswordRecoveryCodeExpiry)
+
+	_, err = repository.UpdatePasswordRecoveryCode(user.Email, "123456", time.Now())
+	assert.NoError(t, err, "should update password recovery code and expiration")
+	userAfterVerifyEmail, _ := repository.FindUser(user.Email)
+	assert.NotNil(t, userAfterVerifyEmail.PasswordRecoveryCode)
+	assert.NotNil(t, userAfterVerifyEmail.PasswordRecoveryCodeExpiry)
+}

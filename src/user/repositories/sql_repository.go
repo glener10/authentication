@@ -169,9 +169,9 @@ func (r *SQLRepository) UpdatePasswordRecoveryCode(find string, code string, exp
 	var user user_entity.User
 	var err error
 	if utils_validators.IsValidEmail(find) {
-		err = r.Db.QueryRow("UPDATE users SET code_password_recovery = $1, code_verify_email_expiry = $2 WHERE email = $3 RETURNING id, email", code, expiration, find).Scan(&user.Id, &user.Email)
+		err = r.Db.QueryRow("UPDATE users SET password_recovery_code = $1, password_recovery_code_expiry = $2 WHERE email = $3 RETURNING id, email", code, expiration, find).Scan(&user.Id, &user.Email)
 	} else {
-		err = r.Db.QueryRow("UPDATE users SET code_verify_email = $1, code_verify_email_expiry = $2 WHERE id = $3 RETURNING id, email", code, expiration, find).Scan(&user.Id, &user.Email)
+		err = r.Db.QueryRow("UPDATE users SET password_recovery_code = $1, password_recovery_code_expiry = $2 WHERE id = $3 RETURNING id, email", code, expiration, find).Scan(&user.Id, &user.Email)
 	}
 	if err != nil {
 		return nil, errors.New("error to verify email in repository with the parameter (id/email) '" + find + "'")
