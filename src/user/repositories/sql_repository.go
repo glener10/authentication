@@ -183,3 +183,28 @@ func (r *SQLRepository) UpdatePasswordRecoveryCode(find string, code string, exp
 	}
 	return &userWithoutSensitiveData, nil
 }
+
+func (r *SQLRepository) CheckPasswordRecoveryCode(find string, code string) (*bool, error) {
+	var codeInDb string
+	var expire time.Time
+	var err error
+	if utils_validators.IsValidEmail(find) {
+		err = r.Db.QueryRow("SELECT password_recovery_code, password_recovery_code_expiry FROM users WHERE email = $1", find).Scan(&codeInDb, &expire)
+	} else {
+		err = r.Db.QueryRow("SELECT password_recovery_code, password_recovery_code_expiry FROM users WHERE id = $1", find).Scan(&codeInDb, &expire)
+	}
+	if err != nil {
+		return nil, errors.New("no element with the parameter (id/email) '" + find + "'")
+	}
+
+	if code != codeInDb {
+		return nil, errors.New("your code is invalid")
+	}
+
+	if expire.Before(time.Now()) {
+		return nil, errors.New("your code has expired")
+	}
+
+	successBool := true
+	return &successBool, nil
+}

@@ -278,3 +278,54 @@ func TestUpdatePasswordRecoveryCodeWithSuccess(t *testing.T) {
 	assert.NotNil(t, userAfterVerifyEmail.PasswordRecoveryCode)
 	assert.NotNil(t, userAfterVerifyEmail.PasswordRecoveryCodeExpiry)
 }
+
+func TestPasswordRecoveryCodeWithSuccess(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+
+	threeMinutesAfter := time.Now().Add(3 * time.Minute)
+	_, err = repository.UpdatePasswordRecoveryCode(user.Email, "123456", threeMinutesAfter)
+	assert.NoError(t, err, "should update password recovery code and expiration")
+
+	_, err = repository.CheckPasswordRecoveryCode(user.Email, "123456")
+	assert.NoError(t, err, "should verify with success because the code is correct and not expired")
+}
+
+func TestPasswordRecoveryCodeWithoutSuccessBecauseTheCodeIsInvalid(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+
+	threeMinutesAfter := time.Now().Add(3 * time.Minute)
+	_, err = repository.UpdatePasswordRecoveryCode(user.Email, "123456", threeMinutesAfter)
+	assert.NoError(t, err, "should update password recovery code and expiration")
+
+	_, err = repository.CheckPasswordRecoveryCode(user.Email, "654321")
+	assert.Equal(t, err.Error(), "your code is invalid", "should send a error because the code is invalid")
+}
+
+func TestPasswordRecoveryCodeWithoutSuccessBecauseTheCodeIsExpired(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+
+	threeMinutesBefore := time.Now().Add(-3 * time.Minute)
+	_, err = repository.UpdatePasswordRecoveryCode(user.Email, "123456", threeMinutesBefore)
+	assert.NoError(t, err, "should update password recovery code and expiration")
+
+	_, err = repository.CheckPasswordRecoveryCode(user.Email, "123456")
+	assert.Equal(t, err.Error(), "your code has expired", "should send a error because the code is expired")
+}
