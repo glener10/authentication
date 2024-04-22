@@ -114,6 +114,7 @@
 
 🏗 **Use Cases**
 
+- verify_password_recovery_code: Verifies that the code is correct and not expired
 - send_password_recovery_code: Saves a code and an expiration time (5 minutes) in the database and sends an email with the code
 - verify_email: Verifies that the code is correct and not expired and updates the email as verified
 - send_email_verification_code: Saves a code and an expiration time (5 minutes) in the database and sends an email with the code

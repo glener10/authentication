@@ -1,5 +1,6 @@
 # [v1.0.0] - XX/XX/XXXX
 
+- verify_password_recovery_code (need to be logged in): Verifies that the code is correct and not expired
 - send_password_recovery_code (need to be logged in): use case, all tests, bdd and route documentation
 - verify_email (need to be logged in): use case, all tests, bdd and route documentation
 - send_email_verification_code (need to be logged in): use case, all tests, bdd and route documentation
