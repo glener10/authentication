@@ -24,6 +24,7 @@ import (
 	find_user_controller "github.com/glener10/authentication/src/user/controllers/find_user"
 	login_controller "github.com/glener10/authentication/src/user/controllers/login"
 	send_email_verification_code_controller "github.com/glener10/authentication/src/user/controllers/send_email_verification_code"
+	send_password_recovery_code_controller "github.com/glener10/authentication/src/user/controllers/send_password_recovery_code"
 	verify_email_controller "github.com/glener10/authentication/src/user/controllers/verify_email"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -63,6 +64,7 @@ func HandlerRoutes() *gin.Engine {
 	r.PUT("/users/changeEmail/:find", change_email_controller.ChangeEmail)
 	r.POST("/users/sendEmailVerificationCode/:find", send_email_verification_code_controller.SendEmailVerificationCode)
 	r.POST("/users/verifyEmail/:find", verify_email_controller.VerifyEmail)
+	r.POST("/users/sendPasswordRecoveryCode/:find", send_password_recovery_code_controller.SendPasswordRecoveryCode)
 
 	r.Use(middlewares.OnlyAdminMiddleware())
 
