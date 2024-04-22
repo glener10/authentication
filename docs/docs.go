@@ -711,10 +711,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/user_dtos.UserWithoutSensitiveData"
-                        }
+                        "description": "OK"
                     },
                     "401": {
                         "description": "Unauthorized",
@@ -771,10 +768,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/user_dtos.UserWithoutSensitiveData"
-                        }
+                        "description": "OK"
                     },
                     "401": {
                         "description": "Unauthorized",
@@ -840,10 +834,73 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/user_dtos.UserWithoutSensitiveData"
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
                         }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/verifyPasswordRecoveryCode/{find}": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Verify Password Recovery Code by e-mail or id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Verify Password Recovery Code (You will need send a JWT token in authorization header, you can get it in the login route)",
+                "parameters": [
+                    {
+                        "description": "Password Recovery Code",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_dtos.Code"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search parameter: e-mail or id",
+                        "name": "find",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003ctoken\u003e",
+                        "description": "JWT Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
                     },
                     "401": {
                         "description": "Unauthorized",
