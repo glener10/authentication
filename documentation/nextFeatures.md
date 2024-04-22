@@ -1,4 +1,3 @@
-Send Password Recovery Code: use a unique token sended to email
 Verify password recovery code
 Update change email to receive a unique code sended for email
 
