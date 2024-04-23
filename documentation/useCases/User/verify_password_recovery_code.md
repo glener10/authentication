@@ -11,7 +11,7 @@ THEN: It must return the a error message "wrong format, parameter need to be a i
 SCENARIO: Verify password Recovery Code without Success because token is not valid
 GIVEN: The server is running and connected to the database without errors
 WHEN: A POST request is made to /users/verifyPasswordRecoveryCode/:find with a valid search parameter and invalid code
-THEN: It must return the a error message "invalid token" and a 401 code
+THEN: It must return the a error message "your code is invalid" and a 401 code
 
 SCENARIO: Verify password Recovery Code without Success because the token provided is expired
 GIVEN: The server is running and connected to the database without errors
