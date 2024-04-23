@@ -24,6 +24,7 @@ import (
 	delete_user_controller "github.com/glener10/authentication/src/user/controllers/delete_user"
 	find_user_controller "github.com/glener10/authentication/src/user/controllers/find_user"
 	login_controller "github.com/glener10/authentication/src/user/controllers/login"
+	send_change_email_code_controller "github.com/glener10/authentication/src/user/controllers/send_change_email_code"
 	send_email_verification_code_controller "github.com/glener10/authentication/src/user/controllers/send_email_verification_code"
 	send_password_recovery_code_controller "github.com/glener10/authentication/src/user/controllers/send_password_recovery_code"
 	verify_email_controller "github.com/glener10/authentication/src/user/controllers/verify_email"
@@ -68,6 +69,7 @@ func HandlerRoutes() *gin.Engine {
 	r.PUT("/users/changePassword/:find", change_password_controller.ChangePassword)
 	r.PUT("/users/changeEmail/:find", change_email_controller.ChangeEmail)
 	r.POST("/users/sendEmailVerificationCode/:find", send_email_verification_code_controller.SendEmailVerificationCode)
+	r.POST("/users/sendChangeEmailCode/:find", send_change_email_code_controller.SendChangeEmailCode)
 	r.POST("/users/verifyEmail/:find", verify_email_controller.VerifyEmail)
 
 	r.Use(middlewares.OnlyAdminMiddleware())
