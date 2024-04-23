@@ -55,6 +55,8 @@ func HandlerRoutes() *gin.Engine {
 
 	r.POST("/users", create_user_controller.CreateUser)
 	r.POST("/login", login_controller.Login)
+	r.POST("/users/sendPasswordRecoveryCode/:find", send_password_recovery_code_controller.SendPasswordRecoveryCode)
+	r.POST("/users/verifyPasswordRecoveryCode/:find", verify_password_recovery_code_controller.VerifyPasswordRecoveryCode)
 
 	r.Use(middlewares.JwtSignatureMiddleware())
 	r.Use(middlewares.InactiveUserMiddlware())
@@ -65,8 +67,6 @@ func HandlerRoutes() *gin.Engine {
 	r.PUT("/users/changeEmail/:find", change_email_controller.ChangeEmail)
 	r.POST("/users/sendEmailVerificationCode/:find", send_email_verification_code_controller.SendEmailVerificationCode)
 	r.POST("/users/verifyEmail/:find", verify_email_controller.VerifyEmail)
-	r.POST("/users/sendPasswordRecoveryCode/:find", send_password_recovery_code_controller.SendPasswordRecoveryCode)
-	r.POST("/users/verifyPasswordRecoveryCode/:find", verify_password_recovery_code_controller.VerifyPasswordRecoveryCode)
 
 	r.Use(middlewares.OnlyAdminMiddleware())
 
