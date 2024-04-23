@@ -1,4 +1,6 @@
-Update change email to receive a unique code sended for email
+Fix tests of controller change_email_test
+Route to save change_email_code in database and send email
+Route to check the change_email_code
 
 Gateway and method to send email and put in 'update change email', 'password recovery' and 'email verification' usecases
 2FA
