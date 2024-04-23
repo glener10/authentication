@@ -1,6 +1,6 @@
 Update change email to receive a unique code sended for email
-Gateway and method to send email and put in 'update change email', 'password recovery' and 'email verification' usecases
 
+Gateway and method to send email and put in 'update change email', 'password recovery' and 'email verification' usecases
 2FA
 Login with google
 

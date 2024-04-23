@@ -193,7 +193,7 @@ func (r *SQLRepository) UpdatePasswordRecoveryCode(find string, code string, exp
 		err = r.Db.QueryRow("UPDATE users SET password_recovery_code = $1, password_recovery_code_expiry = $2 WHERE id = $3 RETURNING id, email", code, expiration, find).Scan(&user.Id, &user.Email)
 	}
 	if err != nil {
-		return nil, errors.New("error to verify email in repository with the parameter (id/email) '" + find + "'")
+		return nil, errors.New("error to update password recovery code in repository with the parameter (id/email) '" + find + "'")
 	}
 
 	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
@@ -235,6 +235,69 @@ func (r *SQLRepository) ResetPasswordRecoveryCode(find string) (*user_dtos.UserW
 		err = r.Db.QueryRow("UPDATE users SET password_recovery_code = NULL, password_recovery_code_expiry = NULL WHERE email = $1 RETURNING id, email", find).Scan(&user.Id, &user.Email)
 	} else {
 		err = r.Db.QueryRow("UPDATE users SET password_recovery_code = NULL, password_recovery_code_expiry = NULL WHERE id = $1 RETURNING id, email", find).Scan(&user.Id, &user.Email)
+	}
+	if err != nil {
+		return nil, errors.New("error to reset password recovery code in repository with the parameter (id/email) '" + find + "'")
+	}
+
+	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
+		Id:    user.Id,
+		Email: user.Email,
+	}
+	return &userWithoutSensitiveData, nil
+}
+
+func (r *SQLRepository) UpdateChangeEmailCode(find string, code string, expiration time.Time) (*user_dtos.UserWithoutSensitiveData, error) {
+	var user user_entity.User
+	var err error
+	if utils_validators.IsValidEmail(find) {
+		err = r.Db.QueryRow("UPDATE users SET code_change_email = $1, code_change_email_expiry = $2 WHERE email = $3 RETURNING id, email", code, expiration, find).Scan(&user.Id, &user.Email)
+	} else {
+		err = r.Db.QueryRow("UPDATE users SET code_change_email = $1, code_change_email_expiry = $2 WHERE id = $3 RETURNING id, email", code, expiration, find).Scan(&user.Id, &user.Email)
+	}
+	if err != nil {
+		return nil, errors.New("error to update change email code in repository with the parameter (id/email) '" + find + "'")
+	}
+
+	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
+		Id:    user.Id,
+		Email: user.Email,
+	}
+	return &userWithoutSensitiveData, nil
+}
+
+func (r *SQLRepository) CheckChangeEmailCode(find string, code string) (*bool, error) {
+	var codeInDb string
+	var expire time.Time
+	var err error
+	if utils_validators.IsValidEmail(find) {
+		err = r.Db.QueryRow("SELECT code_change_email, code_change_email_expiry FROM users WHERE email = $1", find).Scan(&codeInDb, &expire)
+	} else {
+		err = r.Db.QueryRow("SELECT code_change_email, code_change_email_expiry FROM users WHERE id = $1", find).Scan(&codeInDb, &expire)
+	}
+	if err != nil {
+		return nil, errors.New("no element with the parameter (id/email) '" + find + "'")
+	}
+
+	if code != codeInDb {
+		return nil, errors.New("your code is invalid")
+	}
+
+	if expire.Before(time.Now()) {
+		return nil, errors.New("your code has expired")
+	}
+
+	successBool := true
+	return &successBool, nil
+}
+
+func (r *SQLRepository) ResetChangeEmailCode(find string) (*user_dtos.UserWithoutSensitiveData, error) {
+	var user user_entity.User
+	var err error
+	if utils_validators.IsValidEmail(find) {
+		err = r.Db.QueryRow("UPDATE users SET code_change_email = NULL, code_change_email_expiry = NULL WHERE email = $1 RETURNING id, email", find).Scan(&user.Id, &user.Email)
+	} else {
+		err = r.Db.QueryRow("UPDATE users SET code_change_email = NULL, code_change_email_expiry = NULL WHERE id = $1 RETURNING id, email", find).Scan(&user.Id, &user.Email)
 	}
 	if err != nil {
 		return nil, errors.New("error to reset password recovery code in repository with the parameter (id/email) '" + find + "'")
