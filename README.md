@@ -114,6 +114,7 @@
 
 🏗 **Use Cases**
 
+- change_email (need to be logged in): It is necessary to use a unique code that is sent to the current email
 - change_password_in_recovery: Verifies that the code is correct and not expired and change the password to the new password
 - verify_password_recovery_code: Verifies that the code is correct and not expired
 - send_password_recovery_code: Saves a code and an expiration time (5 minutes) in the database and sends an email with the code
@@ -124,7 +125,6 @@
 - delete_user (need to be logged in): delete by id or e-mail
 - find_user (need to be logged in): find by id or e-mail
 - change_password (need to be logged in)
-- change_email (need to be logged in)
 - login: With JWT
 - create_user: Do not allow repeated emails and weak passwords
 

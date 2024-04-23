@@ -1,4 +1,3 @@
-Fix tests of controller change_email_test
 Route to save change_email_code in database and send email
 Route to check the change_email_code
 
