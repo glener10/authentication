@@ -40,6 +40,6 @@ func VerifyChangeEmailCode(c *gin.Context) {
 
 	dbConnection := db_postgres.GetDb()
 	userRepository := &user_repositories.SQLRepository{Db: dbConnection}
-	useCase := &user_usecases.VerifyEmail{UserRepository: userRepository}
+	useCase := &user_usecases.VerifyChangeEmailCode{UserRepository: userRepository}
 	useCase.Executar(c, parameter, code)
 }
