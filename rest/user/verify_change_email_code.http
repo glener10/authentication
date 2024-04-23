@@ -1,0 +1,11 @@
+@validToken = ""
+
+###verify_change_email_code
+# @prompt idOrEmail
+POST http://localhost:8080/users/verifyChangeEmailCode/{{idOrEmail}}
+content-type: application/json
+Authorization: Bearer {{validToken}}
+
+{
+	"Code": "123456"
+}
