@@ -1,6 +1,6 @@
 SCENARIO: Change email with Success
 GIVEN: The server is running and connected to the database without errors
-WHEN: A PATCH request is made to /users/changeEmail with a valid search parameter (id or email), valid JWT from the owner of the search parameter and valid email
+WHEN: A PATCH request is made to /users/changeEmail with a valid search parameter (id or email), valid JWT from the owner of the search parameter and valid new email and valid code
 THEN: It must return the user information without email and a 200 code
 
 SCENARIO: Change email without Success because token is not informed
@@ -22,3 +22,13 @@ SCENARIO: Change email without Success because the token provided is from a diff
 GIVEN: The server is running and connected to the database without errors
 WHEN: A PATCH request is made to /users/changeEmail with a valid search parameter but the token is from a different user than the search parameter
 THEN: It must return the a error message "you do not have permission to perform this operation" and a 401 code
+
+SCENARIO: Change email without Success because the code is invalid
+GIVEN: The server is running and connected to the database without errors
+WHEN: A PATCH request is made to /users/changeEmail with a valid search parameter (id or email), valid JWT from the owner of the search parameter and valid new email and invalid code
+THEN: It must return the a error message "your code is invalid" and a 401 code
+
+SCENARIO: Change email without Success because the code is expired
+GIVEN: The server is running and connected to the database without errors
+WHEN: A PATCH request is made to /users/changeEmail with a valid search parameter (id or email), valid JWT from the owner of the search parameter and valid new email and expired code
+THEN: It must return the a error message "your code has expired" and a 401 code
