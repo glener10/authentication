@@ -165,6 +165,25 @@ func (r *SQLRepository) CheckCodeVerifyEmail(find string, code string) (*bool, e
 	return &successBool, nil
 }
 
+func (r *SQLRepository) ResetEmailVerificationCode(find string) (*user_dtos.UserWithoutSensitiveData, error) {
+	var user user_entity.User
+	var err error
+	if utils_validators.IsValidEmail(find) {
+		err = r.Db.QueryRow("UPDATE users SET code_verify_email = NULL, code_verify_email_expiry = NULL WHERE email = $1 RETURNING id, email", find).Scan(&user.Id, &user.Email)
+	} else {
+		err = r.Db.QueryRow("UPDATE users SET code_verify_email = NULL, code_verify_email_expiry = NULL WHERE id = $1 RETURNING id, email", find).Scan(&user.Id, &user.Email)
+	}
+	if err != nil {
+		return nil, errors.New("error to reset verify email code in repository with the parameter (id/email) '" + find + "'")
+	}
+
+	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
+		Id:    user.Id,
+		Email: user.Email,
+	}
+	return &userWithoutSensitiveData, nil
+}
+
 func (r *SQLRepository) UpdatePasswordRecoveryCode(find string, code string, expiration time.Time) (*user_dtos.UserWithoutSensitiveData, error) {
 	var user user_entity.User
 	var err error
