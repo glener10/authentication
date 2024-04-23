@@ -18,6 +18,7 @@ import (
 // @Security Bearer
 // @Param find path string true "Search parameter: e-mail or id"
 // @Param Authorization header string true "JWT Token" default(Bearer <token>)
+// @Param tags body user_dtos.ChangePasswordRequest true "Change Password Request"
 // @Success 200 {object} user_dtos.UserWithoutSensitiveData
 // @Failure      422 {object} utils_interfaces.ErrorResponse
 // @Failure      404 {object} utils_interfaces.ErrorResponse
