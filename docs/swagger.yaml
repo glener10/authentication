@@ -676,6 +676,44 @@ paths:
         code with your new password)
       tags:
       - user
+  /users/sendChangeEmailCode/{find}:
+    post:
+      description: Send Email Verification Code by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Send Email Verification Code (You will need send a JWT token in authorization
+        header, you can get it in the login route)
+      tags:
+      - user
   /users/sendEmailVerificationCode/{find}:
     post:
       description: Send Email Verification Code by e-mail or id
@@ -723,6 +761,44 @@ paths:
         name: find
         required: true
         type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Send Password Recovery Code (You will need send a JWT token in authorization
+        header, you can get it in the login route)
+      tags:
+      - user
+  /users/verifyChangeEmailCode/{find}:
+    post:
+      description: Verify Email by e-mail or id
+      parameters:
+      - description: Verify Change Email Code
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/user_dtos.Code'
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
       - default: Bearer <token>
         description: JWT Token
         in: header
@@ -748,8 +824,8 @@ paths:
             $ref: '#/definitions/utils_interfaces.ErrorResponse'
       security:
       - Bearer: []
-      summary: Send Password Recovery Code (You will need send a JWT token in authorization
-        header, you can get it in the login route)
+      summary: Verify Change Email Code (You will need send a JWT token in authorization
+        header, you can get it in the login route) and a valid code
       tags:
       - user
   /users/verifyEmail/{find}:
@@ -809,12 +885,6 @@ paths:
       - description: 'Search parameter: e-mail or id'
         in: path
         name: find
-        required: true
-        type: string
-      - default: Bearer <token>
-        description: JWT Token
-        in: header
-        name: Authorization
         required: true
         type: string
       produces:
