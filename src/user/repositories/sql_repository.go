@@ -227,3 +227,22 @@ func (r *SQLRepository) CheckPasswordRecoveryCode(find string, code string) (*bo
 	successBool := true
 	return &successBool, nil
 }
+
+func (r *SQLRepository) ResetPasswordRecoveryCode(find string) (*user_dtos.UserWithoutSensitiveData, error) {
+	var user user_entity.User
+	var err error
+	if utils_validators.IsValidEmail(find) {
+		err = r.Db.QueryRow("UPDATE users SET password_recovery_code = NULL, password_recovery_code_expiry = NULL WHERE email = $1 RETURNING id, email", find).Scan(&user.Id, &user.Email)
+	} else {
+		err = r.Db.QueryRow("UPDATE users SET password_recovery_code = NULL, password_recovery_code_expiry = NULL WHERE id = $1 RETURNING id, email", find).Scan(&user.Id, &user.Email)
+	}
+	if err != nil {
+		return nil, errors.New("error to reset password recovery code in repository with the parameter (id/email) '" + find + "'")
+	}
+
+	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
+		Id:    user.Id,
+		Email: user.Email,
+	}
+	return &userWithoutSensitiveData, nil
+}

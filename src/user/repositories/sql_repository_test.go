@@ -349,3 +349,23 @@ func TestResetVerifyEmailCodeWithSuccess(t *testing.T) {
 	_, err = repository.ResetEmailVerificationCode(user.Email)
 	assert.NoError(t, err, "should reset email verify code with success")
 }
+
+func TestResetPasswordRecoveryCodeWithSuccess(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+
+	threeMinutesBefore := time.Now().Add(3 * time.Minute)
+	_, err = repository.UpdatePasswordRecoveryCode(user.Email, "123456", threeMinutesBefore)
+	assert.NoError(t, err, "should update password recovery code and expiration")
+
+	_, err = repository.CheckPasswordRecoveryCode(user.Email, "123456")
+	assert.NoError(t, err, "should check password recovery code with success")
+
+	_, err = repository.ResetPasswordRecoveryCode(user.Email)
+	assert.NoError(t, err, "should reset password recovery code with success")
+}
