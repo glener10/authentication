@@ -18,6 +18,26 @@ definitions:
       userId:
         type: integer
     type: object
+  user_dtos.ChangePasswordInRecoveryRequest:
+    properties:
+      code:
+        example: "123456"
+        type: string
+      newPassword:
+        example: aaaaaaaA#1
+        type: string
+    required:
+    - code
+    - newPassword
+    type: object
+  user_dtos.ChangePasswordRequest:
+    properties:
+      password:
+        example: aaaaaaaA#1
+        type: string
+    required:
+    - password
+    type: object
   user_dtos.Code:
     properties:
       code:
@@ -567,6 +587,12 @@ paths:
         name: Authorization
         required: true
         type: string
+      - description: Change Password Request
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/user_dtos.ChangePasswordRequest'
       produces:
       - application/json
       responses:
@@ -590,6 +616,46 @@ paths:
       - Bearer: []
       summary: Change Password (You will need send a JWT token in authorization header,
         you can get it in the login route)
+      tags:
+      - user
+  /users/changePasswordInRecovery/{find}:
+    patch:
+      description: Change Password in recovery by id or email
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - description: ChangePasswordInRecoveryRequest
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/user_dtos.ChangePasswordInRecoveryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dtos.UserWithoutSensitiveData'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Change Password in recovery (You will need send a valid and not expired
+        code with your new password)
       tags:
       - user
   /users/sendEmailVerificationCode/{find}:
