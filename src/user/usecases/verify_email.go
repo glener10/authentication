@@ -60,6 +60,14 @@ func (u *VerifyEmail) Executar(c *gin.Context, find string, code user_dtos.Code)
 		return
 	}
 
+	_, err = u.UserRepository.ResetEmailVerificationCode(find)
+	if err != nil {
+		statusCode := http.StatusInternalServerError
+		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/verifyEmail/:find", "POST", false, log_messages.VERIFY_EMAIL_WITHOUT_SUCCESS, c.ClientIP())
+		return
+	}
+
 	go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/verifyEmail/:find", "POST", true, log_messages.VERIFY_EMAIL_WITH_SUCCESS, c.ClientIP())
 	c.JSON(http.StatusOK, nil)
 }
