@@ -31,7 +31,7 @@ func ChangePassword(c *gin.Context) {
 		c.JSON(statusCode, gin.H{"error": "invalid request body", "statusCode": statusCode})
 		return
 	}
-	if err := user_dtos.ValidateChangePassword(&newPassword); err != nil {
+	if err := user_dtos.ValidateChangePassword(newPassword.Password); err != nil {
 		statusCode := http.StatusUnprocessableEntity
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
 		return
