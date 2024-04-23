@@ -114,7 +114,7 @@
 
 🏗 **Use Cases**
 
-- verify_change_email_code: Verifies that the code is correct and not expired
+- verify_change_email_code (need to be logged in): Verifies that the code is correct and not expired
 - send_change_email_code (need to be logged in): Saves a code and an expiration time (5 minutes) in the database and sends an email with the code
 - change_email (need to be logged in): It is necessary to use a unique code that is sent to the current email
 - change_password_in_recovery: Verifies that the code is correct and not expired and change the password to the new password
