@@ -1,5 +1,6 @@
 # [v1.0.0] - XX/XX/XXXX
 
+- change_password_in_recovery: Verifies that the code is correct and not expired and change the password to the new password
 - verify_password_recovery_code: Verifies that the code is correct and not expired
 - send_password_recovery_code: use case, all tests, bdd and route documentation
 - verify_email (need to be logged in): use case, all tests, bdd and route documentation
