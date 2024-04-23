@@ -1,5 +1,6 @@
 # [v1.0.0] - XX/XX/XXXX
 
+- verify_change_email_code: Verifies that the code is correct and not expired
 - send_change_email_code: use case, all tests, bdd and route documentation
 - ALTERING USECASE change_email: Now it is necessary to use a unique code that is sent to the current email
 - change_password_in_recovery: Verifies that the code is correct and not expired and change the password to the new password
