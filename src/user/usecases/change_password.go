@@ -48,6 +48,7 @@ func (u *ChangePassword) Executar(c *gin.Context, find string, newPassword strin
 	if err != nil {
 		statusCode := http.StatusNotFound
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/changePassword/:find", "PATCH", false, log_messages.FIND_USER_WITHOUT_SUCCESS, c.ClientIP())
 		return
 	}
 
