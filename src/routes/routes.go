@@ -19,6 +19,7 @@ import (
 	middlewares "github.com/glener10/authentication/src/routes/middlewares"
 	change_email_controller "github.com/glener10/authentication/src/user/controllers/change_email"
 	change_password_controller "github.com/glener10/authentication/src/user/controllers/change_password"
+	change_password_in_recovery_controller "github.com/glener10/authentication/src/user/controllers/change_password_in_recovery"
 	create_user_controller "github.com/glener10/authentication/src/user/controllers/create_user"
 	delete_user_controller "github.com/glener10/authentication/src/user/controllers/delete_user"
 	find_user_controller "github.com/glener10/authentication/src/user/controllers/find_user"
@@ -57,6 +58,7 @@ func HandlerRoutes() *gin.Engine {
 	r.POST("/login", login_controller.Login)
 	r.POST("/users/sendPasswordRecoveryCode/:find", send_password_recovery_code_controller.SendPasswordRecoveryCode)
 	r.POST("/users/verifyPasswordRecoveryCode/:find", verify_password_recovery_code_controller.VerifyPasswordRecoveryCode)
+	r.POST("/users/changePasswordInRecovery/:find", change_password_in_recovery_controller.ChangePasswordInRecovery)
 
 	r.Use(middlewares.JwtSignatureMiddleware())
 	r.Use(middlewares.InactiveUserMiddlware())
