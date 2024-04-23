@@ -44,6 +44,6 @@ func ChangePasswordInRecovery(c *gin.Context) {
 
 	dbConnection := db_postgres.GetDb()
 	userRepository := &user_repositories.SQLRepository{Db: dbConnection}
-	useCase := &user_usecases.ChangePassword{UserRepository: userRepository}
-	useCase.Executar(c, parameter, changePasswordInRecoveryRequest.NewPassword)
+	useCase := &user_usecases.ChangePasswordInRecovery{UserRepository: userRepository}
+	useCase.Executar(c, parameter, changePasswordInRecoveryRequest)
 }
