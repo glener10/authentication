@@ -1,12 +1,21 @@
 package send_change_email_code_controller
 
 import (
+	"encoding/json"
+	"log"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	admin_repositories "github.com/glener10/authentication/src/admin/repositories"
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
+	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
+	user_dtos "github.com/glener10/authentication/src/user/dtos"
+	user_entities "github.com/glener10/authentication/src/user/entities"
 	user_repositories "github.com/glener10/authentication/src/user/repositories"
+	utils_interfaces "github.com/glener10/authentication/src/utils/interfaces"
 	"github.com/glener10/authentication/tests"
+	"gotest.tools/v3/assert"
 )
 
 var repository user_repositories.SQLRepository
@@ -19,13 +28,12 @@ func TestMain(m *testing.M) {
 	tests.ExecuteAndFinish(m)
 }
 
-/*
-func TestSendEmailVerificationCodeWithJwtOfNonAdminUser(t *testing.T) {
+func TestSendChangeEmailCodeWithDifferentUserJwt(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.POST("/users/sendEmailVerificationCode/:find", SendEmailVerificationCode)
+	r.POST("/users/sendChangeEmailCode/:find", SendChangeEmailCode)
 
-	req, _ := http.NewRequest("POST", "/users/sendEmailVerificationCode/5", nil)
+	req, _ := http.NewRequest("POST", "/users/sendChangeEmailCode/5", nil)
 	userForJwt := user_entities.User{
 		Id:       1,
 		Email:    tests.ValidEmail,
@@ -33,7 +41,7 @@ func TestSendEmailVerificationCodeWithJwtOfNonAdminUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestSendEmailVerificationCodeWithJwtOfNonAdminUser' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestSendChangeEmailCodeWithJwtOfNonAdminUser' test: " + err.Error())
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -52,12 +60,12 @@ func TestSendEmailVerificationCodeWithJwtOfNonAdminUser(t *testing.T) {
 	assert.Equal(t, expected, actual, "should return 'you do not have permission to perform this operation' and 401 in the body")
 }
 
-func TestSendEmailVerificationCodeWithSuccess(t *testing.T) {
+func TestSendChangeEmailCodeWithSuccess(t *testing.T) {
 	tests.BeforeEach()
 	r := tests.SetupRoutes()
-	r.POST("/users/sendEmailVerificationCode/:find", SendEmailVerificationCode)
+	r.POST("/users/sendChangeEmailCode/:find", SendChangeEmailCode)
 
-	req, _ := http.NewRequest("POST", "/users/sendEmailVerificationCode/1", nil)
+	req, _ := http.NewRequest("POST", "/users/sendChangeEmailCode/1", nil)
 
 	userToInative := user_dtos.CreateUserRequest{
 		Email:    tests.ValidEmail,
@@ -65,7 +73,7 @@ func TestSendEmailVerificationCodeWithSuccess(t *testing.T) {
 	}
 	_, err := repository.CreateUser(userToInative)
 	if err != nil {
-		t.Errorf("failed to create user in 'TestSendEmailVerificationCodeWithSuccess' test: %v", err)
+		t.Errorf("failed to create user in 'TestSendChangeEmailCodeWithSuccess' test: %v", err)
 	}
 
 	userForJwt := user_entities.User{
@@ -75,7 +83,7 @@ func TestSendEmailVerificationCodeWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestSendEmailVerificationCodeWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestSendChangeEmailCodeWithSuccess' test: " + err.Error())
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -83,4 +91,3 @@ func TestSendEmailVerificationCodeWithSuccess(t *testing.T) {
 
 	assert.Equal(t, response.Result().StatusCode, http.StatusOK, "should return a 200 status code")
 }
-*/
