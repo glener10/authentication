@@ -47,19 +47,19 @@ func (u *ChangePasswordInRecovery) Executar(c *gin.Context, find string, changeP
 		return
 	}
 
-	userWithNewPassword, err := u.UserRepository.ChangePassword(find, *newPasswordInHash)
-	if err != nil {
-		statusCode := http.StatusInternalServerError
-		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go utils_usecases.CreateLog(&num, "users/changePasswordInRecovery/:find", "POST", false, log_messages.CHANGE_PASSWORD_WITHOUT_SUCCESS, c.ClientIP())
-		return
-	}
-
 	_, err = u.UserRepository.ResetPasswordRecoveryCode(find)
 	if err != nil {
 		statusCode := http.StatusInternalServerError
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
 		go utils_usecases.CreateLog(&num, "users/changePasswordInRecovery/:find", "POST", false, log_messages.RESET_PASSWORD_RECOVERY_CODE_WITHOUT_SUCCESS, c.ClientIP())
+		return
+	}
+
+	userWithNewPassword, err := u.UserRepository.ChangePassword(find, *newPasswordInHash)
+	if err != nil {
+		statusCode := http.StatusInternalServerError
+		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		go utils_usecases.CreateLog(&num, "users/changePasswordInRecovery/:find", "POST", false, log_messages.CHANGE_PASSWORD_WITHOUT_SUCCESS, c.ClientIP())
 		return
 	}
 

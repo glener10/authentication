@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	db_postgres "github.com/glener10/authentication/src/db/postgres"
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
@@ -131,10 +132,17 @@ func TestChangeEmailByIdAndValidJwtWithSuccess(t *testing.T) {
 	if err != nil {
 		t.Errorf("failed to create user in 'TestChangeEmailByIdAndValidJwtWithSuccess' test: %v", err)
 	}
+	threeMinutesAfter := time.Now().Add(3 * time.Minute)
+	_, err = repository.UpdateChangeEmailCode(createUser.Email, "123456", threeMinutesAfter)
+	if err != nil {
+		t.Errorf("failed to update email verification code and expiration 'TestChangeEmailByIdAndValidJwtWithSuccess' test: %v", err)
+	}
+
 	r := tests.SetupRoutes()
 	r.PUT("/users/changeEmail/:find", ChangeEmail)
 	requestBody := user_dtos.ChangeEmailRequest{
 		Email: "validNewEmail@fulano.com",
+		Code:  "123456",
 	}
 	bodyConverted, _ := json.Marshal(requestBody)
 	req, _ := http.NewRequest("PUT", "/users/changeEmail/1", bytes.NewBuffer(bodyConverted))
@@ -164,10 +172,17 @@ func TestChangeEmailByEmailAndValidJwtWithSuccess(t *testing.T) {
 	if err != nil {
 		t.Errorf("failed to create user in 'TestChangeEmailByEmailAndValidJwtWithSuccess' test: %v", err)
 	}
+	threeMinutesAfter := time.Now().Add(3 * time.Minute)
+	_, err = repository.UpdateChangeEmailCode(createUser.Email, "123456", threeMinutesAfter)
+	if err != nil {
+		t.Errorf("failed to update email verification code and expiration 'TestChangeEmailByEmailAndValidJwtWithSuccess' test: %v", err)
+	}
+
 	r := tests.SetupRoutes()
 	r.PUT("/users/changeEmail/:find", ChangeEmail)
 	requestBody := user_dtos.ChangeEmailRequest{
 		Email: "validNewEmail@fulano.com",
+		Code:  "123456",
 	}
 	bodyConverted, _ := json.Marshal(requestBody)
 	req, _ := http.NewRequest("PUT", "/users/changeEmail/"+tests.ValidEmail, bytes.NewBuffer(bodyConverted))
