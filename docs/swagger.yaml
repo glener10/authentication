@@ -18,6 +18,18 @@ definitions:
       userId:
         type: integer
     type: object
+  user_dtos.ChangeEmailRequest:
+    properties:
+      code:
+        example: "123456"
+        type: string
+      email:
+        example: fulano@fulano.com
+        type: string
+    required:
+    - code
+    - email
+    type: object
   user_dtos.ChangePasswordInRecoveryRequest:
     properties:
       code:
@@ -541,6 +553,12 @@ paths:
         name: find
         required: true
         type: string
+      - description: Change Email Request
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/user_dtos.ChangeEmailRequest'
       - default: Bearer <token>
         description: JWT Token
         in: header

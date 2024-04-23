@@ -581,6 +581,15 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "description": "Change Email Request",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_dtos.ChangeEmailRequest"
+                        }
+                    },
+                    {
                         "type": "string",
                         "default": "Bearer \u003ctoken\u003e",
                         "description": "JWT Token",
@@ -1136,6 +1145,23 @@ const docTemplate = `{
                 },
                 "userId": {
                     "type": "integer"
+                }
+            }
+        },
+        "user_dtos.ChangeEmailRequest": {
+            "type": "object",
+            "required": [
+                "code",
+                "email"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "fulano@fulano.com"
                 }
             }
         },
