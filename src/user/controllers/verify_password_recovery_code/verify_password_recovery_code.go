@@ -18,7 +18,6 @@ import (
 // @Security Bearer
 // @Param tags body user_dtos.Code true "Password Recovery Code"
 // @Param find path string true "Search parameter: e-mail or id"
-// @Param Authorization header string true "JWT Token" default(Bearer <token>)
 // @Success 200 {object} nil
 // @Failure      422 {object} utils_interfaces.ErrorResponse
 // @Failure      404 {object} utils_interfaces.ErrorResponse
