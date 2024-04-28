@@ -11,6 +11,7 @@ import (
 	user_gateways "github.com/glener10/authentication/src/user/gateways"
 	user_interfaces "github.com/glener10/authentication/src/user/interfaces"
 	utils_usecases "github.com/glener10/authentication/src/utils/usecases"
+	"github.com/glener10/authentication/tests"
 )
 
 type SendEmailVerificationCode struct {
@@ -54,7 +55,7 @@ func (u *SendEmailVerificationCode) Executar(c *gin.Context, find string) {
 		return
 	}
 
-	if emailInClaims != "fulano@fulano.com" {
+	if emailInClaims != tests.ValidEmail {
 		err = user_gateways.SendEmail(emailInClaims.(string), "Password Recovery Code", "your code is: "+randomCode)
 		if err != nil {
 			statusCode := http.StatusInternalServerError

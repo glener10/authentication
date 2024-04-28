@@ -9,6 +9,7 @@ import (
 	user_gateways "github.com/glener10/authentication/src/user/gateways"
 	user_interfaces "github.com/glener10/authentication/src/user/interfaces"
 	utils_usecases "github.com/glener10/authentication/src/utils/usecases"
+	"github.com/glener10/authentication/tests"
 )
 
 type SendPasswordRecoveryCode struct {
@@ -42,7 +43,7 @@ func (u *SendPasswordRecoveryCode) Executar(c *gin.Context, find string) {
 		return
 	}
 
-	if user.Email != "fulano@fulano.com" {
+	if user.Email != tests.ValidEmail {
 		err = user_gateways.SendEmail(user.Email, "Password Recovery Code", "your code is: "+randomCode)
 		if err != nil {
 			statusCode := http.StatusInternalServerError

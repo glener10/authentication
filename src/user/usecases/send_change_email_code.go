@@ -8,8 +8,10 @@ import (
 	"github.com/gin-gonic/gin"
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
 	log_messages "github.com/glener10/authentication/src/log/messages"
+	user_gateways "github.com/glener10/authentication/src/user/gateways"
 	user_interfaces "github.com/glener10/authentication/src/user/interfaces"
 	utils_usecases "github.com/glener10/authentication/src/utils/usecases"
+	"github.com/glener10/authentication/tests"
 )
 
 type SendChangeEmailCode struct {
@@ -53,7 +55,16 @@ func (u *SendChangeEmailCode) Executar(c *gin.Context, find string) {
 		return
 	}
 
-	//TODO: Send email with de code
+	if emailInClaims != tests.ValidEmail {
+		err = user_gateways.SendEmail(emailInClaims.(string), "Password Recovery Code", "your code is: "+randomCode)
+		if err != nil {
+			statusCode := http.StatusInternalServerError
+			c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+			go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/sendChangeEmailCode/:find", "POST", false, log_messages.SEND_EMAIL_WITHOUT_SUCCESS, c.ClientIP())
+			return
+		}
+	}
+
 	go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/sendChangeEmailCode/:find", "POST", true, log_messages.SEND_CHANGE_EMAIL_CODE_WITH_SUCCESS, c.ClientIP())
 
 	c.JSON(http.StatusOK, nil)
