@@ -55,7 +55,7 @@ func (u *SendEmailVerificationCode) Executar(c *gin.Context, find string) {
 	}
 
 	if emailInClaims != "fulano@fulano.com" {
-		err = user_gateways.SendEmail(emailInClaims.(string), "Password Recovery Code", randomCode)
+		err = user_gateways.SendEmail(emailInClaims.(string), "Password Recovery Code", "your code is: "+randomCode)
 		if err != nil {
 			statusCode := http.StatusInternalServerError
 			c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
