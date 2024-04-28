@@ -1,5 +1,6 @@
 # [v1.0.0] - XX/XX/XXXX
 
+- notify the user by email: when your password is changed, when your email is changed, when your email is verified
 - create gateway to send email
 - verify_change_email_code: Verifies that the code is correct and not expired
 - send_change_email_code: use case, all tests, bdd and route documentation

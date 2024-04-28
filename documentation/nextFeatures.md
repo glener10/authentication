@@ -1,4 +1,3 @@
-Gateway and method to send email and put in 'update change email', 'password recovery' and 'email verification' usecases
 2FA
 Login with google
 
