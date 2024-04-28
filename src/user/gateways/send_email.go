@@ -9,13 +9,13 @@ import (
 	gomail "gopkg.in/mail.v2"
 )
 
-func SendEmail(to string, subject string) error {
+func SendEmail(to string, subject string, code string) error {
 	mail := gomail.NewMessage()
 
 	mail.SetHeader("From", os.Getenv("EMAIL_FROM"))
 	mail.SetHeader("To", to)
 	mail.SetHeader("Subject", subject)
-	mail.SetBody("text/plain", "that is a test")
+	mail.SetBody("text/plain", "your code is: "+code)
 
 	sendEmail := gomail.NewDialer("smtp.gmail.com", 587, os.Getenv("EMAIL_FROM"), os.Getenv("EMAIL_PASSWORD"))
 	sendEmail.StartTLSPolicy = gomail.MandatoryStartTLS
