@@ -1,6 +1,7 @@
 package user_usecases
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -9,8 +10,10 @@ import (
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
 	log_messages "github.com/glener10/authentication/src/log/messages"
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
+	user_gateways "github.com/glener10/authentication/src/user/gateways"
 	user_interfaces "github.com/glener10/authentication/src/user/interfaces"
 	utils_usecases "github.com/glener10/authentication/src/utils/usecases"
+	"github.com/glener10/authentication/tests"
 )
 
 type VerifyEmail struct {
@@ -66,6 +69,14 @@ func (u *VerifyEmail) Executar(c *gin.Context, find string, code user_dtos.Code)
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
 		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/verifyEmail/:find", "POST", false, log_messages.RESET_VERIFY_EMAIL_CODE_WITHOUT_SUCCESS, c.ClientIP())
 		return
+	}
+
+	if emailInClaims != tests.ValidEmail {
+		err = user_gateways.SendEmail(emailInClaims.(string), "email verified", "your email has been verified")
+		if err != nil {
+			log.Println("error to send email verification notification by email")
+			go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/verifyEmail/:find", "POST", false, log_messages.SEND_EMAIL_WITHOUT_SUCCESS, c.ClientIP())
+		}
 	}
 
 	go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/verifyEmail/:find", "POST", true, log_messages.VERIFY_EMAIL_WITH_SUCCESS, c.ClientIP())
