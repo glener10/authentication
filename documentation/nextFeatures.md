@@ -1,4 +1,3 @@
-Fix SendPasswordRecoveryCode and VerifyPasswordRecoveryCode when pass email and not the id
 Update Login to consider the 2FA code
 Login with google
 
