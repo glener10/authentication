@@ -32,9 +32,9 @@ func (r *SQLRepository) FindUser(find string) (*user_entity.User, error) {
 	var user user_entity.User
 	var err error
 	if utils_validators.IsValidEmail(find) {
-		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive, verified_email, code_verify_email, code_verify_email_expiry, code_change_email, code_change_email_expiry, password_recovery_code, password_recovery_code_expiry FROM users WHERE email = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive, &user.VerifiedEmail, &user.CodeVerifyEmail, &user.CodeVerifyEmailExpiry, &user.CodeChangeEmail, &user.CodeChangeEmailExpiry, &user.PasswordRecoveryCode, &user.PasswordRecoveryCodeExpiry)
+		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive, verified_email, code_verify_email, code_verify_email_expiry, code_change_email, code_change_email_expiry, password_recovery_code, password_recovery_code_expiry, twofa, twofa_code FROM users WHERE email = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive, &user.VerifiedEmail, &user.CodeVerifyEmail, &user.CodeVerifyEmailExpiry, &user.CodeChangeEmail, &user.CodeChangeEmailExpiry, &user.PasswordRecoveryCode, &user.PasswordRecoveryCodeExpiry, &user.Twofa, &user.TwofaCode)
 	} else {
-		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive, verified_email, code_verify_email, code_change_email, password_recovery_code FROM users WHERE id = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive, &user.VerifiedEmail, &user.CodeVerifyEmail, &user.CodeChangeEmail, &user.PasswordRecoveryCode)
+		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive, verified_email, code_verify_email, code_change_email, password_recovery_code, twofa, twofa_code FROM users WHERE id = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive, &user.VerifiedEmail, &user.CodeVerifyEmail, &user.CodeChangeEmail, &user.PasswordRecoveryCode, &user.Twofa, &user.TwofaCode)
 	}
 	if err != nil {
 		return nil, errors.New("no element with the parameter (id/email) '" + find + "'")

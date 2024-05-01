@@ -20,4 +20,7 @@ type User struct {
 
 	PasswordRecoveryCode       *string
 	PasswordRecoveryCodeExpiry *time.Time
+
+	Twofa     *bool
+	TwofaCode *string
 }
