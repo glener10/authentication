@@ -13,5 +13,8 @@ CREATE TABLE IF NOT EXISTS users (
     code_change_email_expiry TIMESTAMP WITH TIME ZONE,
 
     password_recovery_code VARCHAR(12),
-    password_recovery_code_expiry TIMESTAMP WITH TIME ZONE
+    password_recovery_code_expiry TIMESTAMP WITH TIME ZONE,
+
+    twofa BOOLEAN,
+    twofa_code VARCHAR(255)
 );
