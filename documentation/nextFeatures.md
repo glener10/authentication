@@ -1,3 +1,4 @@
+Login2FA E2E tests
 Improving log messages
 Login with google
 
