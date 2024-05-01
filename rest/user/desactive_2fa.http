@@ -1,0 +1,7 @@
+@validToken = ""
+
+###desactive_2fa: desactive 2fa per id or email
+# @prompt idOrEmail
+GET http://localhost:8080/users/2fa/desactive/{{idOrEmail}}
+content-type: application/json
+Authorization: Bearer {{validToken}}
