@@ -32,6 +32,6 @@ func Active2FA(c *gin.Context) {
 	}
 	dbConnection := db_postgres.GetDb()
 	userRepository := &user_repositories.SQLRepository{Db: dbConnection}
-	useCase := &user_usecases.Desactive2FA{UserRepository: userRepository}
+	useCase := &user_usecases.Active2FA{UserRepository: userRepository}
 	useCase.Executar(c, parameter)
 }
