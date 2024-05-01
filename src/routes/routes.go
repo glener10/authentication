@@ -66,6 +66,7 @@ func HandlerRoutes() *gin.Engine {
 
 	r.Use(middlewares.JwtSignatureMiddleware())
 	r.Use(middlewares.InactiveUserMiddlware())
+	r.Use(middlewares.TwofaMiddleware())
 
 	r.GET("/users/:find", find_user_controller.FindUser)
 	r.DELETE("/users/:find", delete_user_controller.DeleteUser)
