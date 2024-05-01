@@ -1,0 +1,10 @@
+@validToken = ""
+
+###login2FA: with JWT and 2FA Code
+POST http://localhost:8080/login/2fa
+content-type: application/json
+Authorization: Bearer {{validToken}}
+
+{
+	"Code": "2facode"
+}
