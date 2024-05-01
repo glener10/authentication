@@ -32,9 +32,9 @@ func (r *SQLRepository) FindUser(find string) (*user_entity.User, error) {
 	var user user_entity.User
 	var err error
 	if utils_validators.IsValidEmail(find) {
-		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive, verified_email, code_verify_email, code_verify_email_expiry, code_change_email, code_change_email_expiry, password_recovery_code, password_recovery_code_expiry, twofa, twofa_code FROM users WHERE email = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive, &user.VerifiedEmail, &user.CodeVerifyEmail, &user.CodeVerifyEmailExpiry, &user.CodeChangeEmail, &user.CodeChangeEmailExpiry, &user.PasswordRecoveryCode, &user.PasswordRecoveryCodeExpiry, &user.Twofa, &user.TwofaCode)
+		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive, verified_email, code_verify_email, code_verify_email_expiry, code_change_email, code_change_email_expiry, password_recovery_code, password_recovery_code_expiry, twofa, twofa_secret FROM users WHERE email = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive, &user.VerifiedEmail, &user.CodeVerifyEmail, &user.CodeVerifyEmailExpiry, &user.CodeChangeEmail, &user.CodeChangeEmailExpiry, &user.PasswordRecoveryCode, &user.PasswordRecoveryCodeExpiry, &user.Twofa, &user.TwofaSecret)
 	} else {
-		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive, verified_email, code_verify_email, code_change_email, password_recovery_code, twofa, twofa_code FROM users WHERE id = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive, &user.VerifiedEmail, &user.CodeVerifyEmail, &user.CodeChangeEmail, &user.PasswordRecoveryCode, &user.Twofa, &user.TwofaCode)
+		err = r.Db.QueryRow("SELECT id, email, is_admin, password, inactive, verified_email, code_verify_email, code_change_email, password_recovery_code, twofa, twofa_secret FROM users WHERE id = $1", find).Scan(&user.Id, &user.Email, &user.IsAdmin, &user.Password, &user.Inactive, &user.VerifiedEmail, &user.CodeVerifyEmail, &user.CodeChangeEmail, &user.PasswordRecoveryCode, &user.Twofa, &user.TwofaSecret)
 	}
 	if err != nil {
 		return nil, errors.New("no element with the parameter (id/email) '" + find + "'")
@@ -301,6 +301,44 @@ func (r *SQLRepository) ResetChangeEmailCode(find string) (*user_dtos.UserWithou
 	}
 	if err != nil {
 		return nil, errors.New("error to reset password recovery code in repository with the parameter (id/email) '" + find + "'")
+	}
+
+	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
+		Id:    user.Id,
+		Email: user.Email,
+	}
+	return &userWithoutSensitiveData, nil
+}
+
+func (r *SQLRepository) Active2FA(find string, secret string) (*user_dtos.UserWithoutSensitiveData, error) {
+	var user user_entity.User
+	var err error
+	if utils_validators.IsValidEmail(find) {
+		err = r.Db.QueryRow("UPDATE users SET twofa = true, twofa_secret = $1 WHERE email = $2 RETURNING id, email", secret, find).Scan(&user.Id, &user.Email)
+	} else {
+		err = r.Db.QueryRow("UPDATE users SET twofa = true, twofa_secret = $1 WHERE id = $2 RETURNING id, email", secret, find).Scan(&user.Id, &user.Email)
+	}
+	if err != nil {
+		return nil, errors.New("error to active 2FA in repository with the parameter (id/email) '" + find + "'")
+	}
+
+	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
+		Id:    user.Id,
+		Email: user.Email,
+	}
+	return &userWithoutSensitiveData, nil
+}
+
+func (r *SQLRepository) Desactive2FA(find string) (*user_dtos.UserWithoutSensitiveData, error) {
+	var user user_entity.User
+	var err error
+	if utils_validators.IsValidEmail(find) {
+		err = r.Db.QueryRow("UPDATE users SET twofa = false, twofa_secret = null WHERE email = $1 RETURNING id, email", find).Scan(&user.Id, &user.Email)
+	} else {
+		err = r.Db.QueryRow("UPDATE users SET twofa = false, twofa_secret = null WHERE id = $1 RETURNING id, email", find).Scan(&user.Id, &user.Email)
+	}
+	if err != nil {
+		return nil, errors.New("error to active 2FA in repository with the parameter (id/email) '" + find + "'")
 	}
 
 	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
