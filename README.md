@@ -114,6 +114,7 @@
 
 🏗 **Use Cases**
 
+- desactive_2fa (need to be logged in)
 - notify the user by email: when your password is changed and when your email is verified
 - verify_change_email_code (need to be logged in): Verifies that the code is correct and not expired
 - send_change_email_code (need to be logged in): Saves a code and an expiration time (5 minutes) in the database and sends an email with the code
