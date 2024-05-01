@@ -544,6 +544,46 @@ paths:
         you can get it in the login route)
       tags:
       - user
+  /users/2fa/desactive/{find}:
+    post:
+      description: Desactive 2FA by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dtos.UserWithoutSensitiveData'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Desactive 2FA (You will need send a JWT token in authorization header,
+        you can get it in the login route)
+      tags:
+      - user
   /users/changeEmail/{find}:
     patch:
       description: Change Email by id or email
