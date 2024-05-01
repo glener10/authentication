@@ -1,6 +1,7 @@
 package utils_usecases
 
 import (
+	cryptorand "crypto/rand"
 	"encoding/base32"
 	"math/rand"
 	"strconv"
@@ -9,7 +10,8 @@ import (
 
 func GenerateRandomSecret(length int) (string, error) {
 	randomBytes := make([]byte, length)
-	if _, err := rand.Read(randomBytes); err != nil {
+	_, err := cryptorand.Read(randomBytes)
+	if err != nil {
 		return "", err
 	}
 	secret := base32.StdEncoding.EncodeToString(randomBytes)
