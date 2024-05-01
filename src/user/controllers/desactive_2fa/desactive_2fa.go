@@ -18,7 +18,7 @@ import (
 // @Security Bearer
 // @Param find path string true "Search parameter: e-mail or id"
 // @Param Authorization header string true "JWT Token" default(Bearer <token>)
-// @Success 200 {object} nil
+// @Success 200 {object} user_dtos.UserWithoutSensitiveData
 // @Failure      422 {object} utils_interfaces.ErrorResponse
 // @Failure      404 {object} utils_interfaces.ErrorResponse
 // @Failure      401 {object} utils_interfaces.ErrorResponse
@@ -32,6 +32,6 @@ func Desactive2FA(c *gin.Context) {
 	}
 	dbConnection := db_postgres.GetDb()
 	userRepository := &user_repositories.SQLRepository{Db: dbConnection}
-	useCase := &user_usecases.FindUser{UserRepository: userRepository}
+	useCase := &user_usecases.Desactive2FA{UserRepository: userRepository}
 	useCase.Executar(c, parameter)
 }
