@@ -1,10 +1,20 @@
 package utils_usecases
 
 import (
+	"encoding/base32"
 	"math/rand"
 	"strconv"
 	"time"
 )
+
+func GenerateRandomSecret(length int) (string, error) {
+	randomBytes := make([]byte, length)
+	if _, err := rand.Read(randomBytes); err != nil {
+		return "", err
+	}
+	secret := base32.StdEncoding.EncodeToString(randomBytes)
+	return secret, nil
+}
 
 func GenerateRandomCode() string {
 	source := rand.NewSource(time.Now().UnixNano())

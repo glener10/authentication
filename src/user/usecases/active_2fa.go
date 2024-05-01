@@ -1,6 +1,7 @@
 package user_usecases
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -8,9 +9,9 @@ import (
 	"github.com/gin-gonic/gin"
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
 	log_messages "github.com/glener10/authentication/src/log/messages"
-	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_interfaces "github.com/glener10/authentication/src/user/interfaces"
 	utils_usecases "github.com/glener10/authentication/src/utils/usecases"
+	"github.com/skip2/go-qrcode"
 )
 
 type Active2FA struct {
@@ -44,19 +45,41 @@ func (u *Active2FA) Executar(c *gin.Context, find string) {
 		return
 	}
 
-	user, err := u.UserRepository.Desactive2FA(find)
+	randomCode, err := utils_usecases.GenerateRandomSecret(20)
 	if err != nil {
 		statusCode := http.StatusNotFound
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/2fa/active/:find", "POST", false, log_messages.DESACTIVE_2FA_WITHOUT_SUCCESS, c.ClientIP())
+		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/2fa/active/:find", "POST", false, log_messages.GENERATE_RANDOM_SECRET_WITHOUT_SUCCESS, c.ClientIP())
 		return
 	}
 
-	go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/2fa/active/:find", "POST", true, log_messages.DESACTIVE_2FA_WITH_SUCCESS, c.ClientIP())
-	userWithoutSensitiveData := user_dtos.UserWithoutSensitiveData{
-		Id:    user.Id,
-		Email: user.Email,
+	appName := "authentication"
+	uri := fmt.Sprintf("otpauth://totp/%s?secret=%s", appName, randomCode)
+
+	qrCodeBytes, err := GenerateQRCode(uri)
+	if err != nil {
+		statusCode := http.StatusInternalServerError
+		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/2fa/active/:find", "POST", false, log_messages.GENERATE_RANDOM_SECRET_WITHOUT_SUCCESS, c.ClientIP())
+		return
 	}
 
-	c.JSON(http.StatusOK, userWithoutSensitiveData)
+	_, err = u.UserRepository.Active2FA(find, randomCode)
+	if err != nil {
+		statusCode := http.StatusNotFound
+		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/2fa/active/:find", "POST", false, log_messages.ACTIVE_2FA_WITHOUT_SUCCESS, c.ClientIP())
+		return
+	}
+
+	go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/2fa/active/:find", "POST", true, log_messages.ACTIVE_2FA_WITH_SUCCESS, c.ClientIP())
+	c.Data(http.StatusOK, "image/png", qrCodeBytes)
+}
+
+func GenerateQRCode(uri string) ([]byte, error) {
+	qrCodeBytes, err := qrcode.Encode(uri, qrcode.Medium, 256)
+	if err != nil {
+		return nil, err
+	}
+	return qrCodeBytes, nil
 }
