@@ -17,6 +17,7 @@ import (
 	admin_inative_user_controller "github.com/glener10/authentication/src/admin/controllers/admin_inative_user"
 	promote_user_admin_controller "github.com/glener10/authentication/src/admin/controllers/promote_user_admin"
 	middlewares "github.com/glener10/authentication/src/routes/middlewares"
+	active_2fa_controller "github.com/glener10/authentication/src/user/controllers/active_2fa"
 	change_email_controller "github.com/glener10/authentication/src/user/controllers/change_email"
 	change_password_controller "github.com/glener10/authentication/src/user/controllers/change_password"
 	change_password_in_recovery_controller "github.com/glener10/authentication/src/user/controllers/change_password_in_recovery"
@@ -75,6 +76,7 @@ func HandlerRoutes() *gin.Engine {
 	r.POST("/users/verifyEmail/:find", verify_email_controller.VerifyEmail)
 	r.POST("/users/verifyChangeEmailCode/:find", verify_change_email_code_controller.VerifyChangeEmailCode)
 	r.POST("/users/2fa/desactive/:find", desactive_2fa_controller.Desactive2FA)
+	r.POST("/users/2fa/active/:find", active_2fa_controller.Active2FA)
 
 	r.Use(middlewares.OnlyAdminMiddleware())
 
