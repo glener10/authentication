@@ -1,4 +1,3 @@
-Route to active 2FA
 Update Login to consider the 2FA code
 Login with google
 

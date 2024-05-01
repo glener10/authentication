@@ -1,5 +1,6 @@
 # [v1.0.0] - XX/XX/XXXX
 
+- active_2fa: use case, all tests, bdd and route documentation
 - desactive_2fa: use case, all tests, bdd and route documentation
 - notify the user by email: when your password is changed and when your email is verified
 - create gateway to send email

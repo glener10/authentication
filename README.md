@@ -114,6 +114,7 @@
 
 🏗 **Use Cases**
 
+- active_2fa (need to be logged in): returns qrcode to synchronize with google authenticator
 - desactive_2fa (need to be logged in)
 - notify the user by email: when your password is changed and when your email is verified
 - verify_change_email_code (need to be logged in): Verifies that the code is correct and not expired
