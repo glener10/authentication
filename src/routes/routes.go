@@ -26,6 +26,7 @@ import (
 	desactive_2fa_controller "github.com/glener10/authentication/src/user/controllers/desactive_2fa"
 	find_user_controller "github.com/glener10/authentication/src/user/controllers/find_user"
 	login_controller "github.com/glener10/authentication/src/user/controllers/login"
+	login_2fa_controller "github.com/glener10/authentication/src/user/controllers/login_2fa"
 	send_change_email_code_controller "github.com/glener10/authentication/src/user/controllers/send_change_email_code"
 	send_email_verification_code_controller "github.com/glener10/authentication/src/user/controllers/send_email_verification_code"
 	send_password_recovery_code_controller "github.com/glener10/authentication/src/user/controllers/send_password_recovery_code"
@@ -66,6 +67,9 @@ func HandlerRoutes() *gin.Engine {
 
 	r.Use(middlewares.JwtSignatureMiddleware())
 	r.Use(middlewares.InactiveUserMiddlware())
+
+	r.POST("/login/2fa", login_2fa_controller.Login2FA)
+
 	r.Use(middlewares.TwofaMiddleware())
 
 	r.GET("/users/:find", find_user_controller.FindUser)
