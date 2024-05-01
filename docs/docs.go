@@ -593,7 +593,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/user_dtos.UserWithoutSensitiveData"
+                            "type": "file"
                         }
                     },
                     "401": {
