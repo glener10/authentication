@@ -432,6 +432,40 @@ paths:
       summary: Login
       tags:
       - user
+  /login/2fa:
+    post:
+      description: Generate JWT when the 2FA is activated
+      parameters:
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dtos.LoginResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Login2FA
+      tags:
+      - user
   /users:
     post:
       consumes:
@@ -541,6 +575,86 @@ paths:
       security:
       - Bearer: []
       summary: Find User (You will need send a JWT token in authorization header,
+        you can get it in the login route)
+      tags:
+      - user
+  /users/2fa/active/{find}:
+    post:
+      description: Active 2FA by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Active 2FA (You will need send a JWT token in authorization header,
+        you can get it in the login route)
+      tags:
+      - user
+  /users/2fa/desactive/{find}:
+    post:
+      description: Desactive 2FA by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dtos.UserWithoutSensitiveData'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Desactive 2FA (You will need send a JWT token in authorization header,
         you can get it in the login route)
       tags:
       - user

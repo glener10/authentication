@@ -17,13 +17,16 @@ import (
 	admin_inative_user_controller "github.com/glener10/authentication/src/admin/controllers/admin_inative_user"
 	promote_user_admin_controller "github.com/glener10/authentication/src/admin/controllers/promote_user_admin"
 	middlewares "github.com/glener10/authentication/src/routes/middlewares"
+	active_2fa_controller "github.com/glener10/authentication/src/user/controllers/active_2fa"
 	change_email_controller "github.com/glener10/authentication/src/user/controllers/change_email"
 	change_password_controller "github.com/glener10/authentication/src/user/controllers/change_password"
 	change_password_in_recovery_controller "github.com/glener10/authentication/src/user/controllers/change_password_in_recovery"
 	create_user_controller "github.com/glener10/authentication/src/user/controllers/create_user"
 	delete_user_controller "github.com/glener10/authentication/src/user/controllers/delete_user"
+	desactive_2fa_controller "github.com/glener10/authentication/src/user/controllers/desactive_2fa"
 	find_user_controller "github.com/glener10/authentication/src/user/controllers/find_user"
 	login_controller "github.com/glener10/authentication/src/user/controllers/login"
+	login_2fa_controller "github.com/glener10/authentication/src/user/controllers/login_2fa"
 	send_change_email_code_controller "github.com/glener10/authentication/src/user/controllers/send_change_email_code"
 	send_email_verification_code_controller "github.com/glener10/authentication/src/user/controllers/send_email_verification_code"
 	send_password_recovery_code_controller "github.com/glener10/authentication/src/user/controllers/send_password_recovery_code"
@@ -65,6 +68,10 @@ func HandlerRoutes() *gin.Engine {
 	r.Use(middlewares.JwtSignatureMiddleware())
 	r.Use(middlewares.InactiveUserMiddlware())
 
+	r.POST("/login/2fa", login_2fa_controller.Login2FA)
+
+	r.Use(middlewares.TwofaMiddleware())
+
 	r.GET("/users/:find", find_user_controller.FindUser)
 	r.DELETE("/users/:find", delete_user_controller.DeleteUser)
 	r.PUT("/users/changePassword/:find", change_password_controller.ChangePassword)
@@ -73,6 +80,8 @@ func HandlerRoutes() *gin.Engine {
 	r.POST("/users/sendChangeEmailCode/:find", send_change_email_code_controller.SendChangeEmailCode)
 	r.POST("/users/verifyEmail/:find", verify_email_controller.VerifyEmail)
 	r.POST("/users/verifyChangeEmailCode/:find", verify_change_email_code_controller.VerifyChangeEmailCode)
+	r.POST("/users/2fa/desactive/:find", desactive_2fa_controller.Desactive2FA)
+	r.POST("/users/2fa/active/:find", active_2fa_controller.Active2FA)
 
 	r.Use(middlewares.OnlyAdminMiddleware())
 

@@ -2,7 +2,6 @@ package user_usecases
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	log_messages "github.com/glener10/authentication/src/log/messages"
@@ -17,19 +16,11 @@ type SendPasswordRecoveryCode struct {
 }
 
 func (u *SendPasswordRecoveryCode) Executar(c *gin.Context, find string) {
-	num, err := strconv.Atoi(find)
-	if err != nil {
-		statusCode := http.StatusInternalServerError
-		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go utils_usecases.CreateLog(&num, "users/sendPasswordRecoveryCode/:find", "POST", false, log_messages.SEND_PASSWORD_RECOVERY_CODE_WITHOUT_SUCCESS, c.ClientIP())
-		return
-	}
-
 	user, err := u.UserRepository.FindUser(find)
 	if err != nil {
 		statusCode := http.StatusNotFound
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go utils_usecases.CreateLog(&num, "users/sendPasswordRecoveryCode/:find", "POST", false, log_messages.FIND_USER_NOT_FOUND, c.ClientIP())
+		go utils_usecases.CreateLog(ReturnAppropriateFind(find), "users/sendPasswordRecoveryCode/:find", "POST", false, log_messages.FIND_USER_NOT_FOUND, c.ClientIP())
 		return
 	}
 
@@ -39,7 +30,7 @@ func (u *SendPasswordRecoveryCode) Executar(c *gin.Context, find string) {
 	if err != nil {
 		statusCode := http.StatusInternalServerError
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go utils_usecases.CreateLog(&num, "users/sendPasswordRecoveryCode/:find", "POST", false, log_messages.SEND_PASSWORD_RECOVERY_CODE_WITHOUT_SUCCESS, c.ClientIP())
+		go utils_usecases.CreateLog(ReturnAppropriateFind(find), "users/sendPasswordRecoveryCode/:find", "POST", false, log_messages.SEND_PASSWORD_RECOVERY_CODE_WITHOUT_SUCCESS, c.ClientIP())
 		return
 	}
 
@@ -48,12 +39,12 @@ func (u *SendPasswordRecoveryCode) Executar(c *gin.Context, find string) {
 		if err != nil {
 			statusCode := http.StatusInternalServerError
 			c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-			go utils_usecases.CreateLog(&num, "users/sendPasswordRecoveryCode/:find", "POST", false, log_messages.SEND_EMAIL_WITHOUT_SUCCESS, c.ClientIP())
+			go utils_usecases.CreateLog(ReturnAppropriateFind(find), "users/sendPasswordRecoveryCode/:find", "POST", false, log_messages.SEND_EMAIL_WITHOUT_SUCCESS, c.ClientIP())
 			return
 		}
 	}
 
-	go utils_usecases.CreateLog(&num, "users/sendPasswordRecoveryCode/:find", "POST", true, log_messages.SEND_PASSWORD_RECOVERY_CODE_WITH_SUCCESS, c.ClientIP())
+	go utils_usecases.CreateLog(ReturnAppropriateFind(find), "users/sendPasswordRecoveryCode/:find", "POST", true, log_messages.SEND_PASSWORD_RECOVERY_CODE_WITH_SUCCESS, c.ClientIP())
 
 	c.JSON(http.StatusOK, nil)
 }

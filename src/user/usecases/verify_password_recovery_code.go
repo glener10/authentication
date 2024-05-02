@@ -9,6 +9,7 @@ import (
 	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_interfaces "github.com/glener10/authentication/src/user/interfaces"
 	utils_usecases "github.com/glener10/authentication/src/utils/usecases"
+	utils_validators "github.com/glener10/authentication/src/utils/validators"
 )
 
 type VerifyPasswordRecoveryCode struct {
@@ -16,21 +17,25 @@ type VerifyPasswordRecoveryCode struct {
 }
 
 func (u *VerifyPasswordRecoveryCode) Executar(c *gin.Context, find string, code user_dtos.Code) {
-	num, err := strconv.Atoi(find)
-	if err != nil {
-		statusCode := http.StatusInternalServerError
-		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go utils_usecases.CreateLog(&num, "users/verifyPasswordRecoveryCode/:find", "POST", false, log_messages.VERIFY_PASSWORD_RECOVERY_CODE_WITHOUT_SUCCESS, c.ClientIP())
-		return
-	}
-	_, err = u.UserRepository.CheckPasswordRecoveryCode(find, code.Code)
+	_, err := u.UserRepository.CheckPasswordRecoveryCode(find, code.Code)
 	if err != nil {
 		statusCode := http.StatusUnauthorized
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
-		go utils_usecases.CreateLog(&num, "users/verifyPasswordRecoveryCode/:find", "POST", false, log_messages.VERIFY_PASSWORD_RECOVERY_CODE_WITHOUT_SUCCESS, c.ClientIP())
+		go utils_usecases.CreateLog(ReturnAppropriateFind(find), "users/verifyPasswordRecoveryCode/:find", "POST", false, log_messages.VERIFY_PASSWORD_RECOVERY_CODE_WITHOUT_SUCCESS, c.ClientIP())
 		return
 	}
 
-	go utils_usecases.CreateLog(&num, "users/verifyPasswordRecoveryCode/:find", "POST", true, log_messages.VERIFY_PASSWORD_RECOVERY_CODE_WITH_SUCCESS, c.ClientIP())
+	go utils_usecases.CreateLog(ReturnAppropriateFind(find), "users/verifyPasswordRecoveryCode/:find", "POST", true, log_messages.VERIFY_PASSWORD_RECOVERY_CODE_WITH_SUCCESS, c.ClientIP())
 	c.JSON(http.StatusOK, nil)
+}
+
+func ReturnAppropriateFind(find string) *int {
+	if utils_validators.IsValidEmail(find) {
+		return nil
+	}
+	num, err := strconv.Atoi(find)
+	if err != nil {
+		return nil
+	}
+	return &num
 }

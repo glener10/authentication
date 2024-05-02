@@ -23,4 +23,6 @@ type IUserRepository interface {
 	UpdateChangeEmailCode(find string, code string, expiration time.Time) (*user_dtos.UserWithoutSensitiveData, error)
 	CheckChangeEmailCode(find string, code string) (*bool, error)
 	ResetChangeEmailCode(find string) (*user_dtos.UserWithoutSensitiveData, error)
+	Active2FA(find string, secret string) (*user_dtos.UserWithoutSensitiveData, error)
+	Desactive2FA(find string) (*user_dtos.UserWithoutSensitiveData, error)
 }

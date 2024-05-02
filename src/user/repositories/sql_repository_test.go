@@ -439,3 +439,47 @@ func TestCheckEmailChangeCodeWithoutSuccessBecauseTheCodeIsExpired(t *testing.T)
 	_, err = repository.CheckChangeEmailCode(user.Email, "123456")
 	assert.Equal(t, err.Error(), "your code has expired", "should send a error because the code is expired")
 }
+
+func TestActive2FAWithSuccess(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+	userBeforeActive2FA, _ := repository.FindUser(user.Email)
+	assert.Nil(t, userBeforeActive2FA.Twofa)
+	assert.Nil(t, userBeforeActive2FA.TwofaSecret)
+
+	_, err = repository.Active2FA(user.Email, "123456")
+	assert.NoError(t, err, "should update 2FA")
+	userAfterActive2FA, _ := repository.FindUser(user.Email)
+	assert.NotNil(t, userAfterActive2FA.Twofa)
+	assert.NotNil(t, userAfterActive2FA.TwofaSecret)
+}
+
+func TestDesactive2FAWithSuccess(t *testing.T) {
+	tests.BeforeEach()
+	userDto := user_dtos.CreateUserRequest{
+		Email:    tests.ValidEmail,
+		Password: tests.ValidPassword,
+	}
+	user, err := repository.CreateUser(userDto)
+	assert.NoError(t, err)
+	userBeforeActive2FA, _ := repository.FindUser(user.Email)
+	assert.Nil(t, userBeforeActive2FA.Twofa)
+	assert.Nil(t, userBeforeActive2FA.TwofaSecret)
+
+	_, err = repository.Active2FA(user.Email, "123456")
+	assert.NoError(t, err, "should active 2FA")
+	userAfterActive2FA, _ := repository.FindUser(user.Email)
+	assert.NotNil(t, userAfterActive2FA.Twofa)
+	assert.NotNil(t, userAfterActive2FA.TwofaSecret)
+
+	_, err = repository.Desactive2FA(user.Email)
+	assert.NoError(t, err, "should desactive 2FA")
+	userAfterDesactive2FA, _ := repository.FindUser(user.Email)
+	assert.Equal(t, *userAfterDesactive2FA.Twofa, false)
+	assert.Nil(t, userAfterDesactive2FA.TwofaSecret)
+}

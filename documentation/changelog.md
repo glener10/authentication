@@ -1,5 +1,9 @@
 # [v1.0.0] - XX/XX/XXXX
 
+- login_2fa: use case, all tests, bdd and route documentation
+- middleware to check 2fa when user has the 2fa activated
+- active_2fa: use case, all tests, bdd and route documentation
+- desactive_2fa: use case, all tests, bdd and route documentation
 - notify the user by email: when your password is changed and when your email is verified
 - create gateway to send email
 - verify_change_email_code: Verifies that the code is correct and not expired
