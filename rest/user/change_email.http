@@ -1,4 +1,4 @@
-@validToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6ImZ1bGFub0BmdWxhbm8uY29tIiwiSWQiOjEsImV4cCI6MTcxMTAzMDE0OH0.mpB4jBU7z5F23rrIi1Pg8Nw0XmELD2_ruVY_Fxm6R7k
+@validToken = ""
 
 ###change_password: change password of user per id or email
 # @prompt idOrEmail
@@ -7,5 +7,6 @@ content-type: application/json
 Authorization: Bearer {{validToken}}
 
 {
+  "Code": "123456",
 	"Email": "newFulano@fulano.com"
 }

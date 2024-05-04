@@ -22,7 +22,7 @@ import (
 // @Failure      422 {object} utils_interfaces.ErrorResponse
 // @Failure      404 {object} utils_interfaces.ErrorResponse
 // @Failure      401 {object} utils_interfaces.ErrorResponse
-// @Router /user/{find} [get]
+// @Router /users/{find} [get]
 func FindUser(c *gin.Context) {
 	parameter := c.Param("find")
 	if err := user_dtos.ValidateFindUser(parameter); err != nil {

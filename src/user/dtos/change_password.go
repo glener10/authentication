@@ -10,14 +10,14 @@ type ChangePasswordRequest struct {
 	Password string `validate:"required" example:"aaaaaaaA#1"`
 }
 
-func ValidateChangePassword(request *ChangePasswordRequest) error {
-	if request.Password == "" {
+func ValidateChangePassword(password string) error {
+	if password == "" {
 		return errors.New("password is required")
 	}
-	if len(request.Password) > 60 {
+	if len(password) > 60 {
 		return errors.New("password is too long")
 	}
-	err := utils_validators.IsStrongPassword(request.Password)
+	err := utils_validators.IsStrongPassword(password)
 	if err != nil {
 		return errors.New(err.Error())
 	}

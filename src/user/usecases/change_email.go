@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
 	log_messages "github.com/glener10/authentication/src/log/messages"
+	user_dtos "github.com/glener10/authentication/src/user/dtos"
 	user_interfaces "github.com/glener10/authentication/src/user/interfaces"
 	utils_usecases "github.com/glener10/authentication/src/utils/usecases"
 )
@@ -16,7 +17,7 @@ type ChangeEmail struct {
 	UserRepository user_interfaces.IUserRepository
 }
 
-func (u *ChangeEmail) Executar(c *gin.Context, find string, newEmail string) {
+func (u *ChangeEmail) Executar(c *gin.Context, find string, changeEmailRequest user_dtos.ChangeEmailRequest) {
 	authorizationHeader := c.GetHeader("Authorization")
 	jwtFromHeader := strings.Split(authorizationHeader, " ")[1]
 	claims, statusCode, err := jwt_usecases.CheckSignatureAndReturnClaims(jwtFromHeader)
@@ -52,13 +53,30 @@ func (u *ChangeEmail) Executar(c *gin.Context, find string, newEmail string) {
 		return
 	}
 
-	userWithNewEmail, err := u.UserRepository.ChangeEmail(find, newEmail)
+	_, err = u.UserRepository.CheckChangeEmailCode(find, changeEmailRequest.Code)
+	if err != nil {
+		statusCode := http.StatusUnauthorized
+		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/changeEmail/:find", "PATCH", false, log_messages.CHANGE_EMAIL_WITHOUT_SUCCESS, c.ClientIP())
+		return
+	}
+
+	_, err = u.UserRepository.ResetChangeEmailCode(find)
+	if err != nil {
+		statusCode := http.StatusInternalServerError
+		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/changeEmail/:find", "PATCH", false, log_messages.RESET_CHANGE_EMAIL_CODE_WITHOUT_SUCCESS, c.ClientIP())
+		return
+	}
+
+	userWithNewEmail, err := u.UserRepository.ChangeEmail(find, changeEmailRequest.Email)
 	if err != nil {
 		statusCode := http.StatusInternalServerError
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
 		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/changeEmail/:find", "PATCH", false, log_messages.CHANGE_EMAIL_WITHOUT_SUCCESS, c.ClientIP())
 		return
 	}
+
 	go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/changeEmail/:find", "PATCH", true, log_messages.CHANGE_EMAIL_WITH_SUCCESS, c.ClientIP())
 	c.JSON(http.StatusOK, userWithNewEmail)
 }

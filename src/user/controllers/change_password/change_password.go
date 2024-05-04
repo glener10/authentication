@@ -18,11 +18,12 @@ import (
 // @Security Bearer
 // @Param find path string true "Search parameter: e-mail or id"
 // @Param Authorization header string true "JWT Token" default(Bearer <token>)
+// @Param tags body user_dtos.ChangePasswordRequest true "Change Password Request"
 // @Success 200 {object} user_dtos.UserWithoutSensitiveData
 // @Failure      422 {object} utils_interfaces.ErrorResponse
 // @Failure      404 {object} utils_interfaces.ErrorResponse
 // @Failure      401 {object} utils_interfaces.ErrorResponse
-// @Router /user/changePassword/{find} [patch]
+// @Router /users/changePassword/{find} [patch]
 func ChangePassword(c *gin.Context) {
 	var newPassword user_dtos.ChangePasswordRequest
 	if err := c.ShouldBindJSON(&newPassword); err != nil {
@@ -30,7 +31,7 @@ func ChangePassword(c *gin.Context) {
 		c.JSON(statusCode, gin.H{"error": "invalid request body", "statusCode": statusCode})
 		return
 	}
-	if err := user_dtos.ValidateChangePassword(&newPassword); err != nil {
+	if err := user_dtos.ValidateChangePassword(newPassword.Password); err != nil {
 		statusCode := http.StatusUnprocessableEntity
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
 		return

@@ -7,6 +7,7 @@ import (
 )
 
 type ChangeEmailRequest struct {
+	Code  string `validate:"required" example:"123456"`
 	Email string `validate:"required" example:"fulano@fulano.com"`
 }
 

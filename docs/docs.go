@@ -505,7 +505,60 @@ const docTemplate = `{
                 }
             }
         },
-        "/user": {
+        "/login/2fa": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Generate JWT when the 2FA is activated",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Login2FA",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003ctoken\u003e",
+                        "description": "JWT Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/user_dtos.LoginResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
             "post": {
                 "description": "create user with e-mail and password if the e-mail doesnt already exists and the password is strong",
                 "consumes": [
@@ -557,21 +610,81 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/changeEmail/{find}": {
-            "patch": {
+        "/users/2fa/active/{find}": {
+            "post": {
                 "security": [
                     {
                         "Bearer": []
                     }
                 ],
-                "description": "Change Email by id or email",
+                "description": "Active 2FA by e-mail or id",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "user"
                 ],
-                "summary": "Change Email (You will need send a JWT token in authorization header, you can get it in the login route)",
+                "summary": "Active 2FA (You will need send a JWT token in authorization header, you can get it in the login route)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search parameter: e-mail or id",
+                        "name": "find",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003ctoken\u003e",
+                        "description": "JWT Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/2fa/desactive/{find}": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Desactive 2FA by e-mail or id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Desactive 2FA (You will need send a JWT token in authorization header, you can get it in the login route)",
                 "parameters": [
                     {
                         "type": "string",
@@ -617,7 +730,76 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/changePassword/{find}": {
+        "/users/changeEmail/{find}": {
+            "patch": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Change Email by id or email",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Change Email (You will need send a JWT token in authorization header, you can get it in the login route)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search parameter: e-mail or id",
+                        "name": "find",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Change Email Request",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_dtos.ChangeEmailRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003ctoken\u003e",
+                        "description": "JWT Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/user_dtos.UserWithoutSensitiveData"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/changePassword/{find}": {
             "patch": {
                 "security": [
                     {
@@ -647,6 +829,15 @@ const docTemplate = `{
                         "name": "Authorization",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "description": "Change Password Request",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_dtos.ChangePasswordRequest"
+                        }
                     }
                 ],
                 "responses": {
@@ -677,7 +868,421 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/{find}": {
+        "/users/changePasswordInRecovery/{find}": {
+            "patch": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Change Password in recovery by id or email",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Change Password in recovery (You will need send a valid and not expired code with your new password)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search parameter: e-mail or id",
+                        "name": "find",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "ChangePasswordInRecoveryRequest",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_dtos.ChangePasswordInRecoveryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/user_dtos.UserWithoutSensitiveData"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/sendChangeEmailCode/{find}": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Send Email Verification Code by e-mail or id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Send Email Verification Code (You will need send a JWT token in authorization header, you can get it in the login route)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search parameter: e-mail or id",
+                        "name": "find",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003ctoken\u003e",
+                        "description": "JWT Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/sendEmailVerificationCode/{find}": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Send Email Verification Code by e-mail or id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Send Email Verification Code (You will need send a JWT token in authorization header, you can get it in the login route)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search parameter: e-mail or id",
+                        "name": "find",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003ctoken\u003e",
+                        "description": "JWT Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/sendPasswordRecoveryCode/{find}": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Send Password Recovery Code by e-mail or id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Send Password Recovery Code (You will need send a JWT token in authorization header, you can get it in the login route)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search parameter: e-mail or id",
+                        "name": "find",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/verifyChangeEmailCode/{find}": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Verify Email by e-mail or id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Verify Change Email Code (You will need send a JWT token in authorization header, you can get it in the login route) and a valid code",
+                "parameters": [
+                    {
+                        "description": "Verify Change Email Code",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_dtos.Code"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search parameter: e-mail or id",
+                        "name": "find",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003ctoken\u003e",
+                        "description": "JWT Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/verifyEmail/{find}": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Verify Email by e-mail or id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Verify Email (You will need send a JWT token in authorization header, you can get it in the login route)",
+                "parameters": [
+                    {
+                        "description": "Verify Email",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_dtos.Code"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search parameter: e-mail or id",
+                        "name": "find",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003ctoken\u003e",
+                        "description": "JWT Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/verifyPasswordRecoveryCode/{find}": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Verify Password Recovery Code by e-mail or id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Verify Password Recovery Code (You will need send a JWT token in authorization header, you can get it in the login route)",
+                "parameters": [
+                    {
+                        "description": "Password Recovery Code",
+                        "name": "tags",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_dtos.Code"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search parameter: e-mail or id",
+                        "name": "find",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/utils_interfaces.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{find}": {
             "get": {
                 "security": [
                     {
@@ -820,6 +1425,64 @@ const docTemplate = `{
                 },
                 "userId": {
                     "type": "integer"
+                }
+            }
+        },
+        "user_dtos.ChangeEmailRequest": {
+            "type": "object",
+            "required": [
+                "code",
+                "email"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "fulano@fulano.com"
+                }
+            }
+        },
+        "user_dtos.ChangePasswordInRecoveryRequest": {
+            "type": "object",
+            "required": [
+                "code",
+                "newPassword"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "newPassword": {
+                    "type": "string",
+                    "example": "aaaaaaaA#1"
+                }
+            }
+        },
+        "user_dtos.ChangePasswordRequest": {
+            "type": "object",
+            "required": [
+                "password"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "example": "aaaaaaaA#1"
+                }
+            }
+        },
+        "user_dtos.Code": {
+            "type": "object",
+            "required": [
+                "code"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "example": "123456"
                 }
             }
         },

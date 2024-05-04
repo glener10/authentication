@@ -21,7 +21,7 @@ import (
 // @Failure      422 {object} utils_interfaces.ErrorResponse
 // @Failure      408 {object} utils_interfaces.ErrorResponse
 // @Failure      500 {object} utils_interfaces.ErrorResponse
-// @Router /user [post]
+// @Router /users [post]
 func CreateUser(c *gin.Context) {
 	var user user_dtos.CreateUserRequest
 	if err := c.ShouldBindJSON(&user); err != nil {

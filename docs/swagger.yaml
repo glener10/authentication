@@ -18,6 +18,46 @@ definitions:
       userId:
         type: integer
     type: object
+  user_dtos.ChangeEmailRequest:
+    properties:
+      code:
+        example: "123456"
+        type: string
+      email:
+        example: fulano@fulano.com
+        type: string
+    required:
+    - code
+    - email
+    type: object
+  user_dtos.ChangePasswordInRecoveryRequest:
+    properties:
+      code:
+        example: "123456"
+        type: string
+      newPassword:
+        example: aaaaaaaA#1
+        type: string
+    required:
+    - code
+    - newPassword
+    type: object
+  user_dtos.ChangePasswordRequest:
+    properties:
+      password:
+        example: aaaaaaaA#1
+        type: string
+    required:
+    - password
+    type: object
+  user_dtos.Code:
+    properties:
+      code:
+        example: "123456"
+        type: string
+    required:
+    - code
+    type: object
   user_dtos.CreateUserRequest:
     properties:
       email:
@@ -392,7 +432,41 @@ paths:
       summary: Login
       tags:
       - user
-  /user:
+  /login/2fa:
+    post:
+      description: Generate JWT when the 2FA is activated
+      parameters:
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dtos.LoginResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Login2FA
+      tags:
+      - user
+  /users:
     post:
       consumes:
       - application/json
@@ -427,7 +501,7 @@ paths:
       summary: Create User
       tags:
       - user
-  /user/{find}:
+  /users/{find}:
     delete:
       description: Delete user by e-mail or id
       parameters:
@@ -504,7 +578,87 @@ paths:
         you can get it in the login route)
       tags:
       - user
-  /user/changeEmail/{find}:
+  /users/2fa/active/{find}:
+    post:
+      description: Active 2FA by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Active 2FA (You will need send a JWT token in authorization header,
+        you can get it in the login route)
+      tags:
+      - user
+  /users/2fa/desactive/{find}:
+    post:
+      description: Desactive 2FA by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dtos.UserWithoutSensitiveData'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Desactive 2FA (You will need send a JWT token in authorization header,
+        you can get it in the login route)
+      tags:
+      - user
+  /users/changeEmail/{find}:
     patch:
       description: Change Email by id or email
       parameters:
@@ -513,6 +667,12 @@ paths:
         name: find
         required: true
         type: string
+      - description: Change Email Request
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/user_dtos.ChangeEmailRequest'
       - default: Bearer <token>
         description: JWT Token
         in: header
@@ -544,7 +704,7 @@ paths:
         you can get it in the login route)
       tags:
       - user
-  /user/changePassword/{find}:
+  /users/changePassword/{find}:
     patch:
       description: Change Password by id or email
       parameters:
@@ -559,6 +719,12 @@ paths:
         name: Authorization
         required: true
         type: string
+      - description: Change Password Request
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/user_dtos.ChangePasswordRequest'
       produces:
       - application/json
       responses:
@@ -582,6 +748,280 @@ paths:
       - Bearer: []
       summary: Change Password (You will need send a JWT token in authorization header,
         you can get it in the login route)
+      tags:
+      - user
+  /users/changePasswordInRecovery/{find}:
+    patch:
+      description: Change Password in recovery by id or email
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - description: ChangePasswordInRecoveryRequest
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/user_dtos.ChangePasswordInRecoveryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user_dtos.UserWithoutSensitiveData'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Change Password in recovery (You will need send a valid and not expired
+        code with your new password)
+      tags:
+      - user
+  /users/sendChangeEmailCode/{find}:
+    post:
+      description: Send Email Verification Code by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Send Email Verification Code (You will need send a JWT token in authorization
+        header, you can get it in the login route)
+      tags:
+      - user
+  /users/sendEmailVerificationCode/{find}:
+    post:
+      description: Send Email Verification Code by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Send Email Verification Code (You will need send a JWT token in authorization
+        header, you can get it in the login route)
+      tags:
+      - user
+  /users/sendPasswordRecoveryCode/{find}:
+    post:
+      description: Send Password Recovery Code by e-mail or id
+      parameters:
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Send Password Recovery Code (You will need send a JWT token in authorization
+        header, you can get it in the login route)
+      tags:
+      - user
+  /users/verifyChangeEmailCode/{find}:
+    post:
+      description: Verify Email by e-mail or id
+      parameters:
+      - description: Verify Change Email Code
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/user_dtos.Code'
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Verify Change Email Code (You will need send a JWT token in authorization
+        header, you can get it in the login route) and a valid code
+      tags:
+      - user
+  /users/verifyEmail/{find}:
+    post:
+      description: Verify Email by e-mail or id
+      parameters:
+      - description: Verify Email
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/user_dtos.Code'
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      - default: Bearer <token>
+        description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Verify Email (You will need send a JWT token in authorization header,
+        you can get it in the login route)
+      tags:
+      - user
+  /users/verifyPasswordRecoveryCode/{find}:
+    post:
+      description: Verify Password Recovery Code by e-mail or id
+      parameters:
+      - description: Password Recovery Code
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/user_dtos.Code'
+      - description: 'Search parameter: e-mail or id'
+        in: path
+        name: find
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/utils_interfaces.ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Verify Password Recovery Code (You will need send a JWT token in authorization
+        header, you can get it in the login route)
       tags:
       - user
 swagger: "2.0"

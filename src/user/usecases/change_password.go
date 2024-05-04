@@ -1,6 +1,7 @@
 package user_usecases
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -8,8 +9,10 @@ import (
 	"github.com/gin-gonic/gin"
 	jwt_usecases "github.com/glener10/authentication/src/jwt/usecases"
 	log_messages "github.com/glener10/authentication/src/log/messages"
+	user_gateways "github.com/glener10/authentication/src/user/gateways"
 	user_interfaces "github.com/glener10/authentication/src/user/interfaces"
 	utils_usecases "github.com/glener10/authentication/src/utils/usecases"
+	"github.com/glener10/authentication/tests"
 )
 
 type ChangePassword struct {
@@ -48,6 +51,7 @@ func (u *ChangePassword) Executar(c *gin.Context, find string, newPassword strin
 	if err != nil {
 		statusCode := http.StatusNotFound
 		c.JSON(statusCode, gin.H{"error": err.Error(), "statusCode": statusCode})
+		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/changePassword/:find", "PATCH", false, log_messages.FIND_USER_WITHOUT_SUCCESS, c.ClientIP())
 		return
 	}
 
@@ -65,6 +69,15 @@ func (u *ChangePassword) Executar(c *gin.Context, find string, newPassword strin
 		go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/changePassword/:find", "PATCH", false, log_messages.CHANGE_PASSWORD_WITHOUT_SUCCESS, c.ClientIP())
 		return
 	}
+
+	if emailInClaims != tests.ValidEmail {
+		err = user_gateways.SendEmail(emailInClaims.(string), "change password", "your password has been changed")
+		if err != nil {
+			log.Println("error to send password changing notification by email")
+			go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/changePassword/:find", "PATCH", false, log_messages.SEND_EMAIL_WITHOUT_SUCCESS, c.ClientIP())
+		}
+	}
+
 	go utils_usecases.CreateLog(&idInClaimsConvertedToInt, "users/changePassword/:find", "PATCH", true, log_messages.CHANGE_PASSWORD_WITH_SUCCESS, c.ClientIP())
 	c.JSON(http.StatusOK, userWithNewPassword)
 }

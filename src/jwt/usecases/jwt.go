@@ -42,3 +42,19 @@ func GenerateJwt(user *user_entities.User) (*string, error) {
 	}
 	return &signedToken, nil
 }
+
+func GenerateJwtWith2FA(user *user_entities.User) (*string, error) {
+	claims := jwt.MapClaims{
+		"Id":              user.Id,
+		"Email":           user.Email,
+		"IsAdmin":         user.IsAdmin,
+		"exp":             time.Now().Add(time.Hour * 24).Unix(),
+		"twofa_validated": true,
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signedToken, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
+	if err != nil {
+		return nil, errors.New("error in token signature")
+	}
+	return &signedToken, nil
+}
