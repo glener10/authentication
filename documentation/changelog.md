@@ -1,4 +1,4 @@
-# [v1.0.0] - XX/XX/XXXX
+# [v1.0.0] - 03/05/2024 (dd/mm/YYYY)
 
 - login_2fa: use case, all tests, bdd and route documentation
 - middleware to check 2fa when user has the 2fa activated
