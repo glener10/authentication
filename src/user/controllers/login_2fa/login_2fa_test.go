@@ -39,7 +39,7 @@ func TestLogin2FAWithSuccess(t *testing.T) {
 	secretBase32 := base32.StdEncoding.EncodeToString([]byte(secret))
 	code, err := totp.GenerateCode(secretBase32, now)
 	if err != nil {
-		log.Fatalf("error to generate totp 2FA code in 'TestLogin2FAWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate totp 2FA code in 'TestLogin2FAWithSuccess' test: %v", err)
 	}
 	requestBody := user_dtos.Code{
 		Code: code,
@@ -55,7 +55,7 @@ func TestLogin2FAWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestLogin2FAWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestLogin2FAWithSuccess' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 
@@ -95,7 +95,7 @@ func TestLogin2FAWithoutSuccessBecauseCodeIsInvalid(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestLogin2FAWithoutSuccessBecauseCodeIsInvalid' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestLogin2FAWithoutSuccessBecauseCodeIsInvalid' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 

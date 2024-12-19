@@ -14,7 +14,7 @@ import (
 // @description Authentication API
 func main() {
 	if err := utils.LoadEnvironmentVariables(".env"); err != nil {
-		log.Fatalf("error to load environment variables: " + err.Error())
+		log.Fatalf("error to load environment variables: %v", err)
 	}
 
 	r := routes.HandlerRoutes()

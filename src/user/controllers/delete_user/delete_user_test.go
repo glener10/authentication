@@ -38,7 +38,7 @@ func TestDeleteUserWithInvalidParamAndValidJwt(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestDeleteUserWithInvalidParamAndValidJwt' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestDeleteUserWithInvalidParamAndValidJwt' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -100,7 +100,7 @@ func TestDeleteUserByIdAndValidJwtWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestDeleteUserByIdAndValidJwtWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestDeleteUserByIdAndValidJwtWithSuccess' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -132,7 +132,7 @@ func TestDeleteUserByEmailAndValidJwtWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestDeleteUserByEmailAndValidJwtWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestDeleteUserByEmailAndValidJwtWithSuccess' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -163,7 +163,7 @@ func TestDeleteUserByIdAndJwtOfOtherUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&jwtOfOtherUser)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestDeleteUserByIdAndJwtOfOtherUser' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestDeleteUserByIdAndJwtOfOtherUser' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -202,7 +202,7 @@ func TestDeleteUserByEmailAndJwtOfOtherUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&jwtOfOtherUser)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestDeleteUserByEmailAndJwtOfOtherUser' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestDeleteUserByEmailAndJwtOfOtherUser' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()

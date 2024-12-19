@@ -44,7 +44,7 @@ func TestAdminFindUserAllLogsWithJwtOfNonAdminUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestAdminFindUserAllLogsWithJwtOfNonAdminUser' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestAdminFindUserAllLogsWithJwtOfNonAdminUser' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -78,7 +78,7 @@ func TestAdminFindUserAllLogsWithValidJwtButWrongFormatOfFindParam(t *testing.T)
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestAdminFindUserAllLogsWithValidJwtButWrongFormatOfFindParam' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestAdminFindUserAllLogsWithValidJwtButWrongFormatOfFindParam' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -129,7 +129,7 @@ func TestAdminFindUserAllLogsWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userAdminForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestAdminFindUserAllLogsWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestAdminFindUserAllLogsWithSuccess' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()

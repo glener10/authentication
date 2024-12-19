@@ -36,7 +36,7 @@ func (p *Postgres) Disconnect() {
 	if GlobalDb != nil {
 		err := GlobalDb.Close()
 		if err != nil {
-			log.Fatalf("error to disconnect Postgres database: " + err.Error())
+			log.Fatalf("error to disconnect Postgres database: %v", err)
 		}
 		log.Println("disconnecting from Postgres database successfully!")
 	}
@@ -45,11 +45,11 @@ func (p *Postgres) Disconnect() {
 func RunMigrations(connectionString string, migrationUrl string) {
 	migration, err := migrate.New(migrationUrl, connectionString)
 	if err != nil {
-		log.Fatalf("error to create migration config: " + err.Error())
+		log.Fatalf("error to create migration config: %v", err)
 	}
 	if err = migration.Up(); err != nil {
 		if err.Error() != "no change" {
-			log.Fatalf("error to run migrate up: " + err.Error())
+			log.Fatalf("error to run migrate up: %v", err)
 		} else {
 			log.Println("no change in migrations")
 		}
