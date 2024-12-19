@@ -16,7 +16,7 @@ func SetupDb(m *testing.M, migrationUrl string) {
 	var err error
 	pg_container, err = db_postgres.UpTestContainerPostgres()
 	if err != nil {
-		log.Fatalf(err.Error())
+		log.Fatalf("%v", err)
 	}
 	connStr, err := db_postgres.ReturnTestContainerConnectionString(pg_container)
 	if err != nil {
@@ -30,7 +30,7 @@ func ExecuteAndFinish(m *testing.M) {
 	exitCode := m.Run()
 	err := db_postgres.DownTestContainerPostgres(pg_container)
 	if err != nil {
-		log.Fatalf(err.Error())
+		log.Fatalf("%v", err)
 	}
 	os.Exit(exitCode)
 }

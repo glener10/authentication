@@ -22,7 +22,7 @@ func (p *Postgres) Connect() {
 	var err error
 	GlobalDb, err = sql.Open("postgres", p.ConnectionString)
 	if err != nil {
-		log.Fatalf(err.Error())
+		log.Fatalf("%v", err)
 	}
 	err = GlobalDb.Ping()
 	if err != nil {
