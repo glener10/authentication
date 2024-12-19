@@ -38,7 +38,7 @@ func TestActive2FAWithJwtOfDifferentUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestActive2FAWithJwtOfDifferentUser' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestActive2FAWithJwtOfDifferentUser' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -80,7 +80,7 @@ func TestActive2FAWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestActive2FAWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestActive2FAWithSuccess' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()

@@ -44,7 +44,7 @@ func TestAdminFindAllLogsWithJwtOfNonAdminUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestAdminFindAllLogsWithJwtOfNonAdminUser' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestAdminFindAllLogsWithJwtOfNonAdminUser' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -93,7 +93,7 @@ func TestAdminFindAllLogsWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userAdminForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestAdminFindAllLogsWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestAdminFindAllLogsWithSuccess' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()

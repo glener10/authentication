@@ -41,7 +41,7 @@ func TestSendChangeEmailCodeWithDifferentUserJwt(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestSendChangeEmailCodeWithJwtOfNonAdminUser' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestSendChangeEmailCodeWithJwtOfNonAdminUser' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -83,7 +83,7 @@ func TestSendChangeEmailCodeWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestSendChangeEmailCodeWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestSendChangeEmailCodeWithSuccess' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()

@@ -42,7 +42,7 @@ func TestChangePasswordByIdWithoutResultWithValidJwt(t *testing.T) { //If you ha
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestChangePasswordByIdWithoutResultWithValidJwt' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestChangePasswordByIdWithoutResultWithValidJwt' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -76,7 +76,7 @@ func TestChangePasswordWithInvalidParamAndValidJwt(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestFindUserWithInvalidParamAndValidJwt' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestFindUserWithInvalidParamAndValidJwt' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -145,7 +145,7 @@ func TestChangePassowrdByIdAndValidJwtWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestChangePassowrdByIdAndValidJwtWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestChangePassowrdByIdAndValidJwtWithSuccess' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -178,7 +178,7 @@ func TestChangePassowrdByEmailAndValidJwtWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestChangePassowrdByEmailAndValidJwtWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestChangePassowrdByEmailAndValidJwtWithSuccess' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -211,7 +211,7 @@ func TestChangePasswordByIdAndJwtOfOtherUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&jwtOfOtherUser)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestChangePasswordByIdAndJwtOfOtherUser' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestChangePasswordByIdAndJwtOfOtherUser' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -254,7 +254,7 @@ func TestChangePasswordByEmailAndJwtOfOtherUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&jwtOfOtherUser)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestChangePasswordByIdAndJwtOfOtherUser' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestChangePasswordByIdAndJwtOfOtherUser' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()

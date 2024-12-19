@@ -139,7 +139,7 @@ func TestJwtWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestJwtWithSuccess' middlewares tests: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestJwtWithSuccess' middlewares tests: %v", err)
 	}
 	r := SetupRoutes()
 	r.Use(JwtSignatureMiddleware())
@@ -193,7 +193,7 @@ func TestAdminRouteWithTokenOfANonAdminUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestAdminRouteWithTokenOfANonAdminUser' middlewares tests: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestAdminRouteWithTokenOfANonAdminUser' middlewares tests: %v", err)
 	}
 
 	r := SetupRoutes()
@@ -240,7 +240,7 @@ func TestAdminRouteWithTokenOfAdminUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestAdminRouteWithTokenOfAdminUser' middlewares tests: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestAdminRouteWithTokenOfAdminUser' middlewares tests: %v", err)
 	}
 
 	r := SetupRoutes()
@@ -276,7 +276,7 @@ func TestBlockInactiveUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestBlockInactiveUser' middlewares tests: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestBlockInactiveUser' middlewares tests: %v", err)
 	}
 
 	r := SetupRoutes()
@@ -311,7 +311,7 @@ func TestShouldNotBlockActiveUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestShouldNotBlockActiveUser' middlewares tests: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestShouldNotBlockActiveUser' middlewares tests: %v", err)
 	}
 
 	r := SetupRoutes()

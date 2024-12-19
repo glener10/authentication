@@ -22,7 +22,7 @@ func (p *Postgres) Connect() {
 	var err error
 	GlobalDb, err = sql.Open("postgres", p.ConnectionString)
 	if err != nil {
-		log.Fatalf(err.Error())
+		log.Fatalf("%v", err)
 	}
 	err = GlobalDb.Ping()
 	if err != nil {
@@ -36,7 +36,7 @@ func (p *Postgres) Disconnect() {
 	if GlobalDb != nil {
 		err := GlobalDb.Close()
 		if err != nil {
-			log.Fatalf("error to disconnect Postgres database: " + err.Error())
+			log.Fatalf("error to disconnect Postgres database: %v", err)
 		}
 		log.Println("disconnecting from Postgres database successfully!")
 	}
@@ -45,11 +45,11 @@ func (p *Postgres) Disconnect() {
 func RunMigrations(connectionString string, migrationUrl string) {
 	migration, err := migrate.New(migrationUrl, connectionString)
 	if err != nil {
-		log.Fatalf("error to create migration config: " + err.Error())
+		log.Fatalf("error to create migration config: %v", err)
 	}
 	if err = migration.Up(); err != nil {
 		if err.Error() != "no change" {
-			log.Fatalf("error to run migrate up: " + err.Error())
+			log.Fatalf("error to run migrate up: %v", err)
 		} else {
 			log.Println("no change in migrations")
 		}
@@ -71,7 +71,7 @@ func ClearDatabaseTables() {
 			log.Fatalf("error to scan all tables name in clear database method")
 		}
 		if _, err := GlobalDb.Exec(fmt.Sprintf("DELETE FROM %s", tableName)); err != nil {
-			log.Fatalf("error to delete all elements of the " + tableName)
+			log.Fatalf("error to delete all elements of the %s", tableName)
 		}
 	}
 	log.Println("all data base cleaned")

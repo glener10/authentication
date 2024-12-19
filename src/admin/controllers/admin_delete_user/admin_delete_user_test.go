@@ -41,7 +41,7 @@ func TestDeleteUserWithJwtOfNonAdminUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestDeleteUserWithJwtOfNonAdminUser' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestDeleteUserWithJwtOfNonAdminUser' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -98,7 +98,7 @@ func TestAdminDeleteUserWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userAdminForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestAdminDeleteUserWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestAdminDeleteUserWithSuccess' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()

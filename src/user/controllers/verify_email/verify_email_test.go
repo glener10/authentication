@@ -48,7 +48,7 @@ func TestVerifyEmailWithJwtOfNonAdminUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestVerifyEmailWithJwtOfNonAdminUser' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestVerifyEmailWithJwtOfNonAdminUser' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -99,7 +99,7 @@ func TestVerifyEmailWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestVerifyEmailWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestVerifyEmailWithSuccess' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()

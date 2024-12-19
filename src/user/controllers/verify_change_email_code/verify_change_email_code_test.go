@@ -48,7 +48,7 @@ func TestVerifyChangeEmailWithJwtOfDifferentUser(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestVerifyChangeEmailWithJwtOfDifferentUser' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestVerifyChangeEmailWithJwtOfDifferentUser' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()
@@ -99,7 +99,7 @@ func TestVerifyChangeEmailCodeWithSuccess(t *testing.T) {
 	}
 	jwtForTest, err := jwt_usecases.GenerateJwt(&userForJwt)
 	if err != nil {
-		log.Fatalf("error to generate jwt in 'TestVerifyChangeEmailCodeWithSuccess' test: " + err.Error())
+		log.Fatalf("error to generate jwt in 'TestVerifyChangeEmailCodeWithSuccess' test: %v", err)
 	}
 	req.Header.Set("Authorization", "Bearer "+*jwtForTest)
 	response := httptest.NewRecorder()

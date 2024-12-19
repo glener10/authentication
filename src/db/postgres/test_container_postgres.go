@@ -14,8 +14,7 @@ var ctx context.Context
 
 func UpTestContainerPostgres() (*postgres.PostgresContainer, error) {
 	ctx = context.Background()
-	pgContainer, err := postgres.RunContainer(ctx,
-		testcontainers.WithImage("postgres:15.3-alpine"),
+	pgContainer, err := postgres.Run(ctx, "postgres:15.3-alpine",
 		postgres.WithDatabase("test-db"),
 		postgres.WithUsername("postgres"),
 		postgres.WithPassword("postgres"),
