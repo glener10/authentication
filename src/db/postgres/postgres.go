@@ -71,7 +71,7 @@ func ClearDatabaseTables() {
 			log.Fatalf("error to scan all tables name in clear database method")
 		}
 		if _, err := GlobalDb.Exec(fmt.Sprintf("DELETE FROM %s", tableName)); err != nil {
-			log.Fatalf("error to delete all elements of the " + tableName)
+			log.Fatalf("error to delete all elements of the %s", tableName)
 		}
 	}
 	log.Println("all data base cleaned")

@@ -20,7 +20,7 @@ func SetupDb(m *testing.M, migrationUrl string) {
 	}
 	connStr, err := db_postgres.ReturnTestContainerConnectionString(pg_container)
 	if err != nil {
-		log.Fatalf(err.Error())
+		log.Fatalf("%v", err)
 	}
 	postgres := &db_postgres.Postgres{ConnectionString: *connStr, MigrationUrl: migrationUrl}
 	postgres.Connect()
